@@ -7,6 +7,35 @@ Each service is **independently deployable**, horizontally scalable, and interac
 
 ---
 
+## 2. Architecture Diagram
+
+```mermaid
+graph TD
+    A[API Gateway (Optional: Nginx)] --> B[User Service]
+    A --> C[Product Service]
+    A --> D[Cart Service]
+
+    B --> B1[Instance 1]
+    B --> B2[Instance 2]
+    B --> B3[Instance 3]
+    C --> C1[Instance 1]
+    C --> C2[Instance 2]
+    C --> C3[Instance 3]
+    D --> D1[Instance 1]
+    D --> D2[Instance 2]
+    D --> D3[Instance 3]
+
+    B1 --> DB1[MongoDB Replica]
+    B2 --> DB1
+    B3 --> DB1
+
+    C1 --> DB2[MongoDB Replica]
+    C2 --> DB2
+    C3 --> DB2
+
+    D1 --> DB3[MongoDB Replica]
+    D2 --> DB3
+    D3 --> DB3
 
 
 
