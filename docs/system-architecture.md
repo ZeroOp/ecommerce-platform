@@ -6,12 +6,11 @@ This project is a **microservices-based backend system** designed for scalabilit
 Each service is **independently deployable**, horizontally scalable, and interacts with other services via APIs. Frontend assets may be served via **CDN** for better performance.
 
 ---
-
 ## 2. Architecture Diagram
 
 ```mermaid
 graph TD
-    A[API Gateway (Optional: Nginx)] --> B[User Service]
+    A[API Gateway - Optional Nginx] --> B[User Service]
     A --> C[Product Service]
     A --> D[Cart Service]
 
@@ -36,7 +35,6 @@ graph TD
     D1 --> DB3[MongoDB Replica]
     D2 --> DB3
     D3 --> DB3
-
 
 
 **Legend:**  
