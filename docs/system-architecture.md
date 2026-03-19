@@ -7,12 +7,12 @@ Each service is **independently deployable**, horizontally scalable, and interac
 
 ## 2. Architecture Diagram
 
-![Alt text](images/application_architecture.png)
+![Architecture](images/application_architecture.png)
 
 **Legend:**  
 - **API Gateway**: Optional, routes requests to services.  
 - **LB (Load Balancer)**: Each service has its own load balancer distributing traffic across multiple instances.  
-- **MongoDB Replica**: Each service connects to its own database cluster for isolation and scalability.  
+- **Database Replica**: Each service connects to its own database cluster for isolation and scalability.  
 - **CDN**: Serves static frontend assets efficiently.  
 
 ---
