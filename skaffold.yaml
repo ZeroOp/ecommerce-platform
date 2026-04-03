@@ -13,7 +13,7 @@ build:
       # Sync is removed so that Java source changes trigger a full Rebuild/Redeploy
 manifests:
   rawYaml:
-    - infra/k8s/databases/
+#    - infra/k8s/databases/
 #    - infra/k8s/secreates/app-secreates.yaml
     - infra/k8s/identity-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

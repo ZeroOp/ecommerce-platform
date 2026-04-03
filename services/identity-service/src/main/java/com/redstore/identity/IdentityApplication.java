@@ -27,10 +27,4 @@ public class IdentityApplication {
         // 3. Start Spring
         SpringApplication.run(IdentityApplication.class, args);
     }
-
-    // Our "Hello World" endpoint
-    @GetMapping("/api/users/hello")
-    public String sayHello() {
-        return "I am one two three";
-    }
 }

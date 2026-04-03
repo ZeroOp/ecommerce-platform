@@ -1,4 +1,3 @@
-
 # 1. THE DATABASE CLUSTER
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
@@ -26,11 +25,10 @@ spec:
   postgresql:
     parameters:
       synchronous_commit: "on"
-      # Limits Postgres's internal shared memory buffers
       shared_buffers: "128MB"
-    synchronous:
-      method: any
-      number: 1
+
+  # REMOVED: The syncReplicaElectionConstraint block to avoid decoding errors
+  # The operator will still maintain 3 instances and manage replication automatically.
 
   bootstrap:
     initdb:
