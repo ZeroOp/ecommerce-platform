@@ -1,0 +1,40 @@
+
+# 1. THE DATABASE CLUSTER
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: identity-db-cluster
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  # RESOURCE CAPPING: Limits CPU/Memory so your laptop doesn't lag
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  # PERSISTENCE: This automatically creates the PVCs
+  storage:
+    size: 1Gi
+    # For local dev (Docker Desktop/Minikube), this usually uses 'hostpath' or 'standard'
+    storageClass: hostpath
+
+  postgresql:
+    parameters:
+      synchronous_commit: "on"
+      # Limits Postgres's internal shared memory buffers
+      shared_buffers: "128MB"
+    synchronous:
+      method: any
+      number: 1
+
+  bootstrap:
+    initdb:
+      database: identity_db
+      owner: identity_admin
+      secret:
+        name: identity-db-creds

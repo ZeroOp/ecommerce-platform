@@ -37,3 +37,5 @@ ecommerce-microservices-platform
 ├─ frontend/
 └─ infrastructure/
 ```
+# This installs the CNPG Operator "Brain" directly into your cluster
+kubectl apply -f https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/release-1.22/releases/cnpg-1.22.0.yaml

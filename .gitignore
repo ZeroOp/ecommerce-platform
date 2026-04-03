@@ -1,0 +1,40 @@
+# --- Java & Maven ---
+target/
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# --- IntelliJ IDEA ---
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+gen/
+.metadata/
+
+# --- Eclipse (If anyone else uses it) ---
+.settings/
+.project
+.classpath
+bin/
+.tmp/
+
+# --- OS / Logs ---
+.DS_Store
+Thumbs.db
+*.log
+logs/
+temp/
+
+# --- Environment & Secrets ---
+.env
+.env.local
+.env.*.local
+
+# --- Docker & K8s ---
+# Usually, we keep Dockerfiles, but ignore local build data
+.docker/

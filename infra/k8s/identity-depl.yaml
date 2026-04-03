@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: identity-srv
+spec:
+  selector:
+    app: identity
+  ports:
+    - name: identity
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: identity-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity
+  template:
+    metadata:
+      labels:
+        app: identity
+    spec:
+      containers:
+        - name: identity
+          image: zeroop/redstore-identity-service
+          env:
+            # 1. JWT Key (Existing)
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: JWT_KEY
+
+            # 2. DB Connection URL
+            # Points to the Master node via the CNPG generated service
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://identity-db-cluster-rw:5432/identity_db
+
+            # 3. DB Credentials
+            # We pull these directly from the Secret we created in identity-db.yaml
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: identity-db-creds
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: identity-db-creds
+                  key: password
+          ports:
+            - containerPort: 8080

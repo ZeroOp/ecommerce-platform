@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: identity-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: identity-db-creds
+type: Opaque
+stringData:
+  username: identity_admin
+  password: identity_password_123
