@@ -16,9 +16,8 @@ public class IdentityApplication {
         // 1. Define what THIS service specifically needs
         List<String> identitySecrets = List.of(
                 "JWT_KEY",
-                "SPRING_DATASOURCE_URL",
-                "SPRING_DATASOURCE_USERNAME",
-                "SPRING_DATASOURCE_PASSWORD"
+                "SPRING_DATASOURCE_URL", "SPRING_DATASOURCE_USERNAME", "SPRING_DATASOURCE_PASSWORD",
+                "REDIS_HOST", "REDIS_PORT", "REDIS_PASSWORD"
         );
 
         // 2. Call the common validator

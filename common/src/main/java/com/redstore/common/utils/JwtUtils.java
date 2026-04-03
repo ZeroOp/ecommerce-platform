@@ -17,7 +17,7 @@ public class JwtUtils {
     private static final String SECRET = System.getenv("JWT_KEY");
 
     // 24 Hours in milliseconds
-    private static final long EXPIRATION_TIME = 86400000;
+    private static final long EXPIRATION_TIME = 15*60;
 
     public static Key getSigningKey() {
         if (SECRET == null || SECRET.length() < 32) {

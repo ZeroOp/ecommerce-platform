@@ -53,5 +53,18 @@ spec:
                 secretKeyRef:
                   name: identity-db-creds
                   key: password
+            - name: GOOGLE_CLIENT_ID
+              value: 854136327852-v48sbh7hbb3145dmaq0kjt6aknpv6oms.apps.googleusercontent.com
+
+            # 🟢 4. REDIS CONFIGURATION (Added)
+            - name: REDIS_HOST
+              value: redis-session.default.svc.cluster.local
+            - name: REDIS_PORT
+              value: "26379"  # Quoted because K8s expects strings for env values
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: REDIS_PASSWORD
           ports:
             - containerPort: 8080

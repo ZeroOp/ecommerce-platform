@@ -5,6 +5,7 @@ metadata:
 type: Opaque
 stringData:
   JWT_KEY: redstore-secret-key-2026
+  REDIS_PASSWORD: YourSecurePassword
 ---
 apiVersion: v1
 kind: Secret

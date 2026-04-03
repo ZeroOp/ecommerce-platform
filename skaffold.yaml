@@ -6,6 +6,15 @@ build:
   local:
     push: false # Keeps builds local to your Docker Desktop/Minikube
   artifacts:
+    - image: zeroop/redstore-client
+      context: redstore-client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          # Syncs your Angular source files directly to the container
+          - src: "src/**/*.{ts,html,scss}"
+            dest: .
     - image: zeroop/redstore-identity-service
       context: .
       docker:
@@ -15,5 +24,6 @@ manifests:
   rawYaml:
 #    - infra/k8s/databases/
 #    - infra/k8s/secreates/app-secreates.yaml
+    - infra/k8s/client-depl.yaml
     - infra/k8s/identity-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

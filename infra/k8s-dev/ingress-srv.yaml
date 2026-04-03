@@ -13,7 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
 spec:
   rules:
-    - host: link.zeroop.dev
+    - host: redstore.zeroop.dev
       http:
         paths:
           - path: /api/users(/|$)(.*)
@@ -23,3 +23,10 @@ spec:
                 name: identity-srv
                 port:
                   number: 8080
+          - path: /(.*) # 👈 Catch-all regex to push everything else to the client
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: client-srv
+                port:
+                  number: 3000
