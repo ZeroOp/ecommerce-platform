@@ -4,9 +4,8 @@ import com.redstore.common.dto.UserPayload;
 import com.redstore.common.enums.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -15,10 +14,9 @@ import java.util.stream.Collectors;
 public class JwtUtils {
     private static final String SECRET = System.getenv("JWT_KEY");
 
-    // Corrected to 15 minutes (15 * 60 * 1000)
     private static final long EXPIRATION_TIME = 900000;
 
-    public static Key getSigningKey() {
+    public static SecretKey getSigningKey() {
         if (SECRET == null || SECRET.length() < 32) {
             throw new RuntimeException("JWT_KEY environment variable is missing or too short!");
         }
@@ -27,24 +25,24 @@ public class JwtUtils {
 
     public static String generateToken(UserPayload payload) {
         return Jwts.builder()
-                .setSubject(payload.getId()) // 0.11.x uses setSubject
+                .subject(payload.getId()) // 0.11.x uses setSubject
                 .claim("email", payload.getEmail())
                 .claim("roles", payload.getRoles().stream()
                         .map(Enum::name)
                         .collect(Collectors.toList()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(getSigningKey())
                 .compact();
     }
 
     public static UserPayload validateAndGetPayload(String token) {
         // 0.11.x uses parserBuilder() and setSigningKey()
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
 
         return UserPayload.builder()
                 .id(claims.getSubject())

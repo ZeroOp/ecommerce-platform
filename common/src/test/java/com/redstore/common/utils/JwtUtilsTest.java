@@ -19,12 +19,12 @@ class JwtUtilsTest {
     @Test
     void shouldParseValidTokenSuccessfully() {
         String token = Jwts.builder()
-                .setSubject("user-123")
+                .subject("user-123")
                 .claim("email", "jaya@redstore.com")
                 // FIX: Use UserRole.ADMIN.name() instead of raw String "ADMIN"
                 .claim("roles", Set.of(UserRole.ADMIN.name()))
-                .setIssuedAt(new Date())
-                .signWith(JwtUtils.getSigningKey(), SignatureAlgorithm.HS256)
+                .issuedAt(new Date())
+                .signWith(JwtUtils.getSigningKey())
                 .compact();
 
         UserPayload payload = JwtUtils.validateAndGetPayload(token);

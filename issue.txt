@@ -1,27 +1,11 @@
-PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> skaffold dev
-Generating tags...
- - zeroop/redstore-client -> zeroop/redstore-client:db2d096
- - zeroop/redstore-identity-service -> zeroop/redstore-identity-service:db2d096
-Checking cache...
- - zeroop/redstore-client: Found Locally
- - zeroop/redstore-identity-service: Found Locally
-Tags used in deployment:
- - zeroop/redstore-client -> zeroop/redstore-client:18bec706f7897171d8ed3ffa6e40d7d5e7bd98841b66c6a560295d50f10a2d79
- - zeroop/redstore-identity-service -> zeroop/redstore-identity-service:c5cbf3483d162edcf43443d4f68a89b8ea7b1d43903bf46cb1cc015fbd50d1ea
-Starting deploy...
- - deployment.apps/client-depl created
- - service/client-srv created
- - service/identity-srv created
- - deployment.apps/identity-depl created
- - Warning: annotation "kubernetes.io/ingress.class" is deprecated, please use 'spec.ingressClassName' instead
- - ingress.networking.k8s.io/ingress-service created
+- ingress.networking.k8s.io/ingress-service created
 Waiting for deployments to stabilize...
  - deployment/client-depl is ready. [1/2 deployment(s) still pending]
  - deployment/identity-depl is ready.
-Deployments stabilized in 3.206 seconds
+Deployments stabilized in 3.278 seconds
 Listing files to watch...
  - zeroop/redstore-client
-[identity] --- Starting Validation for: Identity-Service ---
+[identity] --- Starting Validation for: Identity-Service ---                                                                                                                                                                        
 [identity] --- All 7 secrets verified. ---
 [client] /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
 [client] /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
@@ -32,52 +16,53 @@ Listing files to watch...
 [client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
 [client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
 [client] /docker-entrypoint.sh: Configuration complete; ready for start up
-[client] 2026/04/09 17:47:58 [notice] 1#1: using the "epoll" event method
-[client] 2026/04/09 17:47:58 [notice] 1#1: nginx/1.29.8
-[client] 2026/04/09 17:47:58 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0)
-[client] 2026/04/09 17:47:58 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
-[client] 2026/04/09 17:47:58 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
-[client] 2026/04/09 17:47:58 [notice] 1#1: start worker processes
-[client] 2026/04/09 17:47:58 [notice] 1#1: start worker process 29
-[client] 2026/04/09 17:47:58 [notice] 1#1: start worker process 30
-[client] 2026/04/09 17:47:58 [notice] 1#1: start worker process 31
-[client] 2026/04/09 17:47:58 [notice] 1#1: start worker process 32
+[client] 2026/04/09 18:08:09 [notice] 1#1: using the "epoll" event method
+[client] 2026/04/09 18:08:09 [notice] 1#1: nginx/1.29.8
+[client] 2026/04/09 18:08:09 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0) 
+[client] 2026/04/09 18:08:09 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+[client] 2026/04/09 18:08:09 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+[client] 2026/04/09 18:08:09 [notice] 1#1: start worker processes
+[client] 2026/04/09 18:08:09 [notice] 1#1: start worker process 30
+[client] 2026/04/09 18:08:09 [notice] 1#1: start worker process 31
+[client] 2026/04/09 18:08:09 [notice] 1#1: start worker process 32
+[client] 2026/04/09 18:08:09 [notice] 1#1: start worker process 33
  - zeroop/redstore-identity-service
-Press Ctrl+C to exit
+Press Ctrl+C to exit                                                                                                                                                                                                                
 Watching for changes...
-[identity]
+[identity] 
 [identity]   .   ____          _            __ _ _
 [identity]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 [identity] ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
 [identity]  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
 [identity]   '  |____| .__|_| |_|_| |_\__, | / / / /
 [identity]  =========|_|==============|___/=/_/_/_/
-[identity]
+[identity] 
 [identity]  :: Spring Boot ::                (v3.4.0)
-[identity]
-[identity] 2026-04-09T17:48:01.966Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
-[identity] 2026-04-09T17:48:01.973Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
-[identity] 2026-04-09T17:48:04.784Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-09T17:48:04.792Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-[identity] 2026-04-09T17:48:05.208Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 382 ms. Found 1 JPA repository interface.
-[identity] 2026-04-09T17:48:05.289Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-09T17:48:05.291Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-[identity] 2026-04-09T17:48:05.334Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-[identity] 2026-04-09T17:48:05.334Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 7 ms. Found 0 Redis repository interfaces.
-[identity] 2026-04-09T17:48:06.634Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[identity] 2026-04-09T17:48:06.663Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[identity] 2026-04-09T17:48:06.664Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
-[identity] 2026-04-09T17:48:06.762Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[identity] 2026-04-09T17:48:06.764Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4520 ms
-[identity] 2026-04-09T17:48:07.106Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-[identity] 2026-04-09T17:48:07.304Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
-[identity] 2026-04-09T17:48:07.390Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-[identity] 2026-04-09T17:48:07.958Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-[identity] 2026-04-09T17:48:08.018Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-[identity] 2026-04-09T17:48:08.493Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@30228de7
-[identity] 2026-04-09T17:48:08.497Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-[identity] 2026-04-09T17:48:08.583Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-[identity] 2026-04-09T17:48:08.630Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+[identity] 
+[identity] 2026-04-09T18:08:14.722Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+[identity] 2026-04-09T18:08:14.733Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
+[client] 10.1.3.249 - - [09/Apr/2026:18:08:16 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[identity] 2026-04-09T18:08:21.168Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-09T18:08:21.175Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[identity] 2026-04-09T18:08:21.736Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 532 ms. Found 1 JPA repository interface.
+[identity] 2026-04-09T18:08:21.853Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-09T18:08:21.859Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[identity] 2026-04-09T18:08:21.914Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+[identity] 2026-04-09T18:08:21.915Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+[identity] 2026-04-09T18:08:23.510Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+[identity] 2026-04-09T18:08:23.535Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[identity] 2026-04-09T18:08:23.536Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+[identity] 2026-04-09T18:08:23.599Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[identity] 2026-04-09T18:08:23.601Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 8429 ms
+[identity] 2026-04-09T18:08:24.007Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+[identity] 2026-04-09T18:08:24.253Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+[identity] 2026-04-09T18:08:24.347Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+[identity] 2026-04-09T18:08:24.883Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+[identity] 2026-04-09T18:08:24.966Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[identity] 2026-04-09T18:08:25.942Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@d1f23a0
+[identity] 2026-04-09T18:08:25.946Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[identity] 2026-04-09T18:08:26.038Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+[identity] 2026-04-09T18:08:26.087Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 [identity]      Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 [identity]      Database driver: undefined/unknown
 [identity]      Database version: 16.13
@@ -85,22 +70,23 @@ Watching for changes...
 [identity]      Isolation level: undefined/unknown
 [identity]      Minimum pool size: undefined/unknown
 [identity]      Maximum pool size: undefined/unknown
-[identity] 2026-04-09T17:48:10.007Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-[identity] 2026-04-09T17:48:10.070Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-[identity] 2026-04-09T17:48:11.335Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-[identity] 2026-04-09T17:48:12.350Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-[identity] 2026-04-09T17:48:12.368Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 11.801 seconds (process running for 13.748)
-[client] 10.1.3.249 - - [09/Apr/2026:17:49:09 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[identity] 2026-04-09T17:49:16.491Z  INFO 1 --- [nio-8080-exec-1] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1775756952217,"i_e":{"enable_itp_optimization":0}}] that contained an invalid cookie. That cookie will be ignored.
+[identity] 2026-04-09T18:08:29.227Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[identity] 2026-04-09T18:08:29.361Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[client] 10.1.3.249 - - [09/Apr/2026:18:08:31 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[identity] 2026-04-09T18:08:32.285Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[identity] 2026-04-09T18:08:33.566Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+[identity] 2026-04-09T18:08:33.593Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 21.748 seconds (process running for 22.379)
+[identity] 2026-04-09T18:08:48.638Z  INFO 1 --- [nio-8080-exec-1] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1775758119238,"i_e":{"enable_itp_optimization":0}}] that contained an invalid cookie. That cookie will be ignored.
 [identity]  Note: further occurrences of this error will be logged at DEBUG level.
-[identity] 2026-04-09T17:49:16.506Z  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-[identity] 2026-04-09T17:49:16.506Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-[identity] 2026-04-09T17:49:16.508Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+[identity] 2026-04-09T18:08:48.662Z  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[identity] 2026-04-09T18:08:48.663Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[identity] 2026-04-09T18:08:48.671Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 8 ms
 [identity] Hibernate: select u1_0.id,u1_0.created_at,u1_0.email,u1_0.is_active,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
-[identity] 2026-04-09T17:49:19.272Z ERROR 1 --- [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: java.lang.NoSuchMethodError: 'io.jsonwebtoken.JwtBuilder io.jsonwebtoken.JwtBuilder.setSubject(java.lang.String)'] with root cause
-[identity]
-[identity] java.lang.NoSuchMethodError: 'io.jsonwebtoken.JwtBuilder io.jsonwebtoken.JwtBuilder.setSubject(java.lang.String)'
-[identity]      at com.redstore.common.utils.JwtUtils.generateToken(JwtUtils.java:30) ~[common-1.0-SNAPSHOT.jar!/:na]
+[identity] 2026-04-09T18:08:50.498Z ERROR 1 --- [nio-8080-exec-1] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed: java.lang.RuntimeException: JWT_KEY environment variable is missing or too short!] with root cause
+[identity] 
+[identity] java.lang.RuntimeException: JWT_KEY environment variable is missing or too short!
+[identity]      at com.redstore.common.utils.JwtUtils.getSigningKey(JwtUtils.java:21) ~[common-1.0-SNAPSHOT.jar!/:na]
+[identity]      at com.redstore.common.utils.JwtUtils.generateToken(JwtUtils.java:35) ~[common-1.0-SNAPSHOT.jar!/:na]
 [identity]      at com.redstore.identity.service.SessionService.createSession(SessionService.java:43) ~[!/:na]
 [identity]      at com.redstore.identity.controller.AuthController.googleLogin(AuthController.java:43) ~[!/:na]
 [identity]      at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
@@ -152,4 +138,4 @@ Watching for changes...
 [identity]      at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.33.jar!/:na]
 [identity]      at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.33.jar!/:na]
 [identity]      at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
-[identity]
+[identity] 

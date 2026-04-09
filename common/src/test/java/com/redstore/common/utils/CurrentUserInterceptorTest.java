@@ -29,9 +29,9 @@ class CurrentUserInterceptorTest {
     void shouldSetContextWhenValidBearerTokenPresent() {
         // 1. Create a real token
         String token = Jwts.builder()
-                .setSubject("abc-123")
+                .subject("abc-123")
                 .claim("email", "interceptor@test.com")
-                .signWith(JwtUtils.getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(JwtUtils.getSigningKey())
                 .compact();
 
         // 2. Mock the header call
