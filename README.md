@@ -45,3 +45,5 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 
 helm install redis-session bitnami/redis --set sentinel.enabled=true --set global.redis.password="YourSecurePassword" --set replica.resources.limits.memory="512Mi" --set replica.resources.requests.memory="256Mi" --set replica.maxmemory="400mb"
+
+docker-compose up -d run from s3-storage. 

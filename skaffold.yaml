@@ -25,5 +25,6 @@ manifests:
 #    - infra/k8s/databases/
 #    - infra/k8s/secreates/app-secreates.yaml
     - infra/k8s/client-depl.yaml
+#    - infra/k8s/s3-storage/s3-buckets.yaml
     - infra/k8s/identity-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

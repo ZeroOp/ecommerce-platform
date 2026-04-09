@@ -1,0 +1,55 @@
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: vector-config
+#data:
+#  vector.yaml: |
+#    sources:
+#      nats_events:
+#        type: nats
+#        url: "nats://nats-srv:4222"
+#        subject: "redstore.>"
+#        queue: "vector_archiver"
+#
+#    sinks:
+#      minio_storage:
+#        type: aws_s3
+#        inputs: ["nats_events"]
+#        bucket: "redstore-main"
+#        region: "us-east-1"
+#        endpoint: "http://minio-primary-srv:9000"
+#        compression: "none"
+#        auth:
+#          access_key_id: "redstore_admin"
+#          secret_access_key: "redstore_password"
+#        batch:
+#          max_events: 10
+#          timeout_secs: 30
+#        encoding:
+#          codec: "json"
+#---
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: redstore-archiver
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: archiver
+#  template:
+#    metadata:
+#      labels:
+#        app: archiver
+#    spec:
+#      containers:
+#        - name: vector
+#          image: timberio/vector:0.36.0-debian
+#          args: ["--config", "/etc/vector/vector.yaml"]
+#          volumeMounts:
+#            - name: config
+#              mountPath: /etc/vector
+#      volumes:
+#        - name: config
+#          configMap:
+#            name: vector-config

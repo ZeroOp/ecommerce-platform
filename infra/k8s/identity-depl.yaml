@@ -66,5 +66,12 @@ spec:
                 secretKeyRef:
                   name: identity-secrets
                   key: REDIS_PASSWORD
+
+            # 🟢 5. NATS CONFIGURATION
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: NATS_URL
           ports:
             - containerPort: 8080

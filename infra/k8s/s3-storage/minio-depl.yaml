@@ -1,0 +1,151 @@
+# --- 1. STORAGE (PVCs) ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-primary-pvc
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-backup-pvc
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
+---
+
+# --- 2. PRIMARY MINIO ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-primary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio-primary
+  template:
+    metadata:
+      labels:
+        app: minio-primary
+    spec:
+      containers:
+        - name: minio
+          image: quay.io/minio/minio
+          args: ["server", "/data", "--console-address", ":9001"]
+          env:
+            - name: MINIO_ROOT_USER
+              value: "redstore_admin"
+            - name: MINIO_ROOT_PASSWORD
+              value: "redstore_password"
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: minio-primary-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-primary-srv
+spec:
+  ports:
+    - name: api
+      port: 9000
+    - name: console
+      port: 9001
+  selector:
+    app: minio-primary
+---
+
+# --- 3. BACKUP MINIO ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-backup
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio-backup
+  template:
+    metadata:
+      labels:
+        app: minio-backup
+    spec:
+      containers:
+        - name: minio
+          image: quay.io/minio/minio
+          args: ["server", "/data", "--console-address", ":9001"]
+          env:
+            - name: MINIO_ROOT_USER
+              value: "redstore_admin"
+            - name: MINIO_ROOT_PASSWORD
+              value: "redstore_password"
+          ports:
+            - containerPort: 9000
+            - containerPort: 9001
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: minio-backup-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio-backup-srv
+spec:
+  ports:
+    - name: api
+      port: 9000
+    - name: console
+      port: 9001
+  selector:
+    app: minio-backup
+---
+
+# --- 4. THE REPLICATOR ---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: minio-replicator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio-replicator
+  template:
+    metadata:
+      labels:
+        app: minio-replicator
+    spec:
+      containers:
+        - name: mc
+          image: minio/mc
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Waiting for MinIO services..."
+              # Using -srv suffix to match your Redis naming convention
+              until mc alias set primary http://minio-primary-srv:9000 redstore_admin redstore_password; do sleep 3; done;
+              until mc alias set backup http://minio-backup-srv:9000 redstore_admin redstore_password; do sleep 3; done;
+              
+              mc mb --ignore-existing primary/redstore-main
+              mc mb --ignore-existing backup/redstore-main-backup
+              
+              echo "Replication started..."
+              mc mirror --watch --remove --overwrite primary/redstore-main backup/redstore-main-backup;
