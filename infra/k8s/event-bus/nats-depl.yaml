@@ -103,7 +103,7 @@ spec:
 
               nats stream add PRODUCTS \
                 --server nats://nats-srv:4222 \
-                --subjects "products.>" \
+                --subjects "product.>" \
                 --retention limits \
                 --max-msgs -1 \
                 --max-bytes -1 \
@@ -116,7 +116,7 @@ spec:
 
               nats stream add ORDERS \
                 --server nats://nats-srv:4222 \
-                --subjects "orders.>, payment.>" \
+                --subjects "order.>, payment.>" \
                 --retention limits \
                 --max-msgs -1 \
                 --max-bytes -1 \

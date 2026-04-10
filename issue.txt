@@ -1,43 +1,43 @@
-[client] 2026/04/09 18:24:36 [notice] 1#1: start worker process 32
+[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 29
+[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 30
+[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 31
+[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 32
  - zeroop/redstore-identity-service
-Press Ctrl+C to exit                                                                                                                                                                                                                
-[identity] 
+Press Ctrl+C to exit
+[identity]
 [identity]   .   ____          _            __ _ _
 [identity]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
 [identity] ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
 [identity]  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
 [identity]   '  |____| .__|_| |_|_| |_\__, | / / / /
 [identity]  =========|_|==============|___/=/_/_/_/
-[identity] 
+[identity]
 [identity]  :: Spring Boot ::                (v3.4.0)
-[identity] 
+[identity]
 Watching for changes...
-[identity] 2026-04-09T18:24:39.229Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
-[identity] 2026-04-09T18:24:39.236Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
-[client] 10.1.3.249 - - [09/Apr/2026:18:24:39 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[client] 10.1.3.249 - - [09/Apr/2026:18:24:44 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[identity] 2026-04-09T18:24:44.792Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-09T18:24:44.796Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-[identity] 2026-04-09T18:24:45.161Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 340 ms. Found 1 JPA repository interface.
-[identity] 2026-04-09T18:24:45.201Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-09T18:24:45.216Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-[identity] 2026-04-09T18:24:45.241Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-[identity] 2026-04-09T18:24:45.242Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
-[client] 10.1.3.249 - - [09/Apr/2026:18:24:46 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[identity] 2026-04-09T18:24:46.667Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[identity] 2026-04-09T18:24:46.723Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[identity] 2026-04-09T18:24:46.724Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
-[identity] 2026-04-09T18:24:46.817Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[identity] 2026-04-09T18:24:46.824Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7398 ms
-[identity] 2026-04-09T18:24:47.475Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-[identity] 2026-04-09T18:24:47.675Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
-[identity] 2026-04-09T18:24:47.740Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-[identity] 2026-04-09T18:24:48.658Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-[identity] 2026-04-09T18:24:48.786Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-[identity] 2026-04-09T18:24:49.453Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@2c668c2a
-[identity] 2026-04-09T18:24:49.461Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-[identity] 2026-04-09T18:24:49.584Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-[identity] 2026-04-09T18:24:49.628Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+[identity] 2026-04-10T07:54:18.423Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+[identity] 2026-04-10T07:54:18.431Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
+[identity] 2026-04-10T07:54:21.620Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-10T07:54:21.625Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[identity] 2026-04-10T07:54:21.933Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 284 ms. Found 1 JPA repository interface.
+[identity] 2026-04-10T07:54:21.995Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-10T07:54:21.997Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[identity] 2026-04-10T07:54:22.072Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+[identity] 2026-04-10T07:54:22.075Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+[identity] 2026-04-10T07:54:23.401Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+[identity] 2026-04-10T07:54:23.432Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[identity] 2026-04-10T07:54:23.432Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+[identity] 2026-04-10T07:54:23.510Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[identity] 2026-04-10T07:54:23.516Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4788 ms
+[identity] 2026-04-10T07:54:23.824Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+[identity] 2026-04-10T07:54:24.072Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+[identity] 2026-04-10T07:54:24.160Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+[identity] 2026-04-10T07:54:24.728Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+[identity] 2026-04-10T07:54:24.798Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[identity] 2026-04-10T07:54:25.718Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@333a44f2
+[identity] 2026-04-10T07:54:25.721Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[identity] 2026-04-10T07:54:25.819Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+[identity] 2026-04-10T07:54:25.898Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 [identity]      Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 [identity]      Database driver: undefined/unknown
 [identity]      Database version: 16.13
@@ -45,20 +45,23 @@ Watching for changes...
 [identity]      Isolation level: undefined/unknown
 [identity]      Minimum pool size: undefined/unknown
 [identity]      Maximum pool size: undefined/unknown
-[identity] 2026-04-09T18:24:51.389Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-[identity] 2026-04-09T18:24:51.620Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-[identity] 2026-04-09T18:24:52.706Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-[identity] 2026-04-09T18:24:53.730Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-[identity] 2026-04-09T18:24:53.746Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 15.531 seconds (process running for 15.691)
-[identity] 2026-04-09T18:25:03.208Z  INFO 1 --- [nio-8080-exec-2] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1775759098875,"i_e":{"enable_itp_optimization":0}}] that contained an invalid cookie. That cookie will be ignored.
+[identity] 2026-04-10T07:54:27.541Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[identity] 2026-04-10T07:54:27.669Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[identity] 2026-04-10T07:54:29.277Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[identity] 2026-04-10T07:54:31.258Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+[identity] 2026-04-10T07:54:31.298Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 14.47 seconds (process running for 17.041)
+[client] 10.1.3.249 - - [10/Apr/2026:07:54:36 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[client] 10.1.3.249 - - [10/Apr/2026:07:54:36 +0000] "GET /styles-5INURTSO.css HTTP/1.1" 200 0 "https://redstore.zeroop.dev/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[client] 10.1.3.249 - - [10/Apr/2026:07:54:36 +0000] "GET /main-KVWE4FJC.js HTTP/1.1" 200 122601 "https://redstore.zeroop.dev/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[identity] 2026-04-10T07:54:45.534Z  INFO 1 --- [nio-8080-exec-1] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1775807677505,"i_e":{"enable_itp_optimization":0}}] that contained an invalid cookie. That cookie will be ignored.
 [identity]  Note: further occurrences of this error will be logged at DEBUG level.
-[identity] 2026-04-09T18:25:03.215Z  INFO 1 --- [nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-[identity] 2026-04-09T18:25:03.216Z  INFO 1 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-[identity] 2026-04-09T18:25:03.217Z  INFO 1 --- [nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+[identity] 2026-04-10T07:54:45.547Z  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[identity] 2026-04-10T07:54:45.548Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[identity] 2026-04-10T07:54:45.551Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
 [identity] Hibernate: select u1_0.id,u1_0.created_at,u1_0.email,u1_0.is_active,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
-[identity] 2026-04-09T18:25:04.744Z  INFO 1 --- [nio-8080-exec-2] c.r.identity.service.SessionService      : Attempting to publish login event for user: jayaramnaik725@gmail.com
-[identity] 2026-04-09T18:25:04.773Z ERROR 1 --- [nio-8080-exec-2] c.redstore.common.events.BasePublisher   : Failed to publish event to NATS
-[identity] 
+[identity] 2026-04-10T07:54:47.326Z  INFO 1 --- [nio-8080-exec-1] c.r.identity.service.SessionService      : Attempting to publish login event for user: jayaramnaik725@gmail.com
+[identity] 2026-04-10T07:54:47.345Z ERROR 1 --- [nio-8080-exec-1] c.redstore.common.events.BasePublisher   : Failed to publish event to NATS
+[identity]
 [identity] java.io.IOException: Error Publishing: 503 No Responders Available For Request
 [identity]      at io.nats.client.impl.NatsJetStream.processPublishResponse(NatsJetStream.java:181) ~[jnats-2.20.0.jar!/:2.20.0]
 [identity]      at io.nats.client.impl.NatsJetStream.publishSyncInternal(NatsJetStream.java:156) ~[jnats-2.20.0.jar!/:2.20.0]
@@ -115,9 +118,9 @@ Watching for changes...
 [identity]      at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.33.jar!/:na]
 [identity]      at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.33.jar!/:na]
 [identity]      at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
-[identity] 
-[identity] 2026-04-09T18:25:04.780Z ERROR 1 --- [nio-8080-exec-2] c.r.identity.service.SessionService      : Failed to publish login event for user: jayaramnaik725@gmail.com
-[identity] 
+[identity]
+[identity] 2026-04-10T07:54:47.352Z ERROR 1 --- [nio-8080-exec-1] c.r.identity.service.SessionService      : Failed to publish login event for user: jayaramnaik725@gmail.com
+[identity]
 [identity] java.lang.RuntimeException: java.io.IOException: Error Publishing: 503 No Responders Available For Request
 [identity]      at com.redstore.common.events.BasePublisher.publish(BasePublisher.java:33) ~[common-1.0-SNAPSHOT.jar!/:na]
 [identity]      at com.redstore.identity.service.SessionService.createSession(SessionService.java:65) ~[!/:na]
@@ -177,4 +180,4 @@ Watching for changes...
 [identity]      at io.nats.client.impl.NatsJetStream.publish(NatsJetStream.java:83) ~[jnats-2.20.0.jar!/:2.20.0]
 [identity]      at com.redstore.common.events.BasePublisher.publish(BasePublisher.java:29) ~[common-1.0-SNAPSHOT.jar!/:na]
 [identity]      ... 51 common frames omitted
-[identity] 
+[identity]
