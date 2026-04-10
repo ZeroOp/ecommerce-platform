@@ -60,3 +60,69 @@ spec:
             limits:
               cpu: "100m"
               memory: "128Mi"
+---
+# --- 3. JETSTREAM STREAM SETUP JOB ---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: nats-stream-setup
+spec:
+  backoffLimit: 5
+  template:
+    metadata:
+      labels:
+        app: nats-setup
+      spec:
+        restartPolicy: OnFailure
+        containers:
+          - name: nats-setup
+            image: natsio/nats-box:0.19.3
+            command:
+              - "sh"
+              - "-c"
+              - |
+                echo "Waiting for NATS cluster to be ready..."
+                until nats server check connection --server nats://nats-srv:4222; do
+                  echo "NATS not ready yet, retrying in 3s..."
+                  sleep 3
+                done
+                echo "NATS is ready. Creating JetStreamStreams..."
+
+                nats stream add IDENTITY \
+                  --server nats://nats-srv:4222 \
+                  --subjects "identity.>" \
+                  --retention limits \
+                  --max-msgs -1 \
+                  --max-bytes -1 \
+                  --max-age 72h \
+                  --storage file \
+                  --replicas 2 \
+                  --discard old \
+                  --defaults \
+                || echo "Identity stream may already exists , skipping..."
+
+                nats stream add PRODUCTS \
+                  --server nats://nats-srv:4222 \
+                  --subjects "products.>" \
+                  --retention limits \
+                  --max-msgs -1 \
+                  --max-bytes -1 \
+                  --max-age 72h \
+                  --storage file \
+                  --replicas 2 \
+                  --discard old \
+                  --defaults \
+                || echo "Products stream may already exists , skipping..."
+
+                nats stream add ORDERS \
+                  --server nats://nats-srv:4222 \
+                  --subjects "orders.>, payment.>" \
+                  --retention limits \
+                  --max-msgs -1 \
+                  --max-bytes -1 \
+                  --max-age 72h \
+                  --storage file \
+                  --replicas 2 \
+                  --discard old \
+                  --defaults \
+                || echo "Orders stream may already exists , skipping..."
