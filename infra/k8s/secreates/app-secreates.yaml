@@ -24,4 +24,4 @@ metadata:
 type: Opaque
 stringData:
   access-key: redstore_admin
-  secret-key: redstore_paaword
+  secret-key: redstore_password

@@ -2,8 +2,8 @@ package com.redstore.archiver.config;
 
 import io.nats.client.*;
 import io.nats.client.api.ConsumerConfiguration;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,7 +36,7 @@ public class NatsConfig {
         JetStreamSubscription identity = createPullSubscription(js, "IDENTITY", "archiver-identity", "identity.>");
         JetStreamSubscription products = createPullSubscription(js, "PRODUCTS", "archiver-products", "product.>");
         JetStreamSubscription orders = createPullSubscription(js, "ORDERS", "archiver-orders-order", "order.>");
-        JetStreamSubscription payments = createPullSubscription(js, "ORDERS", "archiver-orders-paymets", "payments.>");
+        JetStreamSubscription payments = createPullSubscription(js, "ORDERS", "archiver-orders-paymet", "payment.>");
 
         return List.of(identity, products, orders, payments);
     }

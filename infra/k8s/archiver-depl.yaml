@@ -14,22 +14,27 @@ spec:
     spec:
       containers:
         - name: archiver
-          image: zeroop/redstore-archiver-service
+          image: zeroop/redstore-archive-service
           env:
             - name: NATS_URL
-              value: "nats://nats-srv:4222"
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: NATS_URL
             - name: MINIO_ENDPOINT
               value: "http://minio-primary-srv:9000"
             - name: MINIO_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: minio-secrets
-                  key: accesskey
+                  key: access-key
             - name: MINIO_SECRET_KEY
               valueFrom:
                 secretKeyRef:
                   name: minio-secrets
                   key: secret-key
+            - name: MINIO_BUCKET
+              value: "redstore-events"
           resources:
             requests:
               cpu: "50m"

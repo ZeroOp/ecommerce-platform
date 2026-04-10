@@ -4,8 +4,8 @@ import io.nats.client.JetStreamSubscription;
 import io.nats.client.Message;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -44,7 +44,7 @@ public class EventArchiverService {
             log.info("Bucket '{}' already exists", bucketName);
         } catch (NoSuchBucketException e) {
             s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
-            log.info("Created bucket '${}', bucketName", bucketName);
+            log.info("Created bucket '{}'", bucketName);
         }
     }
 
@@ -77,7 +77,7 @@ public class EventArchiverService {
                         PutObjectRequest.builder()
                                 .bucket(bucketName)
                                 .key(key)
-                                .contentType("application/xndjson")
+                                .contentType("application/x-ndjson")
                                 .build(),
                         RequestBody.fromString(jsonlContent)
                 );
@@ -122,6 +122,6 @@ public class EventArchiverService {
                 event,
                 now.format(DATE_PATH),
                 now.format(TIME_PREFIX),
-                UUID.randomUUID().toString().substring(0,0));
+                UUID.randomUUID().toString().substring(0,8));
     }
 }

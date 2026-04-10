@@ -116,7 +116,7 @@ spec:
 
               nats stream add ORDERS \
                 --server nats://nats-srv:4222 \
-                --subjects "order.>, payment.>" \
+                --subjects "order.>,payment.>" \
                 --retention limits \
                 --max-msgs=-1 \
                 --max-bytes=-1 \

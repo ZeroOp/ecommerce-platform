@@ -1,4 +1,4 @@
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
 COPY pom.xml .
@@ -12,7 +12,7 @@ COPY services/archive-service/src services/archive-service/src
 
 RUN mvn clean package -DskipTests -pl services/archive-service -am
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/services/archive-service/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
