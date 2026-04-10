@@ -1,7 +1,20 @@
-[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 29
-[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 30
-[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 31
-[client] 2026/04/10 07:54:14 [notice] 1#1: start worker process 32
+[client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
+[client] 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
+[client] 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
+[client] /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
+[client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
+[client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
+[client] /docker-entrypoint.sh: Configuration complete; ready for start up
+[client] 2026/04/10 08:03:16 [notice] 1#1: using the "epoll" event method
+[client] 2026/04/10 08:03:16 [notice] 1#1: nginx/1.29.8
+[client] 2026/04/10 08:03:16 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0)
+[client] 2026/04/10 08:03:16 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
+[client] 2026/04/10 08:03:16 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+[client] 2026/04/10 08:03:16 [notice] 1#1: start worker processes
+[client] 2026/04/10 08:03:16 [notice] 1#1: start worker process 28
+[client] 2026/04/10 08:03:16 [notice] 1#1: start worker process 29
+[client] 2026/04/10 08:03:16 [notice] 1#1: start worker process 30
+[client] 2026/04/10 08:03:16 [notice] 1#1: start worker process 31
  - zeroop/redstore-identity-service
 Press Ctrl+C to exit
 [identity]
@@ -14,30 +27,30 @@ Press Ctrl+C to exit
 [identity]
 [identity]  :: Spring Boot ::                (v3.4.0)
 [identity]
+[identity] 2026-04-10T08:03:20.019Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
 Watching for changes...
-[identity] 2026-04-10T07:54:18.423Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
-[identity] 2026-04-10T07:54:18.431Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
-[identity] 2026-04-10T07:54:21.620Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-10T07:54:21.625Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-[identity] 2026-04-10T07:54:21.933Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 284 ms. Found 1 JPA repository interface.
-[identity] 2026-04-10T07:54:21.995Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-10T07:54:21.997Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-[identity] 2026-04-10T07:54:22.072Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-[identity] 2026-04-10T07:54:22.075Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
-[identity] 2026-04-10T07:54:23.401Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[identity] 2026-04-10T07:54:23.432Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[identity] 2026-04-10T07:54:23.432Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
-[identity] 2026-04-10T07:54:23.510Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[identity] 2026-04-10T07:54:23.516Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 4788 ms
-[identity] 2026-04-10T07:54:23.824Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-[identity] 2026-04-10T07:54:24.072Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
-[identity] 2026-04-10T07:54:24.160Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-[identity] 2026-04-10T07:54:24.728Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-[identity] 2026-04-10T07:54:24.798Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-[identity] 2026-04-10T07:54:25.718Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@333a44f2
-[identity] 2026-04-10T07:54:25.721Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-[identity] 2026-04-10T07:54:25.819Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-[identity] 2026-04-10T07:54:25.898Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+[identity] 2026-04-10T08:03:20.027Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
+[identity] 2026-04-10T08:03:22.247Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-10T08:03:22.251Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[identity] 2026-04-10T08:03:22.635Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 350 ms. Found 1 JPA repository interface.
+[identity] 2026-04-10T08:03:22.698Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-10T08:03:22.704Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[identity] 2026-04-10T08:03:22.758Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+[identity] 2026-04-10T08:03:22.759Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 16 ms. Found 0 Redis repository interfaces.
+[identity] 2026-04-10T08:03:23.931Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+[identity] 2026-04-10T08:03:23.954Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[identity] 2026-04-10T08:03:23.955Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+[identity] 2026-04-10T08:03:24.036Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[identity] 2026-04-10T08:03:24.042Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3846 ms
+[identity] 2026-04-10T08:03:24.374Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+[identity] 2026-04-10T08:03:24.591Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+[identity] 2026-04-10T08:03:24.677Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+[identity] 2026-04-10T08:03:25.211Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+[identity] 2026-04-10T08:03:25.286Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[identity] 2026-04-10T08:03:25.952Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@280d5a82
+[identity] 2026-04-10T08:03:25.959Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[identity] 2026-04-10T08:03:26.036Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+[identity] 2026-04-10T08:03:26.138Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 [identity]      Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 [identity]      Database driver: undefined/unknown
 [identity]      Database version: 16.13
@@ -45,398 +58,180 @@ Watching for changes...
 [identity]      Isolation level: undefined/unknown
 [identity]      Minimum pool size: undefined/unknown
 [identity]      Maximum pool size: undefined/unknown
-[identity] 2026-04-10T07:54:27.541Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-[identity] 2026-04-10T07:54:27.669Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-[identity] 2026-04-10T07:54:29.277Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-[identity] 2026-04-10T07:54:31.258Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-[identity] 2026-04-10T07:54:31.298Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 14.47 seconds (process running for 17.041)
-[client] 10.1.3.249 - - [10/Apr/2026:07:54:36 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[client] 10.1.3.249 - - [10/Apr/2026:07:54:36 +0000] "GET /styles-5INURTSO.css HTTP/1.1" 200 0 "https://redstore.zeroop.dev/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[client] 10.1.3.249 - - [10/Apr/2026:07:54:36 +0000] "GET /main-KVWE4FJC.js HTTP/1.1" 200 122601 "https://redstore.zeroop.dev/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
-[identity] 2026-04-10T07:54:45.534Z  INFO 1 --- [nio-8080-exec-1] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1775807677505,"i_e":{"enable_itp_optimization":0}}] that contained an invalid cookie. That cookie will be ignored.
+[identity] 2026-04-10T08:03:27.589Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[identity] 2026-04-10T08:03:27.646Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+[identity] 2026-04-10T08:03:28.638Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[identity] 2026-04-10T08:03:29.268Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+[identity] 2026-04-10T08:03:29.285Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 10.793 seconds (process running for 12.072)
+[client] 10.1.3.249 - - [10/Apr/2026:08:05:17 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[client] 10.1.3.249 - - [10/Apr/2026:08:05:32 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[client] 10.1.3.249 - - [10/Apr/2026:08:05:41 +0000] "GET / HTTP/1.1" 200 519 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36" "192.168.65.3"
+[identity] 2026-04-10T08:06:18.479Z  INFO 1 --- [nio-8080-exec-1] o.apache.tomcat.util.http.parser.Cookie  : A cookie header was received [g_state={"i_l":0,"i_ll":1775808343455,"i_e":{"enable_itp_optimization":0}}] that contained an invalid cookie. That cookie will be ignored.
 [identity]  Note: further occurrences of this error will be logged at DEBUG level.
-[identity] 2026-04-10T07:54:45.547Z  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-[identity] 2026-04-10T07:54:45.548Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-[identity] 2026-04-10T07:54:45.551Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+[identity] 2026-04-10T08:06:18.494Z  INFO 1 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+[identity] 2026-04-10T08:06:18.495Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+[identity] 2026-04-10T08:06:18.503Z  INFO 1 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 6 ms
 [identity] Hibernate: select u1_0.id,u1_0.created_at,u1_0.email,u1_0.is_active,u1_0.password,u1_0.role from users u1_0 where u1_0.email=?
-[identity] 2026-04-10T07:54:47.326Z  INFO 1 --- [nio-8080-exec-1] c.r.identity.service.SessionService      : Attempting to publish login event for user: jayaramnaik725@gmail.com
-[identity] 2026-04-10T07:54:47.345Z ERROR 1 --- [nio-8080-exec-1] c.redstore.common.events.BasePublisher   : Failed to publish event to NATS
-[identity]
-[identity] java.io.IOException: Error Publishing: 503 No Responders Available For Request
-[identity]      at io.nats.client.impl.NatsJetStream.processPublishResponse(NatsJetStream.java:181) ~[jnats-2.20.0.jar!/:2.20.0]
-[identity]      at io.nats.client.impl.NatsJetStream.publishSyncInternal(NatsJetStream.java:156) ~[jnats-2.20.0.jar!/:2.20.0]
-[identity]      at io.nats.client.impl.NatsJetStream.publish(NatsJetStream.java:83) ~[jnats-2.20.0.jar!/:2.20.0]
-[identity]      at com.redstore.common.events.BasePublisher.publish(BasePublisher.java:29) ~[common-1.0-SNAPSHOT.jar!/:na]
-[identity]      at com.redstore.identity.service.SessionService.createSession(SessionService.java:65) ~[!/:na]
-[identity]      at com.redstore.identity.controller.AuthController.googleLogin(AuthController.java:43) ~[!/:na]
-[identity]      at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
-[identity]      at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
-[identity]      at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.33.jar!/:6.0.0]
-[identity]      at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.33.jar!/:6.0.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.valves.RemoteIpValve.invoke(RemoteIpValve.java:731) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
-[identity]
-[identity] 2026-04-10T07:54:47.352Z ERROR 1 --- [nio-8080-exec-1] c.r.identity.service.SessionService      : Failed to publish login event for user: jayaramnaik725@gmail.com
-[identity]
-[identity] java.lang.RuntimeException: java.io.IOException: Error Publishing: 503 No Responders Available For Request
-[identity]      at com.redstore.common.events.BasePublisher.publish(BasePublisher.java:33) ~[common-1.0-SNAPSHOT.jar!/:na]
-[identity]      at com.redstore.identity.service.SessionService.createSession(SessionService.java:65) ~[!/:na]
-[identity]      at com.redstore.identity.controller.AuthController.googleLogin(AuthController.java:43) ~[!/:na]
-[identity]      at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
-[identity]      at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
-[identity]      at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:986) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:891) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1088) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:978) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590) ~[tomcat-embed-core-10.1.33.jar!/:6.0.0]
-[identity]      at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.2.0.jar!/:6.2.0]
-[identity]      at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.33.jar!/:6.0.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.2.0.jar!/:6.2.0]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.valves.RemoteIpValve.invoke(RemoteIpValve.java:731) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:397) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:905) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63) ~[tomcat-embed-core-10.1.33.jar!/:na]
-[identity]      at java.base/java.lang.Thread.run(Unknown Source) ~[na:na]
-[identity] Caused by: java.io.IOException: Error Publishing: 503 No Responders Available For Request
-[identity]      at io.nats.client.impl.NatsJetStream.processPublishResponse(NatsJetStream.java:181) ~[jnats-2.20.0.jar!/:2.20.0]
-[identity]      at io.nats.client.impl.NatsJetStream.publishSyncInternal(NatsJetStream.java:156) ~[jnats-2.20.0.jar!/:2.20.0]
-[identity]      at io.nats.client.impl.NatsJetStream.publish(NatsJetStream.java:83) ~[jnats-2.20.0.jar!/:2.20.0]
-[identity]      at com.redstore.common.events.BasePublisher.publish(BasePublisher.java:29) ~[common-1.0-SNAPSHOT.jar!/:na]
-[identity]      ... 51 common frames omitted
-[identity]S C:\Users\mudav\Desktop\Projects\ecommerce-platform> kubectl logs job/nats-stream-setup
-          Waiting for NATS cluster to be ready...
-          OK Connection OK:connected to nats://nats-srv:4222 in 16.928452ms OK:rtt time 784.434µs OK:round trip took 0.003342s | connect_time=0.0169s;0.5000;1.0000 rtt=0.0008s;0.5000;1.0000 request_time=0.0033s;0.5000;1.0000
-          NATS is ready. Creating JetStreamStreams...
-          error: expected argument for flag '--max-msgs'
+[identity] 2026-04-10T08:06:20.672Z  INFO 1 --- [nio-8080-exec-1] c.r.identity.service.SessionService      : Attempting to publish login event for user: jayaramnaik725@gmail.com
+[identity] 2026-04-10T08:06:20.693Z  INFO 1 --- [nio-8080-exec-1] c.redstore.common.events.BasePublisher   : [EVENT PUBLISHED]: identity.user.login
+[identity] 2026-04-10T08:06:20.694Z  INFO 1 --- [nio-8080-exec-1] c.r.identity.service.SessionService      : Successfully published login event for user: jayaramnaik725@gmail.com
 
-          usage: nats stream add [<flags>] [<stream>]
 
-          Create a new Stream
 
-          Args:
-            [<stream>]  Stream name
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> kubectl logs job/nats-stream-setup
+Waiting for NATS cluster to be ready...
+OK Connection OK:connected to nats://nats-srv:4222 in 6.624022ms OK:rtt time 104.784µs OK:round trip took 0.002362s | connect_time=0.0066s;0.5000;1.0000 rtt=0.0001s;0.5000;1.0000 request_time=0.0024s;0.5000;1.0000
+NATS is ready. Creating JetStreamStreams...
+Stream IDENTITY was created
 
-          Flags:
-                --config=CONFIG            JSON file to read configuration from
-                --validate                 Only validates the configuration against the
-                                           official Schema
-                --output=FILE              Save configuration instead of creating
-                --subjects=SUBJECTS ...    Subjects that are consumed by the Stream
-                --description=DESCRIPTION  Sets a contextual description for the stream
-                --storage=STORAGE          Storage backend to use (file, memory)
-                --compression=COMPRESSION  Compression algorithm to use (file storage
-                                           only)
-                --replicas=REPLICAS        When clustered, how many replicas of the data
-                                           to create
-                --tag=TAG ...              Place the stream on servers that has specific
-                                           tags (pass multiple times)
-                --cluster=CLUSTER          Place the stream on a specific cluster
-                --[no-]ack                 Acknowledge publishes
-                --retention=RETENTION      Defines a retention policy (limits, interest,
-                                           work)
-                --discard=DISCARD          Defines the discard policy (new, old)
-                --[no-]discard-per-subject
-                                           Sets the 'new' discard policy and applies it to
-                                           every subject in the stream
-                --first-sequence=FIRST-SEQUENCE
-                                           Sets the starting sequence
-                --max-age=""               Maximum age of messages to keep
-                --max-bytes=BYTES          Maximum bytes to keep
-                --max-consumers=-1         Maximum number of consumers to allow
-                --max-msg-size=BYTES       Maximum size any 1 message may be
-                --max-msgs=0               Maximum amount of messages to keep
-                --max-msgs-per-subject=0   Maximum amount of messages to keep per subject
-                --dupe-window=""           Duration of the duplicate message tracking
-                                           window
-                --mirror=MIRROR            Completely mirror another stream
-                --source=STREAM ...        Source data from other Streams, merging into
-                                           this one
-                --[no-]allow-batch         Allow atomic batch publishing
-                --allow-counter            Configures the Stream as a distributed counter
-                --[no-]allow-rollup        Allows roll-ups to be done by publishing
-                                           messages with special headers
-                --[no-]deny-delete         Deny messages from being deleted via the API
-                --[no-]deny-purge          Deny entire stream or subject purges via the
-                                           API
-                --[no-]allow-direct        Allows fast, direct, access to stream data via
-                                           the direct get API
-                --[no-]allow-mirror-direct
-                                           Allows fast, direct, access to stream data via
-                                           the direct get API on mirrors
-                --allow-msg-ttl            Allows per-message TTL handling
-                --[no-]allow-schedules     Allows message schedules
-                --subject-del-markers-ttl=DURATION
-                                           How long delete markers should persist in the
-                                           Stream
-                --transform-source=SOURCE  Stream subject transform source
-                --transform-destination=DEST
-                                           Stream subject transform destination
-                --metadata=META ...        Adds metadata to the stream
-                --republish-source=SOURCE  Republish messages to --republish-destination
-                --republish-destination=DEST
-                                           Republish destination for messages in
-                                           --republish-source
-                --republish-headers        Republish only message headers, no bodies
-                --limit-consumer-inactive=THRESHOLD
-                                           The maximum Consumer inactive threshold the
-                                           Stream allows
-                --limit-consumer-max-pending=PENDING
-                                           The maximum Consumer Ack Pending the stream
-                                           Allows
-                --persist-mode=PERSIST-MODE
-                                           Configures the persistence mode
-            -j, --json                     Produce JSON output
-                --defaults                 Accept default values for all prompts
+Information for Stream IDENTITY created 2026-04-10 08:02:09
 
-          Command Aliases: create, new
+                Subjects: identity.>
+                Replicas: 2
+                 Storage: File
 
-          Pass --help to see global flags applicable to this command.
-          Identity stream may already exists , skipping...
-          error: expected argument for flag '--max-msgs'
+Options:
 
-          usage: nats stream add [<flags>] [<stream>]
+               Retention: Limits
+         Acknowledgments: true
+          Discard Policy: Old
+        Duplicate Window: 2m0s
+              Direct Get: true
+    Allows Batch Publish: false
+         Allows Counters: false
+       Allows Msg Delete: true
+  Allows Per-Message TTL: false
+            Allows Purge: true
+        Allows Schedules: false
+          Allows Rollups: false
 
-          Create a new Stream
+Limits:
 
-          Args:
-            [<stream>]  Stream name
+        Maximum Messages: unlimited
+     Maximum Per Subject: unlimited
+           Maximum Bytes: unlimited
+             Maximum Age: 3d0h0m0s
+    Maximum Message Size: unlimited
+       Maximum Consumers: unlimited
 
-          Flags:
-                --config=CONFIG            JSON file to read configuration from
-                --validate                 Only validates the configuration against the
-                                           official Schema
-                --output=FILE              Save configuration instead of creating
-                --subjects=SUBJECTS ...    Subjects that are consumed by the Stream
-                --description=DESCRIPTION  Sets a contextual description for the stream
-                --storage=STORAGE          Storage backend to use (file, memory)
-                --compression=COMPRESSION  Compression algorithm to use (file storage
-                                           only)
-                --replicas=REPLICAS        When clustered, how many replicas of the data
-                                           to create
-                --tag=TAG ...              Place the stream on servers that has specific
-                                           tags (pass multiple times)
-                --cluster=CLUSTER          Place the stream on a specific cluster
-                --[no-]ack                 Acknowledge publishes
-                --retention=RETENTION      Defines a retention policy (limits, interest,
-                                           work)
-                --discard=DISCARD          Defines the discard policy (new, old)
-                --[no-]discard-per-subject
-                                           Sets the 'new' discard policy and applies it to
-                                           every subject in the stream
-                --first-sequence=FIRST-SEQUENCE
-                                           Sets the starting sequence
-                --max-age=""               Maximum age of messages to keep
-                --max-bytes=BYTES          Maximum bytes to keep
-                --max-consumers=-1         Maximum number of consumers to allow
-                --max-msg-size=BYTES       Maximum size any 1 message may be
-                --max-msgs=0               Maximum amount of messages to keep
-                --max-msgs-per-subject=0   Maximum amount of messages to keep per subject
-                --dupe-window=""           Duration of the duplicate message tracking
-                                           window
-                --mirror=MIRROR            Completely mirror another stream
-                --source=STREAM ...        Source data from other Streams, merging into
-                                           this one
-                --[no-]allow-batch         Allow atomic batch publishing
-                --allow-counter            Configures the Stream as a distributed counter
-                --[no-]allow-rollup        Allows roll-ups to be done by publishing
-                                           messages with special headers
-                --[no-]deny-delete         Deny messages from being deleted via the API
-                --[no-]deny-purge          Deny entire stream or subject purges via the
-                                           API
-                --[no-]allow-direct        Allows fast, direct, access to stream data via
-                                           the direct get API
-                --[no-]allow-mirror-direct
-                                           Allows fast, direct, access to stream data via
-                                           the direct get API on mirrors
-                --allow-msg-ttl            Allows per-message TTL handling
-                --[no-]allow-schedules     Allows message schedules
-                --subject-del-markers-ttl=DURATION
-                                           How long delete markers should persist in the
-                                           Stream
-                --transform-source=SOURCE  Stream subject transform source
-                --transform-destination=DEST
-                                           Stream subject transform destination
-                --metadata=META ...        Adds metadata to the stream
-                --republish-source=SOURCE  Republish messages to --republish-destination
-                --republish-destination=DEST
-                                           Republish destination for messages in
-                                           --republish-source
-                --republish-headers        Republish only message headers, no bodies
-                --limit-consumer-inactive=THRESHOLD
-                                           The maximum Consumer inactive threshold the
-                                           Stream allows
-                --limit-consumer-max-pending=PENDING
-                                           The maximum Consumer Ack Pending the stream
-                                           Allows
-                --persist-mode=PERSIST-MODE
-                                           Configures the persistence mode
-            -j, --json                     Produce JSON output
-                --defaults                 Accept default values for all prompts
+Cluster Information:
 
-          Command Aliases: create, new
+                    Name: REDSTORE_NATS
+           Cluster Group: S-R2F-1kzGUkWO
+                  Leader: nats-1
+                 Replica: nats-0, current, seen 262µs ago
 
-          Pass --help to see global flags applicable to this command.
-          Products stream may already exists , skipping...
-          error: expected argument for flag '--max-msgs'
+State:
 
-          usage: nats stream add [<flags>] [<stream>]
+                Messages: 0
+                   Bytes: 0 B
+          First Sequence: 0
+           Last Sequence: 0
+        Active Consumers: 0
+Stream PRODUCTS was created
 
-          Create a new Stream
+Information for Stream PRODUCTS created 2026-04-10 08:02:09
 
-          Args:
-            [<stream>]  Stream name
+                Subjects: product.>
+                Replicas: 2
+                 Storage: File
 
-          Flags:
-                --config=CONFIG            JSON file to read configuration from
-                --validate                 Only validates the configuration against the
-                                           official Schema
-                --output=FILE              Save configuration instead of creating
-                --subjects=SUBJECTS ...    Subjects that are consumed by the Stream
-                --description=DESCRIPTION  Sets a contextual description for the stream
-                --storage=STORAGE          Storage backend to use (file, memory)
-                --compression=COMPRESSION  Compression algorithm to use (file storage
-                                           only)
-                --replicas=REPLICAS        When clustered, how many replicas of the data
-                                           to create
-                --tag=TAG ...              Place the stream on servers that has specific
-                                           tags (pass multiple times)
-                --cluster=CLUSTER          Place the stream on a specific cluster
-                --[no-]ack                 Acknowledge publishes
-                --retention=RETENTION      Defines a retention policy (limits, interest,
-                                           work)
-                --discard=DISCARD          Defines the discard policy (new, old)
-                --[no-]discard-per-subject
-                                           Sets the 'new' discard policy and applies it to
-                                           every subject in the stream
-                --first-sequence=FIRST-SEQUENCE
-                                           Sets the starting sequence
-                --max-age=""               Maximum age of messages to keep
-                --max-bytes=BYTES          Maximum bytes to keep
-                --max-consumers=-1         Maximum number of consumers to allow
-                --max-msg-size=BYTES       Maximum size any 1 message may be
-                --max-msgs=0               Maximum amount of messages to keep
-                --max-msgs-per-subject=0   Maximum amount of messages to keep per subject
-                --dupe-window=""           Duration of the duplicate message tracking
-                                           window
-                --mirror=MIRROR            Completely mirror another stream
-                --source=STREAM ...        Source data from other Streams, merging into
-                                           this one
-                --[no-]allow-batch         Allow atomic batch publishing
-                --allow-counter            Configures the Stream as a distributed counter
-                --[no-]allow-rollup        Allows roll-ups to be done by publishing
-                                           messages with special headers
-                --[no-]deny-delete         Deny messages from being deleted via the API
-                --[no-]deny-purge          Deny entire stream or subject purges via the
-                                           API
-                --[no-]allow-direct        Allows fast, direct, access to stream data via
-                                           the direct get API
-                --[no-]allow-mirror-direct
-                                           Allows fast, direct, access to stream data via
-                                           the direct get API on mirrors
-                --allow-msg-ttl            Allows per-message TTL handling
-                --[no-]allow-schedules     Allows message schedules
-                --subject-del-markers-ttl=DURATION
-                                           How long delete markers should persist in the
-                                           Stream
-                --transform-source=SOURCE  Stream subject transform source
-                --transform-destination=DEST
-                                           Stream subject transform destination
-                --metadata=META ...        Adds metadata to the stream
-                --republish-source=SOURCE  Republish messages to --republish-destination
-                --republish-destination=DEST
-                                           Republish destination for messages in
-                                           --republish-source
-                --republish-headers        Republish only message headers, no bodies
-                --limit-consumer-inactive=THRESHOLD
-                                           The maximum Consumer inactive threshold the
-                                           Stream allows
-                --limit-consumer-max-pending=PENDING
-                                           The maximum Consumer Ack Pending the stream
-                                           Allows
-                --persist-mode=PERSIST-MODE
-                                           Configures the persistence mode
-            -j, --json                     Produce JSON output
-                --defaults                 Accept default values for all prompts
+Options:
 
-          Command Aliases: create, new
+               Retention: Limits
+         Acknowledgments: true
+          Discard Policy: Old
+        Duplicate Window: 2m0s
+              Direct Get: true
+    Allows Batch Publish: false
+         Allows Counters: false
+       Allows Msg Delete: true
+  Allows Per-Message TTL: false
+            Allows Purge: true
+        Allows Schedules: false
+          Allows Rollups: false
 
-          Pass --help to see global flags applicable to this command.
-          Orders stream may already exists , skipping...
-          PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> 
+Limits:
+
+        Maximum Messages: unlimited
+     Maximum Per Subject: unlimited
+           Maximum Bytes: unlimited
+             Maximum Age: 3d0h0m0s
+    Maximum Message Size: unlimited
+       Maximum Consumers: unlimited
+
+Cluster Information:
+
+                    Name: REDSTORE_NATS
+           Cluster Group: S-R2F-7IDUClGa
+                  Leader: nats-0
+                 Replica: nats-2, current, seen 335µs ago
+
+State:
+
+                Messages: 0
+                   Bytes: 0 B
+          First Sequence: 0
+           Last Sequence: 0
+        Active Consumers: 0
+Stream ORDERS was created
+
+Information for Stream ORDERS created 2026-04-10 08:02:09
+
+                Subjects: order.>, payment.>
+                Replicas: 2
+                 Storage: File
+
+Options:
+
+               Retention: Limits
+         Acknowledgments: true
+          Discard Policy: Old
+        Duplicate Window: 2m0s
+              Direct Get: true
+    Allows Batch Publish: false
+         Allows Counters: false
+       Allows Msg Delete: true
+  Allows Per-Message TTL: false
+            Allows Purge: true
+        Allows Schedules: false
+          Allows Rollups: false
+
+Limits:
+
+        Maximum Messages: unlimited
+     Maximum Per Subject: unlimited
+           Maximum Bytes: unlimited
+             Maximum Age: 3d0h0m0s
+    Maximum Message Size: unlimited
+       Maximum Consumers: unlimited
+
+Cluster Information:
+
+                    Name: REDSTORE_NATS
+           Cluster Group: S-R2F-2WHjY3nk
+                  Leader: nats-2
+                 Replica: nats-1, current, seen 845µs ago
+
+State:
+
+                Messages: 0
+                   Bytes: 0 B
+          First Sequence: 0
+           Last Sequence: 0
+        Active Consumers: 0
+Stream setup complete.
+Obtaining Stream stats
+
+╭─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                        Stream Report                                                        │
+├─────────────────┬─────────┬───────────┬───────────┬──────────┬───────┬──────┬─────────┬───────────┬─────────────────────────┤
+│ Stream          │ Storage │ Placement │ Consumers │ Messages │ Bytes │ Lost │ Deleted │ API Level │ Replicas                │
+├─────────────────┼─────────┼───────────┼───────────┼──────────┼───────┼──────┼─────────┼───────────┼─────────────────────────┤
+│ IDENTITY        │ File    │           │ 0         │ 0        │ 0 B   │ 0    │ 0       │ 0         │ nats-0, nats-1*         │
+│ ORDERS          │ File    │           │ 0         │ 0        │ 0 B   │ 0    │ 0       │ 0         │ nats-1, nats-2*         │
+│ PRODUCTS        │ File    │           │ 0         │ 0        │ 0 B   │ 0    │ 0       │ 0         │ nats-0*, nats-2         │
+│ REDSTORE_EVENTS │ File    │           │ 1         │ 1        │ 69 B  │ 0    │ 0       │ 0         │ nats-0*, nats-1, nats-2 │
+╰─────────────────┴─────────┴───────────┴───────────┴──────────┴───────┴──────┴─────────┴───────────┴─────────────────────────╯
+
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> 

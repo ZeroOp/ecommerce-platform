@@ -92,37 +92,40 @@ spec:
                 --server nats://nats-srv:4222 \
                 --subjects "identity.>" \
                 --retention limits \
-                --max-msgs -1 \
-                --max-bytes -1 \
+                --max-msgs=-1 \
+                --max-bytes=-1 \
                 --max-age 72h \
                 --storage file \
                 --replicas 2 \
                 --discard old \
                 --defaults \
-              || echo "Identity stream may already exists , skipping..."
+              || echo "IDENTITY stream may already exists , skipping..."
 
               nats stream add PRODUCTS \
                 --server nats://nats-srv:4222 \
                 --subjects "product.>" \
                 --retention limits \
-                --max-msgs -1 \
-                --max-bytes -1 \
+                --max-msgs=-1 \
+                --max-bytes=-1 \
                 --max-age 72h \
                 --storage file \
                 --replicas 2 \
                 --discard old \
                 --defaults \
-              || echo "Products stream may already exists , skipping..."
+              || echo "PRODUCTS stream may already exists , skipping..."
 
               nats stream add ORDERS \
                 --server nats://nats-srv:4222 \
                 --subjects "order.>, payment.>" \
                 --retention limits \
-                --max-msgs -1 \
-                --max-bytes -1 \
+                --max-msgs=-1 \
+                --max-bytes=-1 \
                 --max-age 72h \
                 --storage file \
                 --replicas 2 \
                 --discard old \
                 --defaults \
-              || echo "Orders stream may already exists , skipping..."
+              || echo "ORDERS stream may already exists , skipping..."
+
+              echo "Stream setup complete."
+              nats stream report --server nats://nats-srv:4222
