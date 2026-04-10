@@ -180,4 +180,263 @@ Watching for changes...
 [identity]      at io.nats.client.impl.NatsJetStream.publish(NatsJetStream.java:83) ~[jnats-2.20.0.jar!/:2.20.0]
 [identity]      at com.redstore.common.events.BasePublisher.publish(BasePublisher.java:29) ~[common-1.0-SNAPSHOT.jar!/:na]
 [identity]      ... 51 common frames omitted
-[identity]
+[identity]S C:\Users\mudav\Desktop\Projects\ecommerce-platform> kubectl logs job/nats-stream-setup
+          Waiting for NATS cluster to be ready...
+          OK Connection OK:connected to nats://nats-srv:4222 in 16.928452ms OK:rtt time 784.434µs OK:round trip took 0.003342s | connect_time=0.0169s;0.5000;1.0000 rtt=0.0008s;0.5000;1.0000 request_time=0.0033s;0.5000;1.0000
+          NATS is ready. Creating JetStreamStreams...
+          error: expected argument for flag '--max-msgs'
+
+          usage: nats stream add [<flags>] [<stream>]
+
+          Create a new Stream
+
+          Args:
+            [<stream>]  Stream name
+
+          Flags:
+                --config=CONFIG            JSON file to read configuration from
+                --validate                 Only validates the configuration against the
+                                           official Schema
+                --output=FILE              Save configuration instead of creating
+                --subjects=SUBJECTS ...    Subjects that are consumed by the Stream
+                --description=DESCRIPTION  Sets a contextual description for the stream
+                --storage=STORAGE          Storage backend to use (file, memory)
+                --compression=COMPRESSION  Compression algorithm to use (file storage
+                                           only)
+                --replicas=REPLICAS        When clustered, how many replicas of the data
+                                           to create
+                --tag=TAG ...              Place the stream on servers that has specific
+                                           tags (pass multiple times)
+                --cluster=CLUSTER          Place the stream on a specific cluster
+                --[no-]ack                 Acknowledge publishes
+                --retention=RETENTION      Defines a retention policy (limits, interest,
+                                           work)
+                --discard=DISCARD          Defines the discard policy (new, old)
+                --[no-]discard-per-subject
+                                           Sets the 'new' discard policy and applies it to
+                                           every subject in the stream
+                --first-sequence=FIRST-SEQUENCE
+                                           Sets the starting sequence
+                --max-age=""               Maximum age of messages to keep
+                --max-bytes=BYTES          Maximum bytes to keep
+                --max-consumers=-1         Maximum number of consumers to allow
+                --max-msg-size=BYTES       Maximum size any 1 message may be
+                --max-msgs=0               Maximum amount of messages to keep
+                --max-msgs-per-subject=0   Maximum amount of messages to keep per subject
+                --dupe-window=""           Duration of the duplicate message tracking
+                                           window
+                --mirror=MIRROR            Completely mirror another stream
+                --source=STREAM ...        Source data from other Streams, merging into
+                                           this one
+                --[no-]allow-batch         Allow atomic batch publishing
+                --allow-counter            Configures the Stream as a distributed counter
+                --[no-]allow-rollup        Allows roll-ups to be done by publishing
+                                           messages with special headers
+                --[no-]deny-delete         Deny messages from being deleted via the API
+                --[no-]deny-purge          Deny entire stream or subject purges via the
+                                           API
+                --[no-]allow-direct        Allows fast, direct, access to stream data via
+                                           the direct get API
+                --[no-]allow-mirror-direct
+                                           Allows fast, direct, access to stream data via
+                                           the direct get API on mirrors
+                --allow-msg-ttl            Allows per-message TTL handling
+                --[no-]allow-schedules     Allows message schedules
+                --subject-del-markers-ttl=DURATION
+                                           How long delete markers should persist in the
+                                           Stream
+                --transform-source=SOURCE  Stream subject transform source
+                --transform-destination=DEST
+                                           Stream subject transform destination
+                --metadata=META ...        Adds metadata to the stream
+                --republish-source=SOURCE  Republish messages to --republish-destination
+                --republish-destination=DEST
+                                           Republish destination for messages in
+                                           --republish-source
+                --republish-headers        Republish only message headers, no bodies
+                --limit-consumer-inactive=THRESHOLD
+                                           The maximum Consumer inactive threshold the
+                                           Stream allows
+                --limit-consumer-max-pending=PENDING
+                                           The maximum Consumer Ack Pending the stream
+                                           Allows
+                --persist-mode=PERSIST-MODE
+                                           Configures the persistence mode
+            -j, --json                     Produce JSON output
+                --defaults                 Accept default values for all prompts
+
+          Command Aliases: create, new
+
+          Pass --help to see global flags applicable to this command.
+          Identity stream may already exists , skipping...
+          error: expected argument for flag '--max-msgs'
+
+          usage: nats stream add [<flags>] [<stream>]
+
+          Create a new Stream
+
+          Args:
+            [<stream>]  Stream name
+
+          Flags:
+                --config=CONFIG            JSON file to read configuration from
+                --validate                 Only validates the configuration against the
+                                           official Schema
+                --output=FILE              Save configuration instead of creating
+                --subjects=SUBJECTS ...    Subjects that are consumed by the Stream
+                --description=DESCRIPTION  Sets a contextual description for the stream
+                --storage=STORAGE          Storage backend to use (file, memory)
+                --compression=COMPRESSION  Compression algorithm to use (file storage
+                                           only)
+                --replicas=REPLICAS        When clustered, how many replicas of the data
+                                           to create
+                --tag=TAG ...              Place the stream on servers that has specific
+                                           tags (pass multiple times)
+                --cluster=CLUSTER          Place the stream on a specific cluster
+                --[no-]ack                 Acknowledge publishes
+                --retention=RETENTION      Defines a retention policy (limits, interest,
+                                           work)
+                --discard=DISCARD          Defines the discard policy (new, old)
+                --[no-]discard-per-subject
+                                           Sets the 'new' discard policy and applies it to
+                                           every subject in the stream
+                --first-sequence=FIRST-SEQUENCE
+                                           Sets the starting sequence
+                --max-age=""               Maximum age of messages to keep
+                --max-bytes=BYTES          Maximum bytes to keep
+                --max-consumers=-1         Maximum number of consumers to allow
+                --max-msg-size=BYTES       Maximum size any 1 message may be
+                --max-msgs=0               Maximum amount of messages to keep
+                --max-msgs-per-subject=0   Maximum amount of messages to keep per subject
+                --dupe-window=""           Duration of the duplicate message tracking
+                                           window
+                --mirror=MIRROR            Completely mirror another stream
+                --source=STREAM ...        Source data from other Streams, merging into
+                                           this one
+                --[no-]allow-batch         Allow atomic batch publishing
+                --allow-counter            Configures the Stream as a distributed counter
+                --[no-]allow-rollup        Allows roll-ups to be done by publishing
+                                           messages with special headers
+                --[no-]deny-delete         Deny messages from being deleted via the API
+                --[no-]deny-purge          Deny entire stream or subject purges via the
+                                           API
+                --[no-]allow-direct        Allows fast, direct, access to stream data via
+                                           the direct get API
+                --[no-]allow-mirror-direct
+                                           Allows fast, direct, access to stream data via
+                                           the direct get API on mirrors
+                --allow-msg-ttl            Allows per-message TTL handling
+                --[no-]allow-schedules     Allows message schedules
+                --subject-del-markers-ttl=DURATION
+                                           How long delete markers should persist in the
+                                           Stream
+                --transform-source=SOURCE  Stream subject transform source
+                --transform-destination=DEST
+                                           Stream subject transform destination
+                --metadata=META ...        Adds metadata to the stream
+                --republish-source=SOURCE  Republish messages to --republish-destination
+                --republish-destination=DEST
+                                           Republish destination for messages in
+                                           --republish-source
+                --republish-headers        Republish only message headers, no bodies
+                --limit-consumer-inactive=THRESHOLD
+                                           The maximum Consumer inactive threshold the
+                                           Stream allows
+                --limit-consumer-max-pending=PENDING
+                                           The maximum Consumer Ack Pending the stream
+                                           Allows
+                --persist-mode=PERSIST-MODE
+                                           Configures the persistence mode
+            -j, --json                     Produce JSON output
+                --defaults                 Accept default values for all prompts
+
+          Command Aliases: create, new
+
+          Pass --help to see global flags applicable to this command.
+          Products stream may already exists , skipping...
+          error: expected argument for flag '--max-msgs'
+
+          usage: nats stream add [<flags>] [<stream>]
+
+          Create a new Stream
+
+          Args:
+            [<stream>]  Stream name
+
+          Flags:
+                --config=CONFIG            JSON file to read configuration from
+                --validate                 Only validates the configuration against the
+                                           official Schema
+                --output=FILE              Save configuration instead of creating
+                --subjects=SUBJECTS ...    Subjects that are consumed by the Stream
+                --description=DESCRIPTION  Sets a contextual description for the stream
+                --storage=STORAGE          Storage backend to use (file, memory)
+                --compression=COMPRESSION  Compression algorithm to use (file storage
+                                           only)
+                --replicas=REPLICAS        When clustered, how many replicas of the data
+                                           to create
+                --tag=TAG ...              Place the stream on servers that has specific
+                                           tags (pass multiple times)
+                --cluster=CLUSTER          Place the stream on a specific cluster
+                --[no-]ack                 Acknowledge publishes
+                --retention=RETENTION      Defines a retention policy (limits, interest,
+                                           work)
+                --discard=DISCARD          Defines the discard policy (new, old)
+                --[no-]discard-per-subject
+                                           Sets the 'new' discard policy and applies it to
+                                           every subject in the stream
+                --first-sequence=FIRST-SEQUENCE
+                                           Sets the starting sequence
+                --max-age=""               Maximum age of messages to keep
+                --max-bytes=BYTES          Maximum bytes to keep
+                --max-consumers=-1         Maximum number of consumers to allow
+                --max-msg-size=BYTES       Maximum size any 1 message may be
+                --max-msgs=0               Maximum amount of messages to keep
+                --max-msgs-per-subject=0   Maximum amount of messages to keep per subject
+                --dupe-window=""           Duration of the duplicate message tracking
+                                           window
+                --mirror=MIRROR            Completely mirror another stream
+                --source=STREAM ...        Source data from other Streams, merging into
+                                           this one
+                --[no-]allow-batch         Allow atomic batch publishing
+                --allow-counter            Configures the Stream as a distributed counter
+                --[no-]allow-rollup        Allows roll-ups to be done by publishing
+                                           messages with special headers
+                --[no-]deny-delete         Deny messages from being deleted via the API
+                --[no-]deny-purge          Deny entire stream or subject purges via the
+                                           API
+                --[no-]allow-direct        Allows fast, direct, access to stream data via
+                                           the direct get API
+                --[no-]allow-mirror-direct
+                                           Allows fast, direct, access to stream data via
+                                           the direct get API on mirrors
+                --allow-msg-ttl            Allows per-message TTL handling
+                --[no-]allow-schedules     Allows message schedules
+                --subject-del-markers-ttl=DURATION
+                                           How long delete markers should persist in the
+                                           Stream
+                --transform-source=SOURCE  Stream subject transform source
+                --transform-destination=DEST
+                                           Stream subject transform destination
+                --metadata=META ...        Adds metadata to the stream
+                --republish-source=SOURCE  Republish messages to --republish-destination
+                --republish-destination=DEST
+                                           Republish destination for messages in
+                                           --republish-source
+                --republish-headers        Republish only message headers, no bodies
+                --limit-consumer-inactive=THRESHOLD
+                                           The maximum Consumer inactive threshold the
+                                           Stream allows
+                --limit-consumer-max-pending=PENDING
+                                           The maximum Consumer Ack Pending the stream
+                                           Allows
+                --persist-mode=PERSIST-MODE
+                                           Configures the persistence mode
+            -j, --json                     Produce JSON output
+                --defaults                 Accept default values for all prompts
+
+          Command Aliases: create, new
+
+          Pass --help to see global flags applicable to this command.
+          Orders stream may already exists , skipping...
+          PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> 
