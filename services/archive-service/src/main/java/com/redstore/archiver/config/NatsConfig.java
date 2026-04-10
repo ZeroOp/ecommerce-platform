@@ -41,6 +41,8 @@ public class NatsConfig {
         return List.of(identity, products, orders, payments);
     }
 
+    private static final int MAX_RETRIES = 10;
+    private static final long RETRY_DELAY_MS = 30000;
     private JetStreamSubscription createPullSubscription(JetStream js, String stream, String durable, String subject) throws Exception {
         ConsumerConfiguration cc = ConsumerConfiguration.builder()
                 .durable(durable)
@@ -52,7 +54,19 @@ public class NatsConfig {
                 .configuration(cc)
                 .build();
 
-        log.info("Creating pull subscription: stream={}, durable={} , subjects={}", stream, durable, subject);
-        return js.subscribe(subject, opts);
+        for (int attempt =1 ; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                log.info("Creating pull subscription (attempt {}): stream={}, durable={}, subject={}", attempt, stream,durable, subject);
+                return js.subscribe(subject, opts);
+            } catch (Exception e) {
+                if (attempt == MAX_RETRIES) {
+                    log.error("Failed to create subscritpion after {} attempts: stream={}, durable={}, subject={}", MAX_RETRIES, stream,durable, subject);
+                    throw e;
+                }
+                log.warn("Subscription attempt {} failed for stream={}, durable={}, subject={}", attempt, stream,durable, subject);
+                Thread.sleep(RETRY_DELAY_MS);
+            }
+        }
+        throw  new IllegalStateException("Unreachable");
     }
 }

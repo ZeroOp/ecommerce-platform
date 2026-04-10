@@ -1,6 +1,7 @@
-zeroop/redstore-client
-[identity] --- Starting Validation for: Identity-Service ---
-[identity] --- All 7 secrets verified. ---
+[client] 2026/04/10 12:42:11 [notice] 1#1: start worker process 32
+ - zeroop/redstore-identity-service
+ - zeroop/redstore-archive-service
+Press Ctrl+C to exit
 [identity]
 [identity]   .   ____          _            __ _ _
 [identity]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -11,29 +12,30 @@ zeroop/redstore-client
 [identity]
 [identity]  :: Spring Boot ::                (v3.4.0)
 [identity]
-[identity] 2026-04-10T12:26:19.256Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
-[identity] 2026-04-10T12:26:19.261Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
-[identity] 2026-04-10T12:26:23.817Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-10T12:26:23.821Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-[identity] 2026-04-10T12:26:24.339Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 493 ms. Found 1 JPA repository interface.
-[identity] 2026-04-10T12:26:24.365Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
-[identity] 2026-04-10T12:26:24.366Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
-[identity] 2026-04-10T12:26:24.393Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
-[identity] 2026-04-10T12:26:24.393Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 8 ms. Found 0 Redis repository interfaces.
-[identity] 2026-04-10T12:26:25.736Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[identity] 2026-04-10T12:26:25.786Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[identity] 2026-04-10T12:26:25.786Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
-[identity] 2026-04-10T12:26:26.484Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[identity] 2026-04-10T12:26:26.486Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 7002 ms
-[identity] 2026-04-10T12:26:26.675Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-[identity] 2026-04-10T12:26:26.757Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
-[identity] 2026-04-10T12:26:26.799Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-[identity] 2026-04-10T12:26:27.350Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-[identity] 2026-04-10T12:26:27.389Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-[identity] 2026-04-10T12:26:28.033Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6b2e9db2
-[identity] 2026-04-10T12:26:28.036Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-[identity] 2026-04-10T12:26:28.099Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-[identity] 2026-04-10T12:26:28.127Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+Watching for changes...
+[identity] 2026-04-10T12:42:17.795Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Starting IdentityApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+[identity] 2026-04-10T12:42:17.840Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : No active profile set, falling back to 1 default profile: "default"
+[identity] 2026-04-10T12:42:21.536Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-10T12:42:21.538Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[identity] 2026-04-10T12:42:21.762Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 204 ms. Found 1 JPA repository interface.
+[identity] 2026-04-10T12:42:21.804Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+[identity] 2026-04-10T12:42:21.806Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+[identity] 2026-04-10T12:42:21.854Z  INFO 1 --- [           main] .RepositoryConfigurationExtensionSupport : Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.redstore.identity.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+[identity] 2026-04-10T12:42:21.854Z  INFO 1 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 14 ms. Found 0 Redis repository interfaces.
+[identity] 2026-04-10T12:42:23.283Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+[identity] 2026-04-10T12:42:23.370Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[identity] 2026-04-10T12:42:23.370Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+[identity] 2026-04-10T12:42:23.466Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[identity] 2026-04-10T12:42:23.470Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5135 ms
+[identity] 2026-04-10T12:42:24.278Z  INFO 1 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+[identity] 2026-04-10T12:42:24.481Z  INFO 1 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.2.Final
+[identity] 2026-04-10T12:42:24.570Z  INFO 1 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+[identity] 2026-04-10T12:42:25.366Z  INFO 1 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+[identity] 2026-04-10T12:42:25.425Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+[identity] 2026-04-10T12:42:26.602Z  INFO 1 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@333a44f2
+[identity] 2026-04-10T12:42:26.607Z  INFO 1 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+[identity] 2026-04-10T12:42:26.694Z  WARN 1 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+[identity] 2026-04-10T12:42:26.758Z  INFO 1 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 [identity]      Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 [identity]      Database driver: undefined/unknown
 [identity]      Database version: 16.13
@@ -41,34 +43,8 @@ zeroop/redstore-client
 [identity]      Isolation level: undefined/unknown
 [identity]      Minimum pool size: undefined/unknown
 [identity]      Maximum pool size: undefined/unknown
-[identity] 2026-04-10T12:26:30.075Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-[identity] 2026-04-10T12:26:30.162Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-[identity] 2026-04-10T12:26:31.249Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-[identity] 2026-04-10T12:26:31.980Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-[identity] 2026-04-10T12:26:31.997Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 14.818 seconds (process running for 16.154)
-[client] /docker-entrypoint.sh: /docker-entrypoint.d/ is not empty, will attempt to perform configuration
-[client] /docker-entrypoint.sh: Looking for shell scripts in /docker-entrypoint.d/
-[client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/10-listen-on-ipv6-by-default.sh
-[client] 10-listen-on-ipv6-by-default.sh: info: Getting the checksum of /etc/nginx/conf.d/default.conf
-[client] 10-listen-on-ipv6-by-default.sh: info: /etc/nginx/conf.d/default.conf differs from the packaged version
-[client] /docker-entrypoint.sh: Sourcing /docker-entrypoint.d/15-local-resolvers.envsh
-[client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/20-envsubst-on-templates.sh
-[client] /docker-entrypoint.sh: Launching /docker-entrypoint.d/30-tune-worker-processes.sh
-[client] /docker-entrypoint.sh: Configuration complete; ready for start up
-[client] 2026/04/10 12:26:14 [notice] 1#1: using the "epoll" event method
-[client] 2026/04/10 12:26:14 [notice] 1#1: nginx/1.29.8
-[client] 2026/04/10 12:26:14 [notice] 1#1: built by gcc 15.2.0 (Alpine 15.2.0)
-[client] 2026/04/10 12:26:14 [notice] 1#1: OS: Linux 6.6.87.2-microsoft-standard-WSL2
-[client] 2026/04/10 12:26:14 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
-[client] 2026/04/10 12:26:14 [notice] 1#1: start worker processes
-[client] 2026/04/10 12:26:14 [notice] 1#1: start worker process 30
-[client] 2026/04/10 12:26:14 [notice] 1#1: start worker process 31
-[client] 2026/04/10 12:26:14 [notice] 1#1: start worker process 32
-[client] 2026/04/10 12:26:14 [notice] 1#1: start worker process 33
- - zeroop/redstore-identity-service
- - zeroop/redstore-archive-service
-Press Ctrl+C to exit
-Watching for changes...
+[identity] 2026-04-10T12:42:31.742Z  INFO 1 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+[identity] 2026-04-10T12:42:31.984Z  INFO 1 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
 [archiver]
 [archiver]   .   ____          _            __ _ _
 [archiver]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -79,107 +55,20 @@ Watching for changes...
 [archiver]
 [archiver]  :: Spring Boot ::                (v3.4.0)
 [archiver]
-[archiver] 2026-04-10T12:27:42.628Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : Starting ArchiverApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
-[archiver] 2026-04-10T12:27:42.689Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : No active profile set, falling back to 1 default profile: "default"
-[archiver] 2026-04-10T12:27:57.725Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[archiver] 2026-04-10T12:27:57.926Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[archiver] 2026-04-10T12:27:57.926Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
-[archiver] 2026-04-10T12:28:00.580Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[archiver] 2026-04-10T12:28:00.641Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 17055 ms
-[archiver] 2026-04-10T12:28:05.646Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription: stream=IDENTITY, durable=archiver-identity , subjects=identity.>
-[archiver] 2026-04-10T12:28:06.470Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription: stream=PRODUCTS, durable=archiver-products , subjects=product.>
-[archiver] 2026-04-10T12:28:08.481Z  WARN 1 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'eventArchiverService' defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/redstore/archiver/service/EventArchiverService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'archiverSubscriptions' defined in class path resource [com/redstore/archiver/config/NatsConfig.class]: Failed to instantiate [java.util.List]: Factory method 'archiverSubscriptions' threw exception with message: Timeout or no response waiting for NATS JetStream server
-[archiver] 2026-04-10T12:28:08.575Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
-[archiver] 2026-04-10T12:28:08.693Z  INFO 1 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger :
-[archiver]
-[archiver] Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
-[archiver] 2026-04-10T12:28:09.086Z ERROR 1 --- [           main] o.s.boot.SpringApplication               : Application run failed
-[archiver]
-[archiver] org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'eventArchiverService' defined in URL [jar:nested:/app/app.jar/!BOOT-INF/classes/!/com/redstore/archiver/service/EventArchiverService.class]: Unsatisfied dependency expressed through constructor parameter 0: Error creating bean with name 'archiverSubscriptions' defined in class path resource [com/redstore/archiver/config/NatsConfig.class]: Failed to instantiate [java.util.List]: Factory method 'archiverSubscriptions' threw exception with message: Timeout or no response waiting for NATS JetStream server
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:804) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.autowireConstructor(ConstructorResolver.java:240) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireConstructor(AbstractAutowireCapableBeanFactory.java:1371) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1208) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:563) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:336) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:288) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:334) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultListableBeanFactory.instantiateSingleton(DefaultListableBeanFactory.java:1122) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingleton(DefaultListableBeanFactory.java:1093) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:1030) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:987) ~[spring-context-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:627) ~[spring-context-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146) ~[spring-boot-3.4.0.jar!/:3.4.0]
-[archiver]      at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:752) ~[spring-boot-3.4.0.jar!/:3.4.0]
-[archiver]      at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:439) ~[spring-boot-3.4.0.jar!/:3.4.0]
-[archiver]      at org.springframework.boot.SpringApplication.run(SpringApplication.java:318) ~[spring-boot-3.4.0.jar!/:3.4.0]
-[archiver]      at org.springframework.boot.SpringApplication.run(SpringApplication.java:1361) ~[spring-boot-3.4.0.jar!/:3.4.0]
-[archiver]      at org.springframework.boot.SpringApplication.run(SpringApplication.java:1350) ~[spring-boot-3.4.0.jar!/:3.4.0]
-[archiver]      at com.redstore.archiver.ArchiverApplication.main(ArchiverApplication.java:11) ~[!/:na]
-[archiver]      at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
-[archiver]      at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
-[archiver]      at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:102) ~[app.jar:na]
-[archiver]      at org.springframework.boot.loader.launch.Launcher.launch(Launcher.java:64) ~[app.jar:na]
-[archiver]      at org.springframework.boot.loader.launch.JarLauncher.main(JarLauncher.java:40) ~[app.jar:na]
-[archiver] Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'archiverSubscriptions' defined in class path resource [com/redstore/archiver/config/NatsConfig.class]: Failed to instantiate [java.util.List]: Factory method 'archiverSubscriptions' threw exception with message: Timeout or no response waiting for NATS JetStream server
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:657) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:645) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1351) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1181) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:563) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:523) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:336) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:288) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:334) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:254) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1626) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1514) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.resolveAutowiredArgument(ConstructorResolver.java:913) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.createArgumentArray(ConstructorResolver.java:791) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      ... 26 common frames omitted
-[archiver] Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [java.util.List]: Factory method 'archiverSubscriptions' threw exception with message: Timeout or no response waiting for NATS JetStream server
-[archiver]      at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:199) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiateWithFactoryMethod(SimpleInstantiationStrategy.java:88) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:168) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:653) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      ... 40 common frames omitted
-[archiver] Caused by: java.io.IOException: Timeout or no response waiting for NATS JetStream server
-[archiver]      at io.nats.client.impl.NatsJetStreamImpl.responseRequired(NatsJetStreamImpl.java:249) ~[jnats-2.20.0.jar!/:2.20.0]
-[archiver]      at io.nats.client.impl.NatsJetStreamImpl.makeRequestResponseRequired(NatsJetStreamImpl.java:233) ~[jnats-2.20.0.jar!/:2.20.0]
-[archiver]      at io.nats.client.impl.NatsJetStreamImpl._createConsumer(NatsJetStreamImpl.java:122) ~[jnats-2.20.0.jar!/:2.20.0]
-[archiver]      at io.nats.client.impl.NatsJetStreamImpl._createConsumerUnsubscribeOnException(NatsJetStreamImpl.java:128) ~[jnats-2.20.0.jar!/:2.20.0]
-[archiver]      at io.nats.client.impl.NatsJetStream.createSubscription(NatsJetStream.java:487) ~[jnats-2.20.0.jar!/:2.20.0]
-[archiver]      at io.nats.client.impl.NatsJetStream.subscribe(NatsJetStream.java:640) ~[jnats-2.20.0.jar!/:2.20.0]
-[archiver]      at com.redstore.archiver.config.NatsConfig.createPullSubscription(NatsConfig.java:56) ~[!/:na]
-[archiver]      at com.redstore.archiver.config.NatsConfig.archiverSubscriptions(NatsConfig.java:37) ~[!/:na]
-[archiver]      at com.redstore.archiver.config.NatsConfig$$SpringCGLIB$$0.CGLIB$archiverSubscriptions$1(<generated>) ~[!/:na]
-[archiver]      at com.redstore.archiver.config.NatsConfig$$SpringCGLIB$$FastClass$$1.invoke(<generated>) ~[!/:na]
-[archiver]      at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:258) ~[spring-core-6.2.0.jar!/:6.2.0]
-[archiver]      at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:348) ~[spring-context-6.2.0.jar!/:6.2.0]
-[archiver]      at com.redstore.archiver.config.NatsConfig$$SpringCGLIB$$0.archiverSubscriptions(<generated>) ~[!/:na]
-[archiver]      at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Unknown Source) ~[na:na]
-[archiver]      at java.base/java.lang.reflect.Method.invoke(Unknown Source) ~[na:na]
-[archiver]      at org.springframework.beans.factory.support.SimpleInstantiationStrategy.lambda$instantiate$0(SimpleInstantiationStrategy.java:171) ~[spring-beans-6.2.0.jar!/:6.2.0]
-[archiver]      ... 43 common frames omitted
-[archiver]
-[archiver]
-[archiver]   .   ____          _            __ _ _
-[archiver]  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-[archiver] ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
-[archiver]  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-[archiver]   '  |____| .__|_| |_|_| |_\__, | / / / /
-[archiver]  =========|_|==============|___/=/_/_/_/
-[archiver]
-[archiver]  :: Spring Boot ::                (v3.4.0)
-[archiver]
-[archiver] 2026-04-10T12:28:24.146Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : Starting ArchiverApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
-[archiver] 2026-04-10T12:28:24.240Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : No active profile set, falling back to 1 default profile: "default"
-[archiver] 2026-04-10T12:28:42.350Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-[archiver] 2026-04-10T12:28:42.559Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-[archiver] 2026-04-10T12:28:42.647Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
-[archiver] 2026-04-10T12:28:44.058Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-[archiver] 2026-04-10T12:28:44.155Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 19015 ms
-[archiver] 2026-04-10T12:28:48.251Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription: stream=IDENTITY, durable=archiver-identity , subjects=identity.>
+[identity] 2026-04-10T12:42:33.482Z  WARN 1 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[archiver] 2026-04-10T12:42:33.835Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : Starting ArchiverApplication using Java 21.0.10 with PID 1 (/app/app.jar started by root in /app)
+[archiver] 2026-04-10T12:42:33.842Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : No active profile set, falling back to 1 default profile: "default"
+[identity] 2026-04-10T12:42:34.615Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+[identity] 2026-04-10T12:42:34.635Z  INFO 1 --- [           main] c.redstore.identity.IdentityApplication  : Started IdentityApplication in 19.414 seconds (process running for 21.885)
+[archiver] 2026-04-10T12:42:52.231Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+[archiver] 2026-04-10T12:42:52.529Z  INFO 1 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+[archiver] 2026-04-10T12:42:52.530Z  INFO 1 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.33]
+[archiver] 2026-04-10T12:42:54.439Z  INFO 1 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+[archiver] 2026-04-10T12:42:54.440Z  INFO 1 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 19406 ms
+[archiver] 2026-04-10T12:42:59.238Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription (attempt 1): stream=IDENTITY, durable=archiver-identity, subject=identity.>
+[archiver] 2026-04-10T12:42:59.634Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription (attempt 1): stream=PRODUCTS, durable=archiver-products, subject=product.>
+[archiver] 2026-04-10T12:42:59.693Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription (attempt 1): stream=ORDERS, durable=archiver-orders-order, subject=order.>
+[archiver] 2026-04-10T12:42:59.729Z  INFO 1 --- [           main] c.redstore.archiver.config.NatsConfig    : Creating pull subscription (attempt 1): stream=ORDERS, durable=archiver-orders-payment, subject=payment.>
+[archiver] 2026-04-10T12:43:13.227Z  INFO 1 --- [           main] c.r.a.service.EventArchiverService       : Bucket 'redstore-events' already exists
+[archiver] 2026-04-10T12:43:22.437Z  INFO 1 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+[archiver] 2026-04-10T12:43:22.729Z  INFO 1 --- [           main] c.redstore.archiver.ArchiverApplication  : Started ArchiverApplication in 60.37 seconds (process running for 68.795)
