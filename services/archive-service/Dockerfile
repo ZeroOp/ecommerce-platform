@@ -2,26 +2,34 @@
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
-# 2. Copy ONLY the POM files first.
-# Do NOT use 'COPY . .' yet. This is the secret to fixing the duplicate error.
+# 2. Copy the root POM and the common POM
 COPY pom.xml .
 COPY common/pom.xml common/
-COPY services/archive-service/pom.xml services/archive-service/
 
-# 3. Resolve dependencies.
-# This command only looks at the POMs we just copied.
-# It won't see any "ghost" target folders from your Windows machine.
+# 3. Copy ALL poms from the services directory
+# This satisfies Maven's module check for the entire project
+COPY services/ services/
+RUN find services -type f ! -name "pom.xml" -delete
+
+# 4. Resolve dependencies
+# We target the archive-service here
 RUN mvn dependency:go-offline -B -pl services/archive-service -am
 
-# 4. Now copy the actual source code
+# 5. Copy the actual source code needed for this build
 COPY common/src common/src
 COPY services/archive-service/src services/archive-service/src
 
-# 5. Build the JAR
+# 6. Build the JAR
 RUN mvn clean package -DskipTests -pl services/archive-service -am
 
-# 6. Final Runtime Stage
+# 7. Final Runtime Stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
+
+# Copy the built jar specifically from the archive-service target folder
 COPY --from=build /app/services/archive-service/target/*.jar app.jar
+
+# Adjust the port if your archive-service runs on a different one (e.g., 8082)
+EXPOSE 8082
+
 ENTRYPOINT ["java", "-jar", "app.jar"]

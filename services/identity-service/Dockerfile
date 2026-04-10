@@ -2,26 +2,34 @@
 FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
-# 2. Copy ONLY the POM files first.
-# Do NOT use 'COPY . .' yet. This is the secret to fixing the duplicate error.
+# 2. Copy the root POM and the common POM
 COPY pom.xml .
 COPY common/pom.xml common/
-COPY services/identity-service/pom.xml services/identity-service/
 
-# 3. Resolve dependencies.
-# This command only looks at the POMs we just copied.
-# It won't see any "ghost" target folders from your Windows machine.
+# 3. Copy ALL poms from the services directory
+# We copy the whole services folder but then quickly clean out
+# everything that isn't a pom.xml to keep the layer small.
+COPY services/ services/
+RUN find services -type f ! -name "pom.xml" -delete
+
+# 4. Resolve dependencies
+# Now Maven sees the folder structure:
+# /app/pom.xml
+# /app/common/pom.xml
+# /app/services/identity-service/pom.xml
+# /app/services/archive-service/pom.xml
 RUN mvn dependency:go-offline -B -pl services/identity-service -am
 
-# 4. Now copy the actual source code
+# 5. Now copy the actual source code
 COPY common/src common/src
 COPY services/identity-service/src services/identity-service/src
 
-# 5. Build the JAR
+# 6. Build the JAR
 RUN mvn clean package -DskipTests -pl services/identity-service -am
 
-# 6. Final Runtime Stage
+# 7. Final Runtime Stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=build /app/services/identity-service/target/*.jar app.jar
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
