@@ -1,15 +1,214 @@
-NatsConfig.java
+Users\mudav\Desktop\Projects\ecommerce-platform> cd .\services\
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform\services> cd .\archive-service\
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform\services\archive-service> docker build -t zeroop/redstore-archive-service .                                                                   
+[+] Building 2.8s (16/19)                                                                                                                                                                                      docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                                                                                           0.1s
+ => => transferring dockerfile: 1.00kB                                                                                                                                                                                         0.0s
+ => [internal] load metadata for docker.io/library/maven:3.9.6-eclipse-temurin-21-alpine                                                                                                                                       1.7s
+ => [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine                                                                                                                                               1.7s
+ => [auth] library/maven:pull token for registry-1.docker.io                                                                                                                                                                   0.0s
+ => [auth] library/eclipse-temurin:pull token for registry-1.docker.io                                                                                                                                                         0.0s
+ => [internal] load .dockerignore                                                                                                                                                                                              0.0s
+ => => transferring context: 2B                                                                                                                                                                                                0.0s
+ => [build 1/9] FROM docker.io/library/maven:3.9.6-eclipse-temurin-21-alpine@sha256:9fca6934e64eff26860889804faecb71a522d04b4ebf05574140c71f8e9bc700                                                                           0.1s
+ => => resolve docker.io/library/maven:3.9.6-eclipse-temurin-21-alpine@sha256:9fca6934e64eff26860889804faecb71a522d04b4ebf05574140c71f8e9bc700                                                                                 0.1s
+ => [internal] load build context                                                                                                                                                                                              0.0s
+ => => transferring context: 29B                                                                                                                                                                                               0.0s 
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d                                                                                 0.1s
+ => => resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d                                                                                         0.1s 
+ => CACHED CANCELED [build 2/9] WORKDIR /app                                                                                                                                                                                   0.0s 
+ => CACHED [build 3/9] COPY pom.xml .                                                                                                                                                                                          0.0s 
+ => ERROR [build 4/9] COPY common/pom.xml common/                                                                                                                                                                              0.0s 
+ => ERROR [build 5/9] COPY services/archive-service/pom.xml services/archive-service/                                                                                                                                          0.0s 
+ => CACHED [build 6/9] RUN mvn dependency:go-offline -B -pl services/archive-service -am                                                                                                                                       0.0s 
+ => ERROR [build 7/9] COPY common/src common/src                                                                                                                                                                               0.0s 
+ => ERROR [build 8/9] COPY services/archive-service/src services/archive-service/src                                                                                                                                           0.0s 
+------                                                                                                                                                                                                                              
+ > [build 4/9] COPY common/pom.xml common/:
+------
+------
+ > [build 5/9] COPY services/archive-service/pom.xml services/archive-service/:
+------
+------
+ > [build 7/9] COPY common/src common/src:
+------
+------
+ > [build 8/9] COPY services/archive-service/src services/archive-service/src:
+------
+Dockerfile:18
+--------------------
+  16 |     # 4. Now copy the actual source code
+  17 |     COPY common/src common/src
+  18 | >>> COPY services/archive-service/src services/archive-service/src
+  19 |     
+  20 |     # 5. Build the JAR
+--------------------
+ERROR: failed to build: failed to solve: failed to compute cache key: failed to calculate checksum of ref 1d9hylkxzyhst82348q0xpoml::a1w13voamq708nxz2hwfk3v5n: "/services/archive-service/src": not found
 
-Cannot find @interface method 'value()'
-Private field 'natsUrl' is never assigned
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ekzplt7jhcj5pvm06g56l5cgw
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform\services\archive-service> docker build -t zeroop/redstore-archive-service -f services/archive-service -f services/archive-service/Dockerfile .
 
-EventArchiverService.java
+[+] Building 0.0s (0/0)                                                                                                                                                                                        docker:desktop-linux
+ERROR: failed to build: resolve : GetFileAttributesEx services: The system cannot find the file specified.
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform\services\archive-service> cd ..
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform\services> cd ..
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> docker build -t zeroop/redstore-archive-service -f services/archive-service -f services/archive-service/Dockerfile .
+[+] Building 8.1s (12/17)                                                                                                                                                                                      docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                                                                                           0.1s
+ => => transferring dockerfile: 1.00kB                                                                                                                                                                                         0.0s 
+ => [internal] load metadata for docker.io/library/maven:3.9.6-eclipse-temurin-21-alpine                                                                                                                                       0.6s 
+ => [internal] load metadata for docker.io/library/eclipse-temurin:21-jre-alpine                                                                                                                                               0.6s
+ => [internal] load .dockerignore                                                                                                                                                                                              0.0s
+ => => transferring context: 2B                                                                                                                                                                                                0.0s 
+ => [build 1/9] FROM docker.io/library/maven:3.9.6-eclipse-temurin-21-alpine@sha256:9fca6934e64eff26860889804faecb71a522d04b4ebf05574140c71f8e9bc700                                                                           0.1s 
+ => => resolve docker.io/library/maven:3.9.6-eclipse-temurin-21-alpine@sha256:9fca6934e64eff26860889804faecb71a522d04b4ebf05574140c71f8e9bc700                                                                                 0.1s
+ => [internal] load build context                                                                                                                                                                                              0.0s
+ => => transferring context: 4.23kB                                                                                                                                                                                            0.0s 
+ => [stage-1 1/3] FROM docker.io/library/eclipse-temurin:21-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d                                                                                 0.1s
+ => => resolve docker.io/library/eclipse-temurin:21-jre-alpine@sha256:6ad8ed080d9be96b61438ec3ce99388e294af216ed57356000c06070e85c5d5d                                                                                         0.1s 
+ => CACHED [build 2/9] WORKDIR /app                                                                                                                                                                                            0.0s 
+ => CACHED [build 3/9] COPY pom.xml .                                                                                                                                                                                          0.0s
+ => CACHED [build 4/9] COPY common/pom.xml common/                                                                                                                                                                             0.0s 
+ => CACHED [build 5/9] COPY services/archive-service/pom.xml services/archive-service/                                                                                                                                         0.0s 
+ => ERROR [build 6/9] RUN mvn dependency:go-offline -B -pl services/archive-service -am                                                                                                                                        6.8s 
+------                                                                                                                                                                                                                              
+ > [build 6/9] RUN mvn dependency:go-offline -B -pl services/archive-service -am:
+2.170 [INFO] Scanning for projects...
+2.415 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-dependencies/3.4.0/spring-boot-dependencies-3.4.0.pom
+2.996 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-dependencies/3.4.0/spring-boot-dependencies-3.4.0.pom (97 kB at 166 kB/s)
+3.028 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/activemq/activemq-bom/6.1.4/activemq-bom-6.1.4.pom
+3.094 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/activemq/activemq-bom/6.1.4/activemq-bom-6.1.4.pom (7.9 kB at 121 kB/s)
+3.105 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/activemq/artemis-bom/2.37.0/artemis-bom-2.37.0.pom
+3.164 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/activemq/artemis-bom/2.37.0/artemis-bom-2.37.0.pom (9.6 kB at 163 kB/s)
+3.170 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/activemq/artemis-project/2.37.0/artemis-project-2.37.0.pom
+3.234 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/activemq/artemis-project/2.37.0/artemis-project-2.37.0.pom (57 kB at 894 kB/s)
+3.246 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/apache/33/apache-33.pom
+3.306 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/apache/33/apache-33.pom (24 kB at 403 kB/s)
+3.322 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/assertj/assertj-bom/3.26.3/assertj-bom-3.26.3.pom
+3.373 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/assertj/assertj-bom/3.26.3/assertj-bom-3.26.3.pom (3.7 kB at 68 kB/s)
+3.378 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/zipkin/reporter2/zipkin-reporter-bom/3.4.2/zipkin-reporter-bom-3.4.2.pom
+3.443 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/zipkin/reporter2/zipkin-reporter-bom/3.4.2/zipkin-reporter-bom-3.4.2.pom (6.4 kB at 100 kB/s)
+3.447 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/zipkin/brave/brave-bom/6.0.3/brave-bom-6.0.3.pom
+3.501 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/zipkin/brave/brave-bom/6.0.3/brave-bom-6.0.3.pom (11 kB at 207 kB/s)
+3.507 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/cassandra/java-driver-bom/4.18.1/java-driver-bom-4.18.1.pom
+3.566 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/cassandra/java-driver-bom/4.18.1/java-driver-bom-4.18.1.pom (5.5 kB at 93 kB/s)
+3.571 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/glassfish/jaxb/jaxb-bom/4.0.5/jaxb-bom-4.0.5.pom
+3.624 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/glassfish/jaxb/jaxb-bom/4.0.5/jaxb-bom-4.0.5.pom (12 kB at 216 kB/s)
+3.629 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/ee4j/project/1.0.9/project-1.0.9.pom
+3.704 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/ee4j/project/1.0.9/project-1.0.9.pom (16 kB at 215 kB/s)
+3.711 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/groovy/groovy-bom/4.0.24/groovy-bom-4.0.24.pom
+3.772 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/groovy/groovy-bom/4.0.24/groovy-bom-4.0.24.pom (27 kB at 440 kB/s)
+3.783 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/infinispan/infinispan-bom/15.0.11.Final/infinispan-bom-15.0.11.Final.pom
+3.836 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/infinispan/infinispan-bom/15.0.11.Final/infinispan-bom-15.0.11.Final.pom (18 kB at 343 kB/s)
+3.844 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/infinispan/infinispan-build-configuration-parent/15.0.11.Final/infinispan-build-configuration-parent-15.0.11.Final.pom
+3.905 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/infinispan/infinispan-build-configuration-parent/15.0.11.Final/infinispan-build-configuration-parent-15.0.11.Final.pom (19 kB at 318 kB/s)
+3.915 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/jboss/jboss-parent/43/jboss-parent-43.pom
+3.976 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/jboss/jboss-parent/43/jboss-parent-43.pom (75 kB at 1.2 MB/s)
+3.992 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.18.1/jackson-bom-2.18.1.pom
+4.049 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-bom/2.18.1/jackson-bom-2.18.1.pom (19 kB at 317 kB/s)
+4.053 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom
+4.098 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/fasterxml/jackson/jackson-parent/2.18.1/jackson-parent-2.18.1.pom (6.7 kB at 152 kB/s)
+4.103 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom
+4.156 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/fasterxml/oss-parent/61/oss-parent-61.pom (23 kB at 426 kB/s)
+4.172 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-bom/3.1.9/jersey-bom-3.1.9.pom
+4.230 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/glassfish/jersey/jersey-bom/3.1.9/jersey-bom-3.1.9.pom (21 kB at 352 kB/s)
+4.241 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/jetty/ee10/jetty-ee10-bom/12.0.15/jetty-ee10-bom-12.0.15.pom
+4.307 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/jetty/ee10/jetty-ee10-bom/12.0.15/jetty-ee10-bom-12.0.15.pom (9.6 kB at 145 kB/s)
+4.313 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-bom/12.0.15/jetty-bom-12.0.15.pom
+4.382 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/eclipse/jetty/jetty-bom/12.0.15/jetty-bom-12.0.15.pom (14 kB at 206 kB/s)
+4.386 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.11.3/junit-bom-5.11.3.pom
+4.434 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/junit/junit-bom/5.11.3/junit-bom-5.11.3.pom (5.6 kB at 123 kB/s)
+4.443 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-bom/1.9.25/kotlin-bom-1.9.25.pom
+4.499 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-bom/1.9.25/kotlin-bom-1.9.25.pom (9.1 kB at 163 kB/s)
+4.508 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-bom/1.8.1/kotlinx-coroutines-bom-1.8.1.pom
+4.555 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-bom/1.8.1/kotlinx-coroutines-bom-1.8.1.pom (4.3 kB at 89 kB/s)
+4.567 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-bom/1.6.3/kotlinx-serialization-bom-1.6.3.pom
+4.618 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-serialization-bom/1.6.3/kotlinx-serialization-bom-1.6.3.pom (3.7 kB at 78 kB/s)
+4.628 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-bom/2.24.1/log4j-bom-2.24.1.pom
+4.682 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-bom/2.24.1/log4j-bom-2.24.1.pom (12 kB at 227 kB/s)
+4.692 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/logging/logging-parent/11.3.0/logging-parent-11.3.0.pom
+4.749 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/logging/logging-parent/11.3.0/logging-parent-11.3.0.pom (53 kB at 902 kB/s)
+4.767 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-bom/1.14.1/micrometer-bom-1.14.1.pom
+4.844 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-bom/1.14.1/micrometer-bom-1.14.1.pom (8.6 kB at 111 kB/s)
+4.855 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-tracing-bom/1.4.0/micrometer-tracing-bom-1.4.0.pom
+4.899 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-tracing-bom/1.4.0/micrometer-tracing-bom-1.4.0.pom (4.5 kB at 100 kB/s)
+4.905 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-bom/1.14.0/micrometer-bom-1.14.0.pom
+4.953 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/micrometer/micrometer-bom/1.14.0/micrometer-bom-1.14.0.pom (8.6 kB at 179 kB/s)
+4.968 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/mockito/mockito-bom/5.14.2/mockito-bom-5.14.2.pom
+5.029 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/mockito/mockito-bom/5.14.2/mockito-bom-5.14.2.pom (3.0 kB at 50 kB/s)
+5.031 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/netty/netty-bom/4.1.115.Final/netty-bom-4.1.115.Final.pom
+5.097 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/netty/netty-bom/4.1.115.Final/netty-bom-4.1.115.Final.pom (14 kB at 211 kB/s)
+5.103 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/sonatype/oss/oss-parent/7/oss-parent-7.pom
+5.175 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/sonatype/oss/oss-parent/7/oss-parent-7.pom (4.8 kB at 65 kB/s)
+5.202 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-bom/1.43.0/opentelemetry-bom-1.43.0.pom
+5.259 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/opentelemetry/opentelemetry-bom/1.43.0/opentelemetry-bom-1.43.0.pom (5.9 kB at 101 kB/s)
+5.265 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/prometheus/prometheus-metrics-bom/1.3.3/prometheus-metrics-bom-1.3.3.pom
+5.324 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/prometheus/prometheus-metrics-bom/1.3.3/prometheus-metrics-bom-1.3.3.pom (5.1 kB at 86 kB/s)
+5.328 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/prometheus/client_java/1.3.3/client_java-1.3.3.pom
+5.385 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/prometheus/client_java/1.3.3/client_java-1.3.3.pom (20 kB at 351 kB/s)
+5.391 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/prometheus/simpleclient_bom/0.16.0/simpleclient_bom-0.16.0.pom
+5.439 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/prometheus/simpleclient_bom/0.16.0/simpleclient_bom-0.16.0.pom (6.0 kB at 123 kB/s)
+5.444 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/prometheus/parent/0.16.0/parent-0.16.0.pom
+5.490 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/prometheus/parent/0.16.0/parent-0.16.0.pom (13 kB at 261 kB/s)
+5.495 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/pulsar/pulsar-bom/3.3.2/pulsar-bom-3.3.2.pom
+5.552 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/pulsar/pulsar-bom/3.3.2/pulsar-bom-3.3.2.pom (26 kB at 447 kB/s)
+5.561 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/apache/apache/29/apache-29.pom
+5.628 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/apache/apache/29/apache-29.pom (21 kB at 351 kB/s)
+5.635 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/com/querydsl/querydsl-bom/5.1.0/querydsl-bom-5.1.0.pom
+5.702 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/com/querydsl/querydsl-bom/5.1.0/querydsl-bom-5.1.0.pom (7.2 kB at 108 kB/s)
+5.711 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/projectreactor/reactor-bom/2024.0.0/reactor-bom-2024.0.0.pom
+5.778 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/projectreactor/reactor-bom/2024.0.0/reactor-bom-2024.0.0.pom (4.8 kB at 71 kB/s)
+5.782 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/rest-assured/rest-assured-bom/5.5.0/rest-assured-bom-5.5.0.pom
+5.842 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/rest-assured/rest-assured-bom/5.5.0/rest-assured-bom-5.5.0.pom (5.0 kB at 85 kB/s)
+5.848 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/io/rsocket/rsocket-bom/1.1.3/rsocket-bom-1.1.3.pom
+5.919 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/io/rsocket/rsocket-bom/1.1.3/rsocket-bom-1.1.3.pom (2.6 kB at 37 kB/s)
+5.923 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/seleniumhq/selenium/selenium-bom/4.25.0/selenium-bom-4.25.0.pom
+5.993 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/seleniumhq/selenium/selenium-bom/4.25.0/selenium-bom-4.25.0.pom (6.0 kB at 87 kB/s)
+6.007 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/amqp/spring-amqp-bom/3.2.0/spring-amqp-bom-3.2.0.pom
+6.067 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/amqp/spring-amqp-bom/3.2.0/spring-amqp-bom-3.2.0.pom (3.9 kB at 64 kB/s)
+6.075 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/batch/spring-batch-bom/5.2.0/spring-batch-bom-5.2.0.pom
+6.130 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/batch/spring-batch-bom/5.2.0/spring-batch-bom-5.2.0.pom (3.2 kB at 59 kB/s)
+6.144 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-bom/2024.1.0/spring-data-bom-2024.1.0.pom
+6.211 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-bom/2024.1.0/spring-data-bom-2024.1.0.pom (5.5 kB at 87 kB/s)
+6.211 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/spring-framework-bom/6.2.0/spring-framework-bom-6.2.0.pom
+6.277 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/spring-framework-bom/6.2.0/spring-framework-bom-6.2.0.pom (5.8 kB at 83 kB/s)
+6.281 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/integration/spring-integration-bom/6.4.0/spring-integration-bom-6.4.0.pom
+6.342 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/integration/spring-integration-bom/6.4.0/spring-integration-bom-6.4.0.pom (10 kB at 168 kB/s)
+6.347 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/pulsar/spring-pulsar-bom/1.2.0/spring-pulsar-bom-1.2.0.pom
+6.393 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/pulsar/spring-pulsar-bom/1.2.0/spring-pulsar-bom-1.2.0.pom (2.9 kB at 62 kB/s)
+6.408 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/restdocs/spring-restdocs-bom/3.0.3/spring-restdocs-bom-3.0.3.pom
+6.472 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/restdocs/spring-restdocs-bom/3.0.3/spring-restdocs-bom-3.0.3.pom (2.6 kB at 41 kB/s)
+6.478 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/security/spring-security-bom/6.4.1/spring-security-bom-6.4.1.pom
+6.540 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/security/spring-security-bom/6.4.1/spring-security-bom-6.4.1.pom (5.3 kB at 90 kB/s)
+6.545 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/session/spring-session-bom/3.4.0/spring-session-bom-3.4.0.pom
+6.611 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/session/spring-session-bom/3.4.0/spring-session-bom-3.4.0.pom (2.9 kB at 44 kB/s)
+6.617 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/ws/spring-ws-bom/4.0.11/spring-ws-bom-4.0.11.pom
+6.680 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/ws/spring-ws-bom/4.0.11/spring-ws-bom-4.0.11.pom (3.5 kB at 55 kB/s)
+6.687 [INFO] Downloading from central: https://repo.maven.apache.org/maven2/org/testcontainers/testcontainers-bom/1.20.4/testcontainers-bom-1.20.4.pom
+6.734 [INFO] Downloaded from central: https://repo.maven.apache.org/maven2/org/testcontainers/testcontainers-bom/1.20.4/testcontainers-bom-1.20.4.pom (11 kB at 231 kB/s)
+6.743 [ERROR] [ERROR] Some problems were encountered while processing the POMs:
+6.743 [ERROR] Child module /app/services/identity-service of /app/pom.xml does not exist @ 
+6.743  @ 
+6.743 [ERROR] The build could not read 1 project -> [Help 1]
+6.743 [ERROR]   
+6.743 [ERROR]   The project com.redstore:ecommerce-platform:1.0-SNAPSHOT (/app/pom.xml) has 1 error
+6.743 [ERROR]     Child module /app/services/identity-service of /app/pom.xml does not exist
+6.743 [ERROR] 
+6.745 [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+6.745 [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+6.745 [ERROR] 
+6.745 [ERROR] For more information about the errors and possible solutions, please read the following articles:
+6.746 [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/ProjectBuildingException
+------
+Dockerfile:14
+--------------------
+  12 |     # This command only looks at the POMs we just copied.
+  13 |     # It won't see any "ghost" target folders from your Windows machine.
+  14 | >>> RUN mvn dependency:go-offline -B -pl services/archive-service -am
+  15 |     
+  16 |     # 4. Now copy the actual source code
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c mvn dependency:go-offline -B -pl services/archive-service -am" did not complete successfully: exit code: 1
 
-Cannot find @interface method 'value()'
-Cannot find @interface method 'value()'
-Private field 'bucketName' is never assigned
-Private field 'batchSize' is never assigned
-Typo: In word 'evetns'
-
-
-
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/hhg2otq6xcg3td6rk4wb5miv1
+PS C:\Users\mudav\Desktop\Projects\ecommerce-platform> 

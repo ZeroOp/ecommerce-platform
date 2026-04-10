@@ -36,7 +36,7 @@ public class NatsConfig {
         JetStreamSubscription identity = createPullSubscription(js, "IDENTITY", "archiver-identity", "identity.>");
         JetStreamSubscription products = createPullSubscription(js, "PRODUCTS", "archiver-products", "product.>");
         JetStreamSubscription orders = createPullSubscription(js, "ORDERS", "archiver-orders-order", "order.>");
-        JetStreamSubscription payments = createPullSubscription(js, "ORDERS", "archiver-orders-paymet", "payment.>");
+        JetStreamSubscription payments = createPullSubscription(js, "ORDERS", "archiver-orders-payment", "payment.>");
 
         return List.of(identity, products, orders, payments);
     }

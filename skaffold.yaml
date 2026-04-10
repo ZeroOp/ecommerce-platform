@@ -19,12 +19,15 @@ build:
       context: .
       docker:
         dockerfile: services/identity-service/Dockerfile
-      # Sync is removed so that Java source changes trigger a full Rebuild/Redeploy
+    - image: zeroop/redstore-archive-service
+      context: .
+      docker:
+        dockerfile: services/archive-service/Dockerfile
 manifests:
   rawYaml:
 #    - infra/k8s/databases/
 #    - infra/k8s/secreates/app-secreates.yaml
     - infra/k8s/client-depl.yaml
-#    - infra/k8s/s3-storage/s3-buckets.yaml
     - infra/k8s/identity-depl.yaml
+    - infra/k8s/archive-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml
