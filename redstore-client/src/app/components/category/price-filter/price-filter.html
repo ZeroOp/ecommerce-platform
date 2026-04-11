@@ -1,0 +1,17 @@
+<div class="price-filter" *ngIf="priceRanges.length > 0">
+  <h3 class="filter-title">Shop by Price</h3>
+  <div class="price-ranges">
+    @for (range of priceRanges; track range.id) {
+      <button class="price-range-btn" 
+              [class.active]="isActive(range)"
+              (click)="selectRange(range)">
+        <span class="range-label">{{ range.label }}</span>
+        @if (range.max === 9999) {
+          <span class="range-value">${{ range.min }}+</span>
+        } @else {
+          <span class="range-value">${{ range.min }} - ${{ range.max }}</span>
+        }
+      </button>
+    }
+  </div>
+</div>

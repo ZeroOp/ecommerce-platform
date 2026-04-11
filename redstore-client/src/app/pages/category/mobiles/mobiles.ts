@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BaseCategoryComponent } from '../base-category';
+import { CATEGORIES_DATA } from '../../../data/category.data';
 
 @Component({
   selector: 'app-mobiles',
@@ -9,9 +10,12 @@ import { BaseCategoryComponent } from '../base-category';
   templateUrl: './mobiles.html',
   styleUrls: ['./mobiles.scss']
 })
-export class MobilesComponent implements OnInit {
-
+export class MobilesComponent {
+  
   constructor() {}
 
-  ngOnInit() {}
+  // Mobiles category data from centralized data
+  categoryName = CATEGORIES_DATA['mobiles'].name;
+  categoryDescription = CATEGORIES_DATA['mobiles'].description;
+  categoryIcon = CATEGORIES_DATA['mobiles'].icon;
 }
