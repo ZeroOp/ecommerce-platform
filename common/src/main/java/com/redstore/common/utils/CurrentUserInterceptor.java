@@ -1,29 +1,48 @@
 package com.redstore.common.utils;
 
 import com.redstore.common.dto.UserPayload;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+@Component
 public class CurrentUserInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        // 1. Get JWT from Header (Node uses session, Java typically uses Bearer Header)
+        // 1. First try to get JWT from Authorization Header
         String authHeader = request.getHeader("Authorization");
+        String token = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            try {
-                String token = authHeader.substring(7);
-                // 2. Verify Token using our JwtUtils
-                UserPayload payload = JwtUtils.validateAndGetPayload(token);
-
-                // 3. Attach to Context (Like req.currentUser = payload)
-                UserContext.setUser(payload);
-            } catch (Exception e) {
-                // Like your empty catch block in Node
+            token = authHeader.substring(7);
+        } else {
+            // 2. If no header, try to get JWT from cookie
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("session".equals(cookie.getName())) {
+                        token = cookie.getValue();
+                        break;
+                    }
+                }
             }
         }
+
+        if (token != null) {
+            try {
+                // 3. Verify Token using our JwtUtils
+                UserPayload payload = JwtUtils.validateAndGetPayload(token);
+                // 4. Attach to Context (Like req.currentUser = payload)
+                UserContext.setUser(payload);
+            } catch (Exception e) {
+                // Invalid token, clear context
+                UserContext.clear();
+            }
+        }
+
         return true; // Always continue to the controller
     }
 

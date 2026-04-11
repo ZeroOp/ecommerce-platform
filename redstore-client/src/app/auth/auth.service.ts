@@ -55,22 +55,34 @@ export class AuthService {
    * Wipes the local state and can be hooked to a backend logout if needed
    */
   logout(): void {
-    // 1. Wipe the current user from Angular state
-    this.currentUserSubject.next(null);
-
-    console.log('User logged out. Redirecting to clean state...');
-
-    // 2. Optional: Hit a backend /logout endpoint to clear cookies
+    // 1. Hit backend /logout endpoint to clear cookies first
     this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true }).subscribe({
-      next: () => {
-        // Reload page to ensure all app states are fully cleared
+      next: (response) => {
+        // 2. Wipe the current user from Angular state
+        this.currentUserSubject.next(null);
+        // 3. Reload page to ensure all app states are fully cleared
         window.location.reload();
       },
-      error: () => {
-        // If backend fails, still reload page anyway for safety
+      error: (error) => {
+        // Still clear local state and reload even if backend fails
+        this.currentUserSubject.next(null);
         window.location.reload();
       }
     });
+  }
+
+  /**
+   * Get current user from backend
+   */
+  getCurrentUser(): Observable<User | null> {
+    return this.http.get<User | null>(`${this.baseUrl}/currentuser`, { withCredentials: true })
+      .pipe(
+        tap(user => {
+          // Check if user object has valid data (not just null values)
+          const isValidUser = user && user.email && user.id;
+          this.currentUserSubject.next(isValidUser ? user : null);
+        })
+      );
   }
 
   /**

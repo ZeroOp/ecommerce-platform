@@ -1,0 +1,43 @@
+<div class="category-page">
+  <div class="category-header">
+    <div class="category-icon-container">
+      @if (categoryIcon) {
+        <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path [attr.d]="categoryIcon"></path>
+        </svg>
+      } @else {
+        <div class="category-placeholder-icon">{{ categoryName.charAt(0).toUpperCase() }}</div>
+      }
+    </div>
+    <div class="category-info">
+      <h1 class="category-title">{{ categoryName }}</h1>
+      @if (categoryDescription) {
+        <p class="category-description">{{ categoryDescription }}</p>
+      }
+    </div>
+  </div>
+  
+  <div class="category-content">
+    <div class="placeholder-card">
+      <div class="card-content">
+        <h2>{{ categoryName }} Category</h2>
+        <p>This is a placeholder for the {{ categoryName }} category page.</p>
+        <p>You can customize this component based on your specific needs.</p>
+        <div class="placeholder-features">
+          <div class="feature-item">
+            <div class="feature-icon">1</div>
+            <div class="feature-text">Feature 1 for {{ categoryName }}</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">2</div>
+            <div class="feature-text">Feature 2 for {{ categoryName }}</div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">3</div>
+            <div class="feature-text">Feature 3 for {{ categoryName }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
