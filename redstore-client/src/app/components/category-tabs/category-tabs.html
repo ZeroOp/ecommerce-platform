@@ -7,10 +7,15 @@
           [class.active]="activeCategory === category.name"
           (click)="navigateToCategory(category)"
         >
-          <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path [attr.d]="getCategoryIcon(category.icon)"></path>
-          </svg>
-          <span class="category-name">{{ category.name }}</span>
+          <div class="category-content">
+            <img [src]="category.image" [alt]="category.name" class="category-image" />
+            <div class="category-info">
+              <svg class="category-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path [attr.d]="getCategoryIcon(category.icon)"></path>
+              </svg>
+              <span class="category-name">{{ category.name }}</span>
+            </div>
+          </div>
         </button>
       }
     </div>

@@ -12,16 +12,16 @@ import { Router } from '@angular/router';
 export class CategoryTabsComponent {
   
   categories = [
-    { name: 'For You', icon: 'star', path: '/' },
-    { name: 'Fashion', icon: 'shirt', path: '/category/fashion' },
-    { name: 'Mobiles', icon: 'smartphone', path: '/category/mobiles' },
-    { name: 'Electronics', icon: 'laptop', path: '/category/electronics' },
-    { name: 'Appliances', icon: 'home', path: '/category/appliances' },
-    { name: 'Sports', icon: 'football', path: '/category/sports' },
-    { name: 'Books', icon: 'book', path: '/category/books' },
-    { name: 'Furniture', icon: 'sofa', path: '/category/furniture' },
-    { name: 'Beauty', icon: 'sparkles', path: '/category/beauty' },
-    { name: 'Toys', icon: 'gamepad', path: '/category/toys' }
+    { name: 'For You', icon: 'star', path: '/', image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b922?w=200&h=200&fit=crop' },
+    { name: 'Fashion', icon: 'shirt', path: '/category/fashion', image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8b?w=200&h=200&fit=crop' },
+    { name: 'Mobiles', icon: 'smartphone', path: '/category/mobiles', image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop' },
+    { name: 'Electronics', icon: 'laptop', path: '/category/electronics', image: 'https://images.unsplash.com/photo-1498049799929-963b8dd2aeb3?w=200&h=200&fit=crop' },
+    { name: 'Appliances', icon: 'home', path: '/category/appliances', image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=200&h=200&fit=crop' },
+    { name: 'Sports', icon: 'football', path: '/category/sports', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=200&h=200&fit=crop' },
+    { name: 'Books', icon: 'book', path: '/category/books', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop' },
+    { name: 'Furniture', icon: 'sofa', path: '/category/furniture', image: 'https://images.unsplash.com/photo-1586023492125-27b2c5458cca?w=200&h=200&fit=crop' },
+    { name: 'Beauty', icon: 'sparkles', path: '/category/beauty', image: 'https://images.unsplash.com/photo-1596462502278-27d52b40a0b2?w=200&h=200&fit=crop' },
+    { name: 'Toys', icon: 'gamepad', path: '/category/toys', image: 'https://images.unsplash.com/photo-1591733254037-e4942e77e11e?w=200&h=200&fit=crop' }
   ];
 
   activeCategory = 'For You';

@@ -1,13 +1,19 @@
 <div class="subcategory-card" (click)="navigateToProducts()" *ngIf="subcategory">
-  <div class="subcategory-icon">
-    @if (subcategory.icon) {
-      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-        <path [attr.d]="subcategory.icon"></path>
-      </svg>
-    } @else {
-      <div class="icon-placeholder">{{ subcategory.name.charAt(0) }}</div>
-    }
-  </div>
+  @if (subcategory.image) {
+    <div class="subcategory-image">
+      <img [src]="subcategory.image" [alt]="subcategory.name" />
+    </div>
+  } @else {
+    <div class="subcategory-icon">
+      @if (subcategory.icon) {
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path [attr.d]="subcategory.icon"></path>
+        </svg>
+      } @else {
+        <div class="icon-placeholder">{{ subcategory.name.charAt(0) }}</div>
+      }
+    </div>
+  }
   <div class="subcategory-content">
     <h3 class="subcategory-name">{{ subcategory.name }}</h3>
     <p class="subcategory-description">{{ subcategory.description }}</p>

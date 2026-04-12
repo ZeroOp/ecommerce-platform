@@ -1,10 +1,10 @@
 .header {
   background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 12px rgba(230, 57, 70, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
-  border-bottom: 1px solid #e1e8ed;
+  border-bottom: 1px solid #fce4e4;
 }
 
 .header-container {
@@ -40,7 +40,7 @@
 .logo-icon {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: linear-gradient(135deg, #e63946, #c0392b);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -55,7 +55,7 @@
 }
 
 .logo-accent {
-  color: #ff6b6b;
+  color: #e63946;
 }
 
 /* Search Section */
@@ -94,7 +94,7 @@
 }
 
 .search-btn {
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: linear-gradient(135deg, #e63946, #c0392b);
   border: none;
   padding: 1rem 1.5rem;
   cursor: pointer;
@@ -104,7 +104,7 @@
   transition: all 0.3s ease;
   
   &:hover {
-    background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+    background: linear-gradient(135deg, #c0392b, #e63946);
     transform: scale(1.05);
   }
 }
@@ -163,7 +163,7 @@
   position: absolute;
   top: -5px;
   right: -5px;
-  background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+  background: linear-gradient(135deg, #e63946, #c0392b);
   color: white;
   font-size: 0.75rem;
   font-weight: bold;
@@ -201,7 +201,7 @@
 
 .dropdown-header {
   padding: 1.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 }
 
 .user-info {
@@ -250,15 +250,15 @@
   color: #333;
   
   &:hover {
-    background: rgba(102, 126, 234, 0.1);
+    background: rgba(230, 57, 70, 0.08);
     padding-left: 2rem;
   }
   
   &.logout {
-    color: #e74c3c;
+    color: #e63946;
     
     &:hover {
-      background: rgba(231, 76, 60, 0.1);
+      background: rgba(230, 57, 70, 0.1);
     }
   }
 }

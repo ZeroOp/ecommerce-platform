@@ -1,10 +1,10 @@
 .category-tabs {
   background: #ffffff;
-  border-bottom: 1px solid #e1e8ed;
+  border-bottom: 1px solid #fce4e4;
   position: sticky;
   top: 73px; /* Height of header */
   z-index: 999;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 3px rgba(230, 57, 70, 0.05);
 }
 
 .tabs-container {
@@ -34,42 +34,77 @@
 .category-tab {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.25rem;
-  padding: 0.5rem 1rem;
-  background: transparent;
-  border: none;
-  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: white;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 80px;
-  text-decoration: none;
-  color: #666;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 500;
   white-space: nowrap;
-  
+  min-width: 120px;
+  overflow: hidden;
+
   &:hover {
-    background: #f8f9fa;
-    color: #333;
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    border-color: #4f46e5;
   }
   
   &.active {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-    color: white;
-    box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+    border-color: #4f46e5;
+    
+    .category-info {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(124, 58, 237, 0.1));
+    }
     
     .category-icon {
-      stroke: white;
+      stroke: #4f46e5;
+    }
+    
+    .category-name {
+      color: #4f46e5;
+      font-weight: 600;
     }
   }
 }
 
+.category-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  width: 100%;
+  height: 100%;
+}
+
+.category-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  
+  .category-tab:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.category-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
 .category-icon {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   stroke-width: 2;
   stroke: #666;
   transition: stroke 0.3s ease;

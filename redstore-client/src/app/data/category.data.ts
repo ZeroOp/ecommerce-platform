@@ -3,6 +3,7 @@ export interface SubCategory {
   name: string;
   description: string;
   icon?: string;
+  image?: string;
 }
 
 export interface Brand {
@@ -36,12 +37,12 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Discover the latest trends in fashion with our curated collection of clothing, accessories, and footwear for every style and occasion.',
     icon: 'M13.5 5.5c1.09 0 2-.91 2-2s-.91-2-2-2-2 .91-2 2 .91 2 2 2zM9.91 8.31L7 23h2l1.5-7.5L13 18v5h2v-6.5l-2.5-2.5-.5 1.5z',
     subcategories: [
-      { id: 'mens-clothing', name: "Men's Clothing", description: 'Shirts, jeans, suits, and more', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'womens-clothing', name: "Women's Clothing", description: 'Dresses, tops, skirts, and more', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'footwear', name: 'Footwear', description: 'Shoes, sneakers, boots, and sandals', icon: 'M12 2l-5.5 9h11z M17.5 11L12 20l-5.5-9z' },
-      { id: 'accessories', name: 'Accessories', description: 'Bags, belts, watches, and jewelry', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'ethnic-wear', name: 'Ethnic Wear', description: 'Traditional and cultural clothing', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'sportswear', name: 'Sportswear', description: 'Athletic and activewear clothing', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'mens-clothing', name: "Men's Clothing", description: 'Shirts, jeans, suits, and more', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1617137968082-3e2f8f5f5d5?w=300&h=200&fit=crop' },
+      { id: 'womens-clothing', name: "Women's Clothing", description: 'Dresses, tops, skirts, and more', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1483985988355-5930aa9b5e12?w=300&h=200&fit=crop' },
+      { id: 'footwear', name: 'Footwear', description: 'Shoes, sneakers, boots, and sandals', icon: 'M12 2l-5.5 9h11z M17.5 11L12 20l-5.5-9z', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=200&fit=crop' },
+      { id: 'accessories', name: 'Accessories', description: 'Bags, belts, watches, and jewelry', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1524863479858-23e9886c787b?w=300&h=200&fit=crop' },
+      { id: 'ethnic-wear', name: 'Ethnic Wear', description: 'Traditional and cultural clothing', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1578632292335-d6bc0ec35192?w=300&h=200&fit=crop' },
+      { id: 'sportswear', name: 'Sportswear', description: 'Athletic and activewear clothing', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'urban-style', name: 'Urban Style', featured: true },
@@ -96,12 +97,12 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Discover cutting-edge electronics including laptops, headphones, smart watches, and more.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'laptops', name: 'Laptops', description: 'Gaming, business, and personal laptops', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'audio', name: 'Audio', description: 'Headphones, speakers, and audio accessories', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'wearables', name: 'Wearables', description: 'Smart watches and fitness trackers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'tablets', name: 'Tablets', description: 'iPads and Android tablets', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'gaming', name: 'Gaming', description: 'Gaming consoles and accessories', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'accessories', name: 'Accessories', description: 'Cables, chargers, and more', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'laptops', name: 'Laptops', description: 'Gaming, business, and personal laptops', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1496181133206-80d2fb74177?w=300&h=200&fit=crop' },
+      { id: 'audio', name: 'Audio', description: 'Headphones, speakers, and audio accessories', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1505740420990-fd921daf3cd8?w=300&h=200&fit=crop' },
+      { id: 'wearables', name: 'Wearables', description: 'Smart watches and fitness trackers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1523275333014-753539b46e1?w=300&h=200&fit=crop' },
+      { id: 'tablets', name: 'Tablets', description: 'iPads and Android tablets', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1544244015-030648a9fb8?w=300&h=200&fit=crop' },
+      { id: 'gaming', name: 'Gaming', description: 'Gaming consoles and accessories', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1492744695087-4dab6a16aee?w=300&h=200&fit=crop' },
+      { id: 'accessories', name: 'Accessories', description: 'Cables, chargers, and more', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1516095033097-7d8e5b6e0e?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'computetech', name: 'ComputeTech', featured: true },
@@ -126,11 +127,11 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Home appliances to make your life easier with smart technology and energy efficiency.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'kitchen', name: 'Kitchen Appliances', description: 'Refrigerators, ovens, microwaves', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'laundry', name: 'Laundry', description: 'Washing machines and dryers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'cooling', name: 'Cooling & Heating', description: 'Air conditioners and heaters', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'small-appliances', name: 'Small Appliances', description: 'Coffee makers, blenders, mixers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'cleaning', name: 'Cleaning', description: 'Vacuum cleaners and steam mops', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'kitchen', name: 'Kitchen Appliances', description: 'Refrigerators, ovens, microwaves', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=300&h=200&fit=crop' },
+      { id: 'laundry', name: 'Laundry', description: 'Washing machines and dryers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1584464632543-426d5d9d6e9?w=300&h=200&fit=crop' },
+      { id: 'cooling', name: 'Cooling & Heating', description: 'Air conditioners and heaters', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1541888936175-469de828e57c?w=300&h=200&fit=crop' },
+      { id: 'small-appliances', name: 'Small Appliances', description: 'Coffee makers, blenders, mixers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-152236658857-9a312b0d2b3?w=300&h=200&fit=crop' },
+      { id: 'cleaning', name: 'Cleaning', description: 'Vacuum cleaners and steam mops', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1580638663285-3b6a0bf6b1a?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'hometech', name: 'HomeTech', featured: true },
@@ -155,11 +156,11 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Gear up for your active lifestyle with sports equipment, fitness accessories, and athletic wear.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'footwear', name: 'Sports Footwear', description: 'Running shoes, sneakers, and sports shoes', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'fitness', name: 'Fitness Equipment', description: 'Weights, yoga mats, and exercise gear', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'outdoor', name: 'Outdoor Sports', description: 'Camping, hiking, and adventure gear', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'team-sports', name: 'Team Sports', description: 'Football, basketball, cricket equipment', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'accessories', name: 'Sports Accessories', description: 'Bottles, bags, and fitness trackers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'footwear', name: 'Sports Footwear', description: 'Running shoes, sneakers, and sports shoes', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=200&fit=crop' },
+      { id: 'fitness', name: 'Fitness Equipment', description: 'Weights, yoga mats, and exercise gear', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop' },
+      { id: 'outdoor', name: 'Outdoor Sports', description: 'Camping, hiking, and adventure gear', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1506905925346-497048bc21f2?w=300&h=200&fit=crop' },
+      { id: 'team-sports', name: 'Team Sports', description: 'Football, basketball, cricket equipment', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-161467435643-0e014b60b6a?w=300&h=200&fit=crop' },
+      { id: 'accessories', name: 'Sports Accessories', description: 'Bottles, bags, and fitness trackers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-159945432999-3d5d8f5d5d5d?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'speedrun', name: 'SpeedRun', featured: true },
@@ -184,11 +185,11 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Expand your horizons with our vast collection of books across all genres and subjects.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'fiction', name: 'Fiction', description: 'Novels, stories, and literature', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'non-fiction', name: 'Non-Fiction', description: 'Biographies, history, and educational books', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'academic', name: 'Academic', description: 'Textbooks and reference materials', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'children', name: 'Children Books', description: 'Kids stories and educational books', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'self-help', name: 'Self Help', description: 'Personal development and motivation', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'fiction', name: 'Fiction', description: 'Novels, stories, and literature', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop' },
+      { id: 'non-fiction', name: 'Non-Fiction', description: 'Biographies, history, and educational books', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1481628654886-9d1f6e4b6?w=300&h=200&fit=crop' },
+      { id: 'academic', name: 'Academic', description: 'Textbooks and reference materials', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop' },
+      { id: 'children', name: 'Children Books', description: 'Kids stories and educational books', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1546973323014-030648a9fb8?w=300&h=200&fit=crop' },
+      { id: 'self-help', name: 'Self Help', description: 'Personal development and motivation', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1513475808567-558c0dbd6b?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'bestbooks', name: 'BestBooks', featured: true },
@@ -213,11 +214,11 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Transform your living space with our stylish and functional furniture collection.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'living-room', name: 'Living Room', description: 'Sofas, chairs, and entertainment centers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'bedroom', name: 'Bedroom', description: 'Beds, wardrobes, and nightstands', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'dining', name: 'Dining Room', description: 'Tables, chairs, and dining sets', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'office', name: 'Office Furniture', description: 'Desks, chairs, and storage solutions', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'storage', name: 'Storage', description: 'Shelves, cabinets, and organizers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'living-room', name: 'Living Room', description: 'Sofas, chairs, and entertainment centers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1586023492125-27b2c5458cca?w=300&h=200&fit=crop' },
+      { id: 'bedroom', name: 'Bedroom', description: 'Beds, wardrobes, and nightstands', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1616556776278-4dab6a16aee?w=300&h=200&fit=crop' },
+      { id: 'dining', name: 'Dining Room', description: 'Tables, chairs, and dining sets', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1577689672140-4d0b4a9b5d5d5d?w=300&h=200&fit=crop' },
+      { id: 'office', name: 'Office Furniture', description: 'Desks, chairs, and storage solutions', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1524863753953-279031e068f0?w=300&h=200&fit=crop' },
+      { id: 'storage', name: 'Storage', description: 'Shelves, cabinets, and organizers', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'comforthome', name: 'ComfortHome', featured: true },
@@ -242,11 +243,11 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Enhance your natural beauty with premium skincare, makeup, and personal care products.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'skincare', name: 'Skincare', description: 'Face creams, serums, and treatments', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'makeup', name: 'Makeup', description: 'Cosmetics, foundations, and color products', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'haircare', name: 'Hair Care', description: 'Shampoos, conditioners, and styling products', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'fragrance', name: 'Fragrance', description: 'Perfumes and colognes', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'personal-care', name: 'Personal Care', description: 'Bath products and personal hygiene', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'skincare', name: 'Skincare', description: 'Face creams, serums, and treatments', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1620618355-2b8c5f5d5d?w=300&h=200&fit=crop' },
+      { id: 'makeup', name: 'Makeup', description: 'Cosmetics, foundations, and color products', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1591733254037-e4942e77e11e?w=300&h=200&fit=crop' },
+      { id: 'haircare', name: 'Hair Care', description: 'Shampoos, conditioners, and styling products', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1524863479858-23e9886c787b?w=300&h=200&fit=crop' },
+      { id: 'fragrance', name: 'Fragrance', description: 'Perfumes and colognes', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=300&h=200&fit=crop' },
+      { id: 'personal-care', name: 'Personal Care', description: 'Bath products and personal hygiene', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1580638663285-3b6a0bf6b1a?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'glowskin', name: 'GlowSkin', featured: true },
@@ -271,11 +272,11 @@ export const CATEGORIES_DATA: { [key: string]: CategoryData } = {
     description: 'Spark imagination and creativity with our exciting collection of toys for all ages.',
     icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z',
     subcategories: [
-      { id: 'educational', name: 'Educational Toys', description: 'Learning and development toys', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'vehicles', name: 'Vehicles', description: 'Cars, trucks, and remote control toys', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'games', name: 'Games & Puzzles', description: 'Board games and puzzles', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'arts-crafts', name: 'Arts & Crafts', description: 'Creative and artistic supplies', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' },
-      { id: 'dolls', name: 'Dolls & Figures', description: 'Action figures and dolls', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z' }
+      { id: 'educational', name: 'Educational Toys', description: 'Learning and development toys', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-150922753540-0e2b4a9b9f?w=300&h=200&fit=crop' },
+      { id: 'vehicles', name: 'Vehicles', description: 'Cars, trucks, and remote control toys', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=300&h=200&fit=crop' },
+      { id: 'games', name: 'Games & Puzzles', description: 'Board games and puzzles', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1591733254037-e4942e77e11e?w=300&h=200&fit=crop' },
+      { id: 'arts-crafts', name: 'Arts & Crafts', description: 'Creative and artistic supplies', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1580638663285-3b6a0bf6b1a?w=300&h=200&fit=crop' },
+      { id: 'dolls', name: 'Dolls & Figures', description: 'Action figures and dolls', icon: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z', image: 'https://images.unsplash.com/photo-1591733254037-e4942e77e11e?w=300&h=200&fit=crop' }
     ],
     brands: [
       { id: 'buildfun', name: 'BuildFun', featured: true },

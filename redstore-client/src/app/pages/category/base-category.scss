@@ -1,7 +1,19 @@
 .category-page {
   min-height: calc(100vh - 130px);
   padding: 2rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #1a1d2e 0%, #2d3748 100%);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    z-index: -1;
+  }
 }
 
 .category-header {
@@ -10,25 +22,27 @@
   gap: 2rem;
   margin-bottom: 2rem;
   padding: 2.5rem;
-  background: white;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(10px);
+  background: rgba(26, 32, 44, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+  border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
 .category-icon-container {
   flex-shrink: 0;
-  width: 100px;
-  height: 100px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 12px 40px rgba(79, 70, 229, 0.4);
   position: relative;
   overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.3);
 
   &::before {
     content: '';
@@ -37,9 +51,9 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.15), transparent);
     transform: rotate(45deg);
-    animation: shimmer 3s infinite;
+    animation: shimmer 4s infinite;
   }
 }
 
@@ -49,17 +63,19 @@
 }
 
 .category-icon {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   stroke-width: 2;
   z-index: 1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .category-placeholder-icon {
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: bold;
   color: white;
   z-index: 1;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .category-info {
@@ -67,11 +83,11 @@
 }
 
 .category-title {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #2d3748;
-  margin-bottom: 0.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-size: 3.5rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 0.75rem;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -79,7 +95,7 @@
 
 .category-description {
   font-size: 1.2rem;
-  color: #718096;
+  color: #b8c5d6;
   line-height: 1.6;
   margin: 0 0 1rem 0;
 }
@@ -91,13 +107,21 @@
 }
 
 .stat-item {
-  padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0.75rem 1.25rem;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
-  border-radius: 25px;
+  border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(79, 70, 229, 0.5);
+  }
 }
 
 .category-content {
@@ -106,10 +130,22 @@
     margin: 2rem 0;
     
     .section-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #111827;
-      margin: 0 0 1.5rem 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        border-radius: 2px;
+      }
     }
     
     .subcategories-grid {

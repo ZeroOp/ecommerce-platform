@@ -1,7 +1,7 @@
 .products-page {
   min-height: calc(100vh - 130px);
   padding: 2rem;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
 .products-header {
@@ -44,9 +44,9 @@
       .page-title {
         font-size: 2.5rem;
         font-weight: 800;
-        color: #2d3748;
+        color: #1a1a2e;
         margin: 0 0 0.5rem 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -71,17 +71,18 @@
         }
         
         .clear-filters-btn {
-          background: #ef4444;
+          background: linear-gradient(135deg, #e63946, #c0392b);
           color: white;
           border: none;
           padding: 0.5rem 1rem;
           border-radius: 8px;
           font-size: 0.875rem;
           cursor: pointer;
-          transition: background 0.3s ease;
+          transition: all 0.3s ease;
           
           &:hover {
-            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
           }
         }
       }
@@ -119,16 +120,16 @@
     font-size: 0.9rem;
 
     &:hover {
-      border-color: #667eea;
-      color: #667eea;
+      border-color: #e63946;
+      color: #e63946;
       transform: translateY(-2px);
     }
 
     &.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
       color: white;
       border-color: transparent;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
     }
   }
   
@@ -157,12 +158,12 @@
     }
 
     &:hover {
-      border-color: #667eea;
-      color: #667eea;
+      border-color: #e63946;
+      color: #e63946;
     }
 
     &.active {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
       color: white;
       border-color: transparent;
     }
@@ -250,7 +251,7 @@
   top: 1rem;
   left: 1rem;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
   border-radius: 25px;
   font-size: 0.8rem;
@@ -258,7 +259,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   z-index: 2;
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
 }
 
 .discount-badge {
@@ -266,13 +267,13 @@
   top: 1rem;
   right: 1rem;
   padding: 0.5rem 1rem;
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
   border-radius: 25px;
   font-size: 0.8rem;
   font-weight: 700;
   z-index: 2;
-  box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
 }
 
 .wishlist-btn {
@@ -386,8 +387,8 @@
 .current-price {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #2d3748;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #1a1a2e;
+  background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -402,7 +403,7 @@
   flex: 1;
   padding: 1rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
   color: white;
   border-radius: 12px;
   font-weight: 700;
@@ -420,7 +421,7 @@
   
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
   }
 }
 
@@ -453,8 +454,8 @@
   }
   
   &:hover {
-    border-color: #667eea;
-    color: #667eea;
+    border-color: #e63946;
+    color: #e63946;
     transform: translateY(-2px);
   }
 }
@@ -497,7 +498,7 @@
   }
   
   .browse-btn {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
     color: white;
     border: none;
     padding: 1rem 2rem;
@@ -508,7 +509,7 @@
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      box-shadow: 0 8px 25px rgba(230, 57, 70, 0.4);
     }
   }
 }
@@ -522,18 +523,18 @@
 .load-more-btn {
   padding: 1rem 3rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #e63946 0%, #c0392b 100%);
   color: white;
   border-radius: 30px;
   font-weight: 700;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3);
   
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 12px 35px rgba(230, 57, 70, 0.4);
   }
 }
 

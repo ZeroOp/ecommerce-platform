@@ -1,1 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Aggressive reset — eliminate ALL default browser padding/margin */
+html, body, app-root, body > * {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Remove any default margins from Angular components */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

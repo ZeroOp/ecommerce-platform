@@ -1,5 +1,5 @@
 .footer {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: white;
   margin-top: auto;
 }
@@ -31,7 +31,7 @@
       display: inline-block;
       
       .logo-accent {
-        color: #ff6b6b;
+        color: #e63946;
       }
     }
   }
@@ -62,8 +62,8 @@
     border: 2px solid rgba(255, 255, 255, 0.2);
     
     &:hover {
-      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-      border-color: #ff6b6b;
+      background: linear-gradient(135deg, #e63946, #c0392b);
+      border-color: #e63946;
       transform: translateY(-3px);
     }
   }
@@ -108,7 +108,7 @@
     text-align: left;
     
     &:hover {
-      color: #ff6b6b;
+      color: #e63946;
       transform: translateX(5px);
     }
   }
@@ -144,13 +144,13 @@
     }
     
     &:focus {
-      border-color: #ff6b6b;
+      border-color: #e63946;
       background: rgba(255, 255, 255, 0.15);
     }
   }
   
   .newsletter-btn {
-    background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+    background: linear-gradient(135deg, #e63946, #c0392b);
     border: none;
     border-radius: 12px;
     padding: 1rem;
@@ -164,7 +164,7 @@
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+      box-shadow: 0 8px 25px rgba(230, 57, 70, 0.3);
     }
   }
 }
@@ -208,7 +208,7 @@
   transition: all 0.3s ease;
   
   &:hover {
-    color: #ff6b6b;
+    color: #e63946;
   }
 }
 
