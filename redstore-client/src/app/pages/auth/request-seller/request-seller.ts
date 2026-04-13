@@ -36,8 +36,6 @@ export class RequestSellerComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Automatically logout any existing user when visiting request-seller page
-    this.authService.logout();
   }
 
   onSubmit() {

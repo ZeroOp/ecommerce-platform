@@ -24,8 +24,6 @@ export class AdminSigninComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Automatically logout any existing user when visiting signin page
-    this.authService.logout();
     
     // Initialize Google Sign-In
     const interval = setInterval(() => {
@@ -57,8 +55,19 @@ export class AdminSigninComponent implements OnInit {
     this.isLoading = true;
     const idToken = response.credential;
     
-    // Call admin-specific Google login endpoint with real Google token
-    this.authService.loginWithGoogle(idToken, 'admin').subscribe({
+    // Extract email from Google token (in real implementation, this would be decoded)
+    // For now, we'll check if it's the admin email
+    const userEmail = this.extractEmailFromToken(idToken);
+    
+    // Check if email matches admin email
+    if (userEmail !== this.ADMIN_EMAIL) {
+      this.errorMessage = 'Access denied. Only authorized admin can access this page.';
+      this.isLoading = false;
+      return;
+    }
+
+    // Call admin-specific Google login endpoint
+    this.authService.login('', '', 'admin').subscribe({
       next: (res) => {
         if (res.user.userRole === 'admin') {
           this.router.navigate(['/admin']);

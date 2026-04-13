@@ -36,8 +36,6 @@ export class UserSigninComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Automatically logout any existing user when visiting signin page
-    this.authService.logout();
     
     // Initialize Google Sign-In
     const interval = setInterval(() => {
