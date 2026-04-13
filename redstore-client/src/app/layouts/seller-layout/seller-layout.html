@@ -1,9 +1,45 @@
 <div class="seller-layout">
-  <app-seller-header></app-seller-header>
+  <header class="seller-header">
+    <div class="header-content">
+      <div class="logo">
+        <h1>RedStore Seller</h1>
+      </div>
+      <nav class="seller-nav">
+        <a routerLink="/seller" class="nav-link" routerLinkActive="active">Dashboard</a>
+        <a routerLink="/seller/products" class="nav-link" routerLinkActive="active">Products</a>
+        <a routerLink="/seller/brands" class="nav-link" routerLinkActive="active">Brands</a>
+        <a routerLink="/seller/orders" class="nav-link" routerLinkActive="active">Orders</a>
+        <a routerLink="/seller/analytics" class="nav-link" routerLinkActive="active">Analytics</a>
+        <a routerLink="/seller/settings" class="nav-link" routerLinkActive="active">Settings</a>
+        <button type="button" class="logout-btn" (click)="logout()">Logout</button>
+      </nav>
+    </div>
+  </header>
   
   <main class="seller-main-content">
     <router-outlet></router-outlet>
   </main>
   
-  <app-seller-footer></app-seller-footer>
+  <footer class="seller-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Seller Dashboard</h4>
+        <p>Manage your products, orders, and analytics</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/seller">Dashboard</a></li>
+          <li><a href="/seller/products">Products</a></li>
+          <li><a href="/seller/brands">Brands</a></li>
+          <li><a href="/seller/orders">Orders</a></li>
+          <li><a href="/seller/analytics">Analytics</a></li>
+          <li><a href="/seller/settings">Settings</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 RedStore. All rights reserved.</p>
+    </div>
+  </footer>
 </div>

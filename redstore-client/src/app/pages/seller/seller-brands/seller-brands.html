@@ -6,7 +6,7 @@
 
   <div class="brands-container">
     <div class="brands-actions">
-      <button class="btn-primary">Register New Brand</button>
+      <button class="btn-primary" (click)="openBrandDialog()">Register New Brand</button>
     </div>
 
     <div class="brands-grid">
@@ -84,3 +84,5 @@
     </div>
   </div>
 </div>
+
+<app-brand-dialog [isOpen]="isDialogOpen" (close)="closeDialog()"></app-brand-dialog>
