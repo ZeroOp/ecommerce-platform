@@ -23,6 +23,34 @@ spec:
                 name: identity-srv
                 port:
                   number: 8080
+          - path: /api/sellers(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity-srv
+                port:
+                  number: 8080
+          - path: /api/admin(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity-srv
+                port:
+                  number: 8080
+          - path: /api/currentuser
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity-srv
+                port:
+                  number: 8080
+          - path: /api/logout
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: identity-srv
+                port:
+                  number: 8080
           - path: /(.*) # 👈 Catch-all regex to push everything else to the client
             pathType: ImplementationSpecific
             backend:

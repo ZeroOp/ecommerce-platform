@@ -2,8 +2,12 @@ package com.redstore.identity.service;
 
 import com.redstore.common.dto.UserLoginEventData; // Added import
 import com.redstore.common.dto.UserPayload;
+import com.redstore.common.dto.RoleBasedLoginEventData;
 import com.redstore.common.utils.JwtUtils;
+import com.redstore.common.enums.UserRole;
 import com.redstore.identity.events.publishers.UserLoginPublisher;
+import com.redstore.identity.events.publishers.SellerLoginPublisher;
+import com.redstore.identity.events.publishers.AdminLoginPublisher;
 import com.redstore.identity.model.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,6 +28,8 @@ public class SessionService {
 
     private final StringRedisTemplate redisTemplate;
     private final UserLoginPublisher userLoginPublisher;
+    private final SellerLoginPublisher sellerLoginPublisher;
+    private final AdminLoginPublisher adminLoginPublisher;
 
     // 15 Minutes for the Access Token
     private static final int ACCESS_TOKEN_EXPIRY_SECONDS = 15 * 60;
@@ -47,27 +53,58 @@ public class SessionService {
 
         // 4. Save the Refresh Token in Redis mapped to the User's ID
         String redisKey = "refresh_token:" + refreshToken;
-        redisTemplate.opsForValue().set(redisKey, user.getId().toString(), REFRESH_TOKEN_EXPIRY);
+        try {
+            redisTemplate.opsForValue().set(redisKey, user.getId().toString(), REFRESH_TOKEN_EXPIRY);
+        } catch (Exception e) {
+            log.error("Failed to save refresh token to Redis for user: {}", user.getEmail(), e);
+            // Continue with session creation even if Redis fails
+        }
 
         // 5. Drop both as secure cookies to the user's browser
         response.addCookie(createCookie("session", jwtToken, ACCESS_TOKEN_EXPIRY_SECONDS));
         response.addCookie(createCookie("refresh_token", refreshToken, (int) REFRESH_TOKEN_EXPIRY.toSeconds()));
 
-        // 🟢 6. Publish User Login Event to NATS
-        try {
-            UserLoginEventData eventData = UserLoginEventData.builder()
-                    .userId(user.getId().toString())
-                    .email(user.getEmail())
-                    .loginTime(LocalDateTime.now().toString())
-                    .build();
+        // 6. Publish Role-Based Login Events to NATS
+        publishRoleBasedLoginEvent(user, refreshToken);
+    }
 
-            log.info("Attempting to publish login event for user: {}", user.getEmail());
-            userLoginPublisher.publish(eventData);
-            log.info("Successfully published login event for user: {}", user.getEmail());
+    private void publishRoleBasedLoginEvent(User user, String refreshToken) {
+        try {
+            log.info("Attempting to publish role-based login event for user: {}", user.getEmail());
+            if (user.getRole().equals(UserRole.BUYER)) {
+                // Publish UserLoginEventData for BUYER
+                UserLoginEventData userEventData = UserLoginEventData.builder()
+                        .userId(user.getId().toString())
+                        .email(user.getEmail())
+                        .loginTime(LocalDateTime.now().toString())
+                        .build();
+                userLoginPublisher.publish(userEventData);
+            } else if (user.getRole().equals(UserRole.SELLER)) {
+                // Publish RoleBasedLoginEventData for SELLER
+                RoleBasedLoginEventData sellerEventData = RoleBasedLoginEventData.builder()
+                        .userId(user.getId().toString())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .loginTime(LocalDateTime.now())
+                        .sessionId(refreshToken)
+                        .build();
+                sellerLoginPublisher.publish(sellerEventData);
+            } else if (user.getRole().equals(UserRole.ADMIN)) {
+                // Publish RoleBasedLoginEventData for ADMIN
+                RoleBasedLoginEventData adminEventData = RoleBasedLoginEventData.builder()
+                        .userId(user.getId().toString())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .loginTime(LocalDateTime.now())
+                        .sessionId(refreshToken)
+                        .build();
+                adminLoginPublisher.publish(adminEventData);
+            }
+            log.info("Successfully published role-based login event for user: {}", user.getEmail());
 
         } catch (Exception e) {
             // We catch this so a messaging failure doesn't block the user from logging in
-            log.error("Failed to publish login event for user: {}", user.getEmail(), e);
+            log.error("Failed to publish role-based login event for user: {}", user.getEmail(), e);
         }
     }
 

@@ -21,12 +21,18 @@ public class GoogleTokenVerifier {
     }
 
     public GoogleIdToken.Payload verify(String token) throws Exception {
+        // Debug logging
+        System.out.println("Google Client ID loaded: " + clientId);
+
+        // Use hardcoded client ID for development
+        String fallbackClientId = "854136327852-v48sbh7hbb3145dmaq0kjt6aknpv6oms.apps.googleusercontent.com";
+        System.out.println("Using Google Client ID: " + fallbackClientId);
 
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(
                 new NetHttpTransport(),
                 GsonFactory.getDefaultInstance()
         )
-                .setAudience(Collections.singletonList(clientId))
+                .setAudience(Collections.singletonList(fallbackClientId))
                 .build();
 
         GoogleIdToken idToken = verifier.verify(token);

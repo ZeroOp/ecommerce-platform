@@ -23,4 +23,8 @@ public class UserPayload {
 
     @NotEmpty(message = "At least one role is required")
     private Set<UserRole> roles; // Changed from String to UserRole
+
+    public String getRole() {
+        return roles != null && !roles.isEmpty() ? roles.iterator().next().name() : null;
+    }
 }

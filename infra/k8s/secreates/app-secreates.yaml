@@ -7,6 +7,7 @@ stringData:
   JWT_KEY: redstore-secret-key-2026-zeroop-hmac
   REDIS_PASSWORD: YourSecurePassword
   NATS_URL: nats://nats-srv:4222
+  GOOGLE_CLIENT_ID: 854136327852-v48sbh7hbb3145dmaq0kjt6aknpv6oms.apps.googleusercontent.com
 ---
 apiVersion: v1
 kind: Secret

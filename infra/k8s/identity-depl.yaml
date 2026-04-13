@@ -54,9 +54,12 @@ spec:
                   name: identity-db-creds
                   key: password
             - name: GOOGLE_CLIENT_ID
-              value: 854136327852-v48sbh7hbb3145dmaq0kjt6aknpv6oms.apps.googleusercontent.com
+              valueFrom:
+                secretKeyRef:
+                  name: identity-secrets
+                  key: GOOGLE_CLIENT_ID
 
-            # 🟢 4. REDIS CONFIGURATION (Added)
+            # 4. REDIS CONFIGURATION (Added)
             - name: REDIS_HOST
               value: redis-session.default.svc.cluster.local
             - name: REDIS_PORT

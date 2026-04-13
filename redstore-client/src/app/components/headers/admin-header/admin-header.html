@@ -1,0 +1,16 @@
+<header class="admin-header">
+  <div class="header-content">
+    <div class="logo">
+      <h1 (click)="navigateToDashboard()">RedStore Admin</h1>
+    </div>
+    <nav class="admin-nav">
+      <a routerLink="/admin/users" class="nav-link">Users</a>
+      <a routerLink="/admin/products" class="nav-link">Products</a>
+      <a routerLink="/admin/orders" class="nav-link">Orders</a>
+      <a routerLink="/admin/sellers" class="nav-link">Sellers</a>
+      <a routerLink="/admin/analytics" class="nav-link">Analytics</a>
+      <a routerLink="/admin/settings" class="nav-link">Settings</a>
+      <button type="button" class="logout-btn" (click)="handleLogout($event)">Logout</button>
+    </nav>
+  </div>
+</header>

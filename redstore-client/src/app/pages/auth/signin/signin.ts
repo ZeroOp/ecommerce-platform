@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../services/auth.service';
 
 // This prevents TypeScript from complaining that 'google' doesn't exist
 declare const google: any;
@@ -24,7 +25,8 @@ export class SigninComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) {
     this.signinForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -34,6 +36,9 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Automatically logout any existing user when visiting signin page
+    this.authService.logout();
+    
     // Initialize Google Sign-In
     const interval = setInterval(() => {
       if (typeof google !== 'undefined') {
@@ -64,8 +69,7 @@ export class SigninComponent implements OnInit {
     this.isLoading = true;
     const idToken = response.credential;
     
-    this.http.post('/api/users/google', { token: idToken }, { withCredentials: true })
-      .subscribe({
+    this.authService.loginWithGoogle(idToken, 'user').subscribe({
         next: (res: any) => {
           console.log('Google Sign-In successful:', res);
           this.successMessage = 'Sign-in successful! Redirecting...';
@@ -97,8 +101,7 @@ export class SigninComponent implements OnInit {
     const { email, password, rememberMe } = this.signinForm.value;
 
     // Regular email/password sign-in
-    this.http.post('/api/users/signin', { email, password }, { withCredentials: true })
-      .subscribe({
+    this.authService.login(email, password, 'user').subscribe({
         next: (res: any) => {
           console.log('Sign-in successful:', res);
           this.successMessage = 'Sign-in successful! Redirecting...';

@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
   }
 
   checkCurrentUser() {
-    this.http.get<User | null>('/api/users/currentuser', { withCredentials: true })
+    this.http.get<User | null>('/api/currentuser', { withCredentials: true })
       .subscribe({
         next: (user) => {
           // Check if user object has valid data (not just null values)
@@ -85,9 +85,17 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
-    this.currentUser = null; // Clear local user state too!
     this.closeProfileDropdown();
+    this.authService.logout();
+    // Don't set currentUser to null here - let authService handle it
+  }
+
+  handleLogout(event: Event) {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Logout clicked, preventing default behavior');
+    this.closeProfileDropdown();
+    this.authService.logout();
   }
 
   navigateToLogin() {

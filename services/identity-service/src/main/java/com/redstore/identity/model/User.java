@@ -8,25 +8,19 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = "id")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
-    private String email;
+    @EmbeddedId
+    private UserId id;
 
     @Column(nullable = false)
     private String password;
-
-    @Enumerated(EnumType.STRING) // Saves "ADMIN" in DB instead of 0
-    @Column(nullable = false)
-    private UserRole role;
 
     @Builder.Default
     @Column(name = "is_active")
@@ -35,4 +29,27 @@ public class User {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    // Convenience getters for email and role
+    public String getEmail() {
+        return id != null ? id.getEmail() : null;
+    }
+
+    public UserRole getRole() {
+        return id != null ? id.getRole() : null;
+    }
+
+    public void setEmail(String email) {
+        if (id == null) {
+            id = new UserId();
+        }
+        id.setEmail(email);
+    }
+
+    public void setRole(UserRole role) {
+        if (id == null) {
+            id = new UserId();
+        }
+        id.setRole(role);
+    }
 }

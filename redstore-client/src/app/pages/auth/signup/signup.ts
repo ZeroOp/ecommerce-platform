@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../../services/auth.service';
 
 // This prevents TypeScript from complaining that 'google' doesn't exist
 declare const google: any;
@@ -27,7 +28,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private authService: AuthService
   ) {
     this.signupForm = this.fb.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -73,8 +75,7 @@ export class SignupComponent implements OnInit {
     this.isLoading = true;
     const idToken = response.credential;
     
-    this.http.post('/api/users/google', { token: idToken }, { withCredentials: true })
-      .subscribe({
+    this.authService.loginWithGoogle(idToken, 'user').subscribe({
         next: (res: any) => {
           console.log('Google Sign-Up successful:', res);
           this.successMessage = 'Account created successfully! Redirecting...';
