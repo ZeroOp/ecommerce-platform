@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -10,23 +10,36 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './seller-dashboard.html',
   styleUrls: ['./seller-dashboard.scss']
 })
-export class SellerDashboardComponent {
-  
+export class SellerDashboardComponent implements OnInit {
+  currentTab: string = 'dashboard';
+
   constructor(private router: Router, private authService: AuthService) {}
 
+  ngOnInit(): void {
+  }
+
+  navigateToDashboard() {
+    this.currentTab = 'dashboard';
+    this.router.navigate(['/seller']);
+  }
+
   navigateToProducts() {
+    this.currentTab = 'products';
     this.router.navigate(['/seller/products']);
   }
 
   navigateToOrders() {
+    this.currentTab = 'orders';
     this.router.navigate(['/seller/orders']);
   }
 
   navigateToAnalytics() {
+    this.currentTab = 'analytics';
     this.router.navigate(['/seller/analytics']);
   }
 
   navigateToSettings() {
+    this.currentTab = 'settings';
     this.router.navigate(['/seller/settings']);
   }
 

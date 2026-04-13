@@ -1,0 +1,12 @@
+.seller-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #1a1d2e 0%, #2d3748 100%);
+}
+
+.seller-main-content {
+  flex: 1;
+  width: 100%;
+  min-height: calc(100vh - 140px); // Account for header and footer heights
+}

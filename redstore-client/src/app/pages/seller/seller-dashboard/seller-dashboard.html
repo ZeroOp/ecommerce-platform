@@ -1,19 +1,4 @@
 <div class="seller-dashboard">
-  <header class="seller-header">
-    <div class="header-content">
-      <div class="logo">
-        <h1>RedStore Seller</h1>
-      </div>
-      <nav class="seller-nav">
-        <button class="nav-item" (click)="navigateToProducts()">Products</button>
-        <button class="nav-item" (click)="navigateToOrders()">Orders</button>
-        <button class="nav-item" (click)="navigateToAnalytics()">Analytics</button>
-        <button class="nav-item" (click)="navigateToSettings()">Settings</button>
-        <div class="logout-btn" (click)="logout(); $event.preventDefault(); $event.stopPropagation()" style="cursor: pointer; display: inline-block; padding: 8px 16px; background: #dc3545; color: white; border-radius: 4px;">Logout</div>
-      </nav>
-    </div>
-  </header>
-
   <main class="dashboard-content">
     <div class="welcome-section">
       <h2>Seller Dashboard</h2>
@@ -22,7 +7,7 @@
 
     <div class="dashboard-stats">
       <div class="stat-card">
-        <div class="stat-icon">📦</div>
+        <div class="stat-icon">?</div>
         <div class="stat-info">
           <h3>Total Products</h3>
           <p class="stat-number">0</p>
@@ -30,7 +15,7 @@
       </div>
       
       <div class="stat-card">
-        <div class="stat-icon">📊</div>
+        <div class="stat-icon">?</div>
         <div class="stat-info">
           <h3>Total Orders</h3>
           <p class="stat-number">0</p>
@@ -38,7 +23,7 @@
       </div>
       
       <div class="stat-card">
-        <div class="stat-icon">💰</div>
+        <div class="stat-icon">?</div>
         <div class="stat-info">
           <h3>Total Revenue</h3>
           <p class="stat-number">$0</p>
@@ -46,7 +31,7 @@
       </div>
       
       <div class="stat-card">
-        <div class="stat-icon">⭐</div>
+        <div class="stat-icon">?</div>
         <div class="stat-info">
           <h3>Average Rating</h3>
           <p class="stat-number">0.0</p>
@@ -58,10 +43,10 @@
       <h3>Quick Actions</h3>
       <div class="action-buttons">
         <button class="action-btn primary" (click)="navigateToProducts()">
-          <span>➕</span> Add New Product
+          <span>+</span> Add New Product
         </button>
         <button class="action-btn secondary" (click)="navigateToOrders()">
-          <span>📋</span> View Orders
+          <span>?</span> View Orders
         </button>
       </div>
     </div>

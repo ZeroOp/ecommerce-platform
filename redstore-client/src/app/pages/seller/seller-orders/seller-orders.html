@@ -1,0 +1,77 @@
+<div class="seller-orders">
+  <div class="page-header">
+    <h1>Orders</h1>
+    <p>Manage and track all your customer orders</p>
+  </div>
+
+  <div class="orders-container">
+    <div class="orders-filters">
+      <div class="filter-group">
+        <label>Status</label>
+        <select>
+          <option>All Orders</option>
+          <option>Pending</option>
+          <option>Processing</option>
+          <option>Shipped</option>
+          <option>Delivered</option>
+          <option>Cancelled</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Date Range</label>
+        <select>
+          <option>Last 7 days</option>
+          <option>Last 30 days</option>
+          <option>Last 3 months</option>
+          <option>Last year</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label>Search</label>
+        <input type="text" placeholder="Search orders...">
+      </div>
+    </div>
+
+    <div class="orders-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Products</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#12345</td>
+            <td>John Doe</td>
+            <td>iPhone 15 Pro, AirPods Pro</td>
+            <td>$1,899.00</td>
+            <td><span class="status processing">Processing</span></td>
+            <td>2024-04-13</td>
+            <td>
+              <button class="action-btn">View</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#12344</td>
+            <td>Jane Smith</td>
+            <td>Samsung Galaxy S24</td>
+            <td>$899.00</td>
+            <td><span class="status shipped">Shipped</span></td>
+            <td>2024-04-12</td>
+            <td>
+              <button class="action-btn">Track</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -16,6 +16,12 @@ import { FurnitureComponent } from './pages/category/furniture/furniture';
 import { BeautyComponent } from './pages/category/beauty/beauty';
 import { ToysComponent } from './pages/category/toys/toys';
 import { SellerDashboardComponent } from './pages/seller/seller-dashboard/seller-dashboard';
+import { SellerProductsComponent } from './pages/seller/seller-products/seller-products';
+import { SellerOrdersComponent } from './pages/seller/seller-orders/seller-orders';
+import { SellerAnalyticsComponent } from './pages/seller/seller-analytics/seller-analytics';
+import { SellerBrandsComponent } from './pages/seller/seller-brands/seller-brands';
+import { SellerSettingsComponent } from './pages/seller/seller-settings/seller-settings';
+import { SellerLayoutComponent } from './layouts/seller-layout/seller-layout';
 import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard';
 import { AuthGuard } from './guards/auth.guard.service';
 
@@ -37,14 +43,16 @@ export const routes: Routes = [
   { path: 'category/toys', component: ToysComponent },
   { 
     path: 'seller', 
+    component: SellerLayoutComponent,
     canActivate: [AuthGuard],
     data: { role: 'seller' },
     children: [
       { path: '', component: SellerDashboardComponent },
-      { path: 'products', component: SellerDashboardComponent },
-      { path: 'orders', component: SellerDashboardComponent },
-      { path: 'analytics', component: SellerDashboardComponent },
-      { path: 'settings', component: SellerDashboardComponent }
+      { path: 'products', component: SellerProductsComponent },
+      { path: 'brands', component: SellerBrandsComponent },
+      { path: 'orders', component: SellerOrdersComponent },
+      { path: 'analytics', component: SellerAnalyticsComponent },
+      { path: 'settings', component: SellerSettingsComponent }
     ]
   },
   { 
