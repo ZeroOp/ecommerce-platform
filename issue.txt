@@ -3,9 +3,8 @@ http://redstore.zeroop.dev/api/product/brands
 why i am seeing this in post man. I should see not authorized right ? 
 
 {
-    "timestamp": "2026-04-16T17:51:48.083+00:00",
+    "timestamp": "2026-04-16T18:20:14.433+00:00",
     "status": 404,
     "error": "Not Found",
     "path": "/api/product/brands"
 }
-

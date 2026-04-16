@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/brands")
+@RequestMapping("/api/product/brands")
 @RequiredArgsConstructor
 @Slf4j
 public class BrandController {
