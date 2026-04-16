@@ -23,6 +23,10 @@ build:
       context: .
       docker:
         dockerfile: services/archive-service/Dockerfile
+    - image: zeroop/redstore-product-service
+      context: .
+      docker:
+        dockerfile: services/product-service/Dockerfile
 manifests:
   rawYaml:
 #    - infra/k8s/databases/
@@ -30,4 +34,5 @@ manifests:
     - infra/k8s/client-depl.yaml
     - infra/k8s/identity-depl.yaml
     - infra/k8s/archiver-depl.yaml
+    - infra/k8s/product-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

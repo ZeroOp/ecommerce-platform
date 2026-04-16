@@ -13,6 +13,7 @@
         <module>common</module>
         <module>services/identity-service</module>
         <module>services/archive-service</module>
+        <module>services/product-service</module>
     </modules>
 
     <properties>

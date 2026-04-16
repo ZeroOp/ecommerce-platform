@@ -145,7 +145,10 @@ spec:
               until mc alias set backup http://minio-backup-srv:9000 redstore_admin redstore_password; do sleep 3; done;
               
               mc mb --ignore-existing primary/redstore-main
+              mc mb --ignore-existing primary/redstore-events
               mc mb --ignore-existing backup/redstore-main-backup
-              
+              mc mb --ignore-existing backup/redstore-events-backup
               echo "Replication started..."
-              mc mirror --watch --remove --overwrite primary/redstore-main backup/redstore-main-backup;
+              mc mirror --watch --remove --overwrite primary/redstore-main backup/redstore-main-backup &
+              mc mirror --watch --remove --overwrite primary/redstore-events backup/redstore-events-backup &
+              wait;

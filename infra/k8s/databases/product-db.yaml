@@ -1,0 +1,38 @@
+# 1. THE DATABASE CLUSTER
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: product-db-cluster
+spec:
+  instances: 3
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  # RESOURCE CAPPING: Limits CPU/Memory so your laptop doesn't lag
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  # PERSISTENCE: This automatically creates the PVCs
+  storage:
+    size: 1Gi
+    # For local dev (Docker Desktop/Minikube), this usually uses 'hostpath' or 'standard'
+    storageClass: hostpath
+
+  postgresql:
+    parameters:
+      synchronous_commit: "on"
+      shared_buffers: "128MB"
+
+  # REMOVED: The syncReplicaElectionConstraint block to avoid decoding errors
+  # The operator will still maintain 3 instances and manage replication automatically.
+
+  bootstrap:
+    initdb:
+      database: product_db
+      owner: product_admin
+      secret:
+        name: product-db-creds

@@ -51,7 +51,14 @@ spec:
                 name: identity-srv
                 port:
                   number: 8080
-          - path: /(.*) # 👈 Catch-all regex to push everything else to the client
+          - path: /api/product(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: product-srv
+                port:
+                  number: 8080
+          - path: /(.*) # Catch-all regex to push everything else to the client
             pathType: ImplementationSpecific
             backend:
               service:

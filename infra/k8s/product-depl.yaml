@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-srv
+spec:
+  selector:
+    app: product
+  ports:
+    - name: product
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      containers:
+        - name: product
+          image: zeroop/redstore-product-service
+          env:
+            # 1. JWT Key (Existing)
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: product-secrets
+                  key: JWT_KEY
+
+            # 2. DB Connection URL
+            # Points to the Master node via the CNPG generated service
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://product-db-cluster-rw:5432/product_db
+
+            # 3. DB Credentials
+            # We pull these directly from the Secret we created in product-db.yaml
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: product-db-creds
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: product-db-creds
+                  key: password
+
+            # 4. REDIS CONFIGURATION (Added)
+            - name: REDIS_HOST
+              value: redis-session.default.svc.cluster.local
+            - name: REDIS_PORT
+              value: "26379"  # Quoted because K8s expects strings for env values
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: product-secrets
+                  key: REDIS_PASSWORD
+
+            # 🟢 5. NATS CONFIGURATION
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: product-secrets
+                  key: NATS_URL
+          ports:
+            - containerPort: 8080

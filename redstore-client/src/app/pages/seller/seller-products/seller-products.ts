@@ -1,43 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { ProductDialogComponent } from '../../../components/product-dialog/product-dialog';
 
 @Component({
   selector: 'app-seller-products',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProductDialogComponent],
   templateUrl: './seller-products.html',
   styleUrls: ['./seller-products.scss']
 })
 export class SellerProductsComponent implements OnInit {
-  activeTab: string = 'products';
-  brands: any[] = [];
   products: any[] = [];
-
-  constructor(private router: Router) {}
+  isDialogOpen: boolean = false;
 
   ngOnInit() {
     // Initialize with mock data
-    this.brands = [
-      { id: 1, name: 'Nike', status: 'approved', logo: '' },
-      { id: 2, name: 'Adidas', status: 'pending', logo: '' }
-    ];
-    
     this.products = [
       { id: 1, name: 'Running Shoes', brand: 'Nike', price: 99.99, status: 'active' },
-      { id: 2, name: 'Sports T-Shirt', brand: 'Adidas', price: 49.99, status: 'active' }
+      { id: 2, name: 'Sports T-Shirt', brand: 'Adidas', price: 49.99, status: 'active' },
+      { id: 3, name: 'Wireless Headphones', brand: 'Sony', price: 199.99, status: 'active' },
+      { id: 4, name: 'Smart Watch', brand: 'Apple', price: 399.99, status: 'inactive' }
     ];
   }
 
-  switchTab(tab: string) {
-    this.activeTab = tab;
+  openProductDialog() {
+    console.log('Opening product dialog...');
+    this.isDialogOpen = true;
   }
 
-  navigateToCreateProduct() {
-    this.router.navigate(['/seller/products/create']);
-  }
-
-  navigateToRegisterBrand() {
-    this.router.navigate(['/seller/products/register-brand']);
+  closeDialog() {
+    this.isDialogOpen = false;
   }
 }
