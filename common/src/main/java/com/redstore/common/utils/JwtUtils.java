@@ -24,12 +24,14 @@ public class JwtUtils {
     }
 
     public static String generateToken(UserPayload payload) {
+        boolean active = payload.getActive() == null || payload.getActive();
         return Jwts.builder()
                 .subject(payload.getId()) // 0.11.x uses setSubject
                 .claim("email", payload.getEmail())
                 .claim("roles", payload.getRoles().stream()
                         .map(Enum::name)
                         .collect(Collectors.toList()))
+                .claim("active", active)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(getSigningKey())
@@ -44,10 +46,16 @@ public class JwtUtils {
                 .parseSignedClaims(token)
                 .getPayload();
 
+        Boolean active = claims.get("active", Boolean.class);
+        if (active == null) {
+            active = true;
+        }
+
         return UserPayload.builder()
                 .id(claims.getSubject())
                 .email(claims.get("email", String.class))
                 .roles(extractRoles(claims))
+                .active(active)
                 .build();
     }
 

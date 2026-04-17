@@ -1,57 +1,143 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BRANDS } from '../../data/mock-brands';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
-import { BadgeComponent, BadgeTone } from '../../shared/components/badge/badge.component';
+import { BadgeComponent } from '../../shared/components/badge/badge.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
+import { AdminSellerApiService, AdminSellerRow } from '../../core/services/admin-seller-api.service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'rs-admin-sellers',
   standalone: true,
-  imports: [CommonModule, PageHeaderComponent, BadgeComponent],
+  imports: [CommonModule, PageHeaderComponent, BadgeComponent, ButtonComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <rs-page-header eyebrow="Marketplace" title="Sellers" subtitle="Review seller applications and manage active brands."></rs-page-header>
+    <rs-page-header
+      eyebrow="Marketplace"
+      title="Sellers"
+      subtitle="Suspend a seller to block new products while they can still sign in and view the dashboard."
+    ></rs-page-header>
 
-    <div class="grid">
-      <article *ngFor="let b of brands" class="card">
+    <div class="toolbar">
+      <rs-button variant="secondary" (click)="reload()">Refresh</rs-button>
+    </div>
+
+    <div class="grid" *ngIf="!loading(); else loadingTpl">
+      <article *ngFor="let s of sellers()" class="card">
         <header>
-          <div class="logo">{{ b.logo }}</div>
-          <rs-badge [tone]="toneFor(b.status)" [soft]="true">{{ b.status }}</rs-badge>
+          <div>
+            <h3>{{ s.email }}</h3>
+            <p class="sub">ID: {{ s.userId }}</p>
+          </div>
+          <rs-badge [tone]="s.active ? 'success' : 'danger'" [soft]="true">{{ s.active ? 'Active' : 'Suspended' }}</rs-badge>
         </header>
-        <h3>{{ b.name }}</h3>
-        <p>{{ b.description }}</p>
-        <div class="meta">
-          <span>{{ b.productCount }} products</span>
-          <span>⭐ {{ b.rating }}</span>
-        </div>
         <footer>
-          <button class="approve" *ngIf="b.status === 'pending'">Approve</button>
-          <button *ngIf="b.status !== 'pending'">View store</button>
-          <button class="reject">{{ b.status === 'pending' ? 'Reject' : 'Suspend' }}</button>
+          <rs-button
+            *ngIf="s.active"
+            variant="secondary"
+            (click)="setActive(s, false)"
+            [disabled]="busyEmail() === s.email"
+            >Suspend seller</rs-button
+          >
+          <rs-button
+            *ngIf="!s.active"
+            variant="primary"
+            (click)="setActive(s, true)"
+            [disabled]="busyEmail() === s.email"
+            >Reactivate</rs-button
+          >
         </footer>
       </article>
     </div>
+    <ng-template #loadingTpl>
+      <p class="muted">Loading sellers…</p>
+    </ng-template>
   `,
-  styles: [`
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
-    .card { background: white; border: 1px solid var(--rs-border); border-radius: var(--rs-radius-lg); padding: 22px; display: flex; flex-direction: column; gap: 8px; }
-    .card header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
-    .logo { width: 54px; height: 54px; border-radius: var(--rs-radius-md); background: var(--rs-surface-2); display: inline-flex; align-items: center; justify-content: center; font-size: 26px; }
-    .card h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
-    .card p { color: var(--rs-text-muted); font-size: 13px; line-height: 1.5; }
-    .meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--rs-text-subtle); margin-top: 6px; }
-    footer { display: flex; gap: 8px; margin-top: 6px; }
-    footer button { flex: 1; padding: 9px; background: var(--rs-surface-2); border-radius: var(--rs-radius-md); font-size: 13px; font-weight: 600; color: var(--rs-text); }
-    footer button:hover { background: var(--rs-surface-3); }
-    .approve { background: var(--rs-accent-500) !important; color: white !important; }
-    .reject { background: #fee2e2 !important; color: var(--rs-danger) !important; }
-  `],
+  styles: [
+    `
+      .toolbar {
+        margin-bottom: 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 14px;
+      }
+      .card {
+        background: white;
+        border: 1px solid var(--rs-border);
+        border-radius: var(--rs-radius-lg);
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .card header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .card h3 {
+        font-size: 16px;
+        font-weight: 800;
+        margin: 0;
+        word-break: break-all;
+      }
+      .sub {
+        font-size: 11px;
+        color: var(--rs-text-subtle);
+        margin: 4px 0 0;
+        word-break: break-all;
+      }
+      footer {
+        display: flex;
+        gap: 8px;
+      }
+      .muted {
+        color: var(--rs-text-muted);
+      }
+    `,
+  ],
 })
 export class AdminSellersComponent {
-  brands = BRANDS;
-  toneFor(s: string | undefined): BadgeTone {
-    if (s === 'active') return 'success';
-    if (s === 'pending') return 'warning';
-    return 'danger';
+  private api = inject(AdminSellerApiService);
+  private toast = inject(ToastService);
+
+  sellers = signal<AdminSellerRow[]>([]);
+  loading = signal(false);
+  busyEmail = signal<string | null>(null);
+
+  constructor() {
+    this.reload();
+  }
+
+  reload(): void {
+    this.loading.set(true);
+    this.api.listSellers().subscribe({
+      next: (rows) => {
+        this.sellers.set(rows);
+        this.loading.set(false);
+      },
+      error: () => {
+        this.toast.error('Could not load sellers (is identity running on 8081 for local proxy?)');
+        this.loading.set(false);
+      },
+    });
+  }
+
+  setActive(s: AdminSellerRow, active: boolean): void {
+    this.busyEmail.set(s.email);
+    this.api.setSellerActive(s.email, active).subscribe({
+      next: () => {
+        this.toast.success(active ? 'Seller reactivated' : 'Seller suspended', s.email);
+        this.reload();
+        this.busyEmail.set(null);
+      },
+      error: () => {
+        this.toast.error('Update failed');
+        this.busyEmail.set(null);
+      },
+    });
   }
 }

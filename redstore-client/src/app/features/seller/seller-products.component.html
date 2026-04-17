@@ -58,13 +58,17 @@
 <div class="dialog-backdrop" *ngIf="showCreateDialog()" (click)="closeCreateDialog()">
   <div class="dialog" (click)="$event.stopPropagation()">
     <h3>Add product</h3>
-    <p>Select your brand and category, then add details and 3–6 images.</p>
+    <p>Select an <strong>approved</strong> brand and category, then add details and <strong>3–6 images</strong> (add one at a time).</p>
+
+    <p class="warn" *ngIf="approvedBrands().length === 0">
+      You have no approved brands yet. Ask an admin to approve a brand under <strong>Admin → Brands</strong>, then try again.
+    </p>
 
     <label>
-      Brand
-      <select [value]="formBrandId()" (change)="onBrandChange($event)">
+      Brand (approved only)
+      <select [value]="formBrandId()" (change)="onBrandChange($event)" [disabled]="approvedBrands().length === 0">
         <option value="" disabled>Choose brand</option>
-        <option *ngFor="let b of myBrands()" [value]="b.id">{{ b.name }}</option>
+        <option *ngFor="let b of approvedBrands()" [value]="b.id">{{ b.name }}</option>
       </select>
     </label>
 
@@ -72,7 +76,7 @@
       Category
       <select [value]="formCategoryId()" (change)="onCategoryChange($event)" [disabled]="!formBrandId()">
         <option value="" disabled>Choose category</option>
-        <option *ngFor="let c of categoriesForBrand()" [value]="c.id">{{ c.name }}</option>
+        <option *ngFor="let c of categoriesForPicker()" [value]="c.id">{{ c.name }}</option>
       </select>
     </label>
 
@@ -105,15 +109,28 @@
       </div>
     </ng-container>
 
-    <label>
-      Images (3–6 files)
-      <input type="file" accept="image/*" multiple (change)="onImagesPicked($event)" />
-      <span class="hint">{{ imageFiles().length }} file(s) selected</span>
-    </label>
+    <div class="images-block">
+      <div class="images-block__head">
+        <span>Product images</span>
+        <span class="hint">{{ imageCount() }} / 6 (minimum 3)</span>
+      </div>
+      <label class="file-add">
+        <input type="file" accept="image/*" (change)="onPickOneImage($event)" [disabled]="imageCount() >= 6" />
+        <span>Add image</span>
+      </label>
+      <div class="thumbs" *ngIf="uploadedImages().length">
+        <div *ngFor="let img of uploadedImages(); let i = index" class="thumb">
+          <img [src]="img.preview" alt="" />
+          <button type="button" class="thumb__x" (click)="removeImageAt(i)" aria-label="Remove image">×</button>
+        </div>
+      </div>
+    </div>
 
     <div class="dialog__actions">
       <rs-button variant="secondary" (click)="closeCreateDialog()">Cancel</rs-button>
-      <rs-button variant="primary" [disabled]="saving()" (click)="submitCreate()">{{ saving() ? 'Creating…' : 'Create' }}</rs-button>
+      <rs-button variant="primary" [disabled]="saving() || !canSubmitCreate()" (click)="submitCreate()">{{
+        saving() ? 'Creating…' : 'Create'
+      }}</rs-button>
     </div>
   </div>
 </div>

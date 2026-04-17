@@ -19,8 +19,9 @@ export class AdminLayoutComponent {
   nav: DashNavItem[] = [
     { label: 'Overview',  icon: 'dashboard', route: '/admin', exact: true },
     { label: 'Users',     icon: 'users',     route: '/admin/users' },
-    { label: 'Sellers',   icon: 'shield',    route: '/admin/sellers' },
-    { label: 'Products',  icon: 'box',       route: '/admin/products' },
+  { label: 'Sellers',   icon: 'shield',    route: '/admin/sellers' },
+  { label: 'Brands',    icon: 'tag',       route: '/admin/brands' },
+  { label: 'Products',  icon: 'box',       route: '/admin/products' },
     { label: 'Categories', icon: 'package',   route: '/admin/categories' },
     { label: 'Orders',    icon: 'truck',     route: '/admin/orders' },
     { label: 'Analytics', icon: 'chart',     route: '/admin/analytics' },

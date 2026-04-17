@@ -38,6 +38,19 @@ export class BrandApiService {
     return this.http.get<BrandApiResponse[]>('/api/brands/my');
   }
 
+  /** Admin / catalog: optional status filter e.g. PENDING, APPROVED, SUSPENDED, REJECTED */
+  getAllBrands(params?: { status?: string }): Observable<BrandApiResponse[]> {
+    const q: Record<string, string> = {};
+    if (params?.status) {
+      q['status'] = params.status;
+    }
+    return this.http.get<BrandApiResponse[]>('/api/brands', { params: q });
+  }
+
+  patchBrandStatus(brandId: string, status: string): Observable<BrandApiResponse> {
+    return this.http.patch<BrandApiResponse>(`/api/brands/${encodeURIComponent(brandId)}/status`, { status });
+  }
+
   createBrand(payload: CreateBrandPayload): Observable<BrandApiResponse> {
     return this.http.post<BrandApiResponse>('/api/brands', payload);
   }

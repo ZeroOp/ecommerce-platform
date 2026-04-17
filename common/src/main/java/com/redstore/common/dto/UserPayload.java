@@ -24,6 +24,11 @@ public class UserPayload {
     @NotEmpty(message = "At least one role is required")
     private Set<UserRole> roles; // Changed from String to UserRole
 
+    /**
+     * When false, seller capabilities (e.g. creating products) are blocked. Defaults to true when absent from JWT.
+     */
+    private Boolean active;
+
     public String getRole() {
         return roles != null && !roles.isEmpty() ? roles.iterator().next().name() : null;
     }

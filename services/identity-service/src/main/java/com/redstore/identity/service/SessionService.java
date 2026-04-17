@@ -43,6 +43,7 @@ public class SessionService {
                 .id(user.getId().toString())
                 .email(user.getEmail())
                 .roles(Set.of(user.getRole()))
+                .active(user.isActive())
                 .build();
 
         // 2. Generate the short-lived 15-minute JWT

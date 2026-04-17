@@ -52,6 +52,7 @@ public class SellerProductController {
     public PresignedUploadUrlResponse createImageUploadUrl(
             @Valid @RequestBody CreateProductImageUploadUrlRequest request
     ) {
+        authContextService.requireActiveSellerAccount();
         String sellerId = authContextService.requireCurrentUserId();
         return productImageUploadService.createUploadUrl(sellerId, request.fileName(), request.contentType());
     }

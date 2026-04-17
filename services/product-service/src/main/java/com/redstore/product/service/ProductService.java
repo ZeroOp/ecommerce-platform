@@ -100,9 +100,14 @@ public class ProductService {
 
     @Transactional
     public ProductDto create(CreateProductRequest request) {
+        authContextService.requireActiveSellerAccount();
         String sellerId = authContextService.requireCurrentUserId();
         Brand brand = brandRepository.findByIdAndSellerId(request.brandId(), sellerId)
                 .orElseThrow(() -> new BadRequestException("Brand not found for seller"));
+
+        if (brand.getStatus() != BrandStatus.APPROVED) {
+            throw new BadRequestException("Only approved brands can list products");
+        }
 
         Category category = categoryRepository.findById(request.categoryId())
                 .orElseThrow(() -> new BadRequestException("Category not found"));
@@ -110,7 +115,8 @@ public class ProductService {
         boolean categoryLinkedToBrand = brand.getCategories().stream()
                 .anyMatch(c -> c.getId().equals(category.getId()));
         if (!categoryLinkedToBrand) {
-            throw new BadRequestException("Selected category must be one of the brand's categories");
+            brand.getCategories().add(category);
+            brandRepository.save(brand);
         }
 
         List<MetadataFieldDefinition> template = categoryMetadataTemplateService.resolveTemplate(category);

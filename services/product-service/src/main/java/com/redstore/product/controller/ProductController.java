@@ -22,15 +22,15 @@ public class ProductController {
 
     @GetMapping
     public List<ProductDto> listPublished(
-            @RequestParam(required = false) String categoryId,
-            @RequestParam(required = false) String categorySlug,
-            @RequestParam(defaultValue = "24") int limit
+            @RequestParam(value = "categoryId", required = false) String categoryId,
+            @RequestParam(value = "categorySlug", required = false) String categorySlug,
+            @RequestParam(value = "limit", defaultValue = "24") int limit
     ) {
         return productService.listStorefront(categoryId, categorySlug, limit);
     }
 
     @GetMapping("/{productId}")
-    public ProductDto getById(@PathVariable String productId) {
+    public ProductDto getById(@PathVariable("productId") String productId) {
         return productService.getById(productId);
     }
 }

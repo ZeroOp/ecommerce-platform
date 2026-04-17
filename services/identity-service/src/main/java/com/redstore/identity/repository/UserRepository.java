@@ -4,6 +4,8 @@ import com.redstore.identity.model.User;
 import com.redstore.identity.model.UserId;
 import com.redstore.common.enums.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +22,7 @@ public interface UserRepository extends JpaRepository<User, UserId> {
     List<User> findById_Email(String email);
 
     boolean existsById_Email(String email);
+
+    @Query("SELECT u FROM User u WHERE u.id.role = :role")
+    List<User> findAllByRole(@Param("role") UserRole role);
 }

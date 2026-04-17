@@ -30,6 +30,7 @@ import { SellerSettingsComponent } from './features/seller/seller-settings.compo
 import { AdminDashboardComponent } from './features/admin/admin-dashboard.component';
 import { AdminUsersComponent } from './features/admin/admin-users.component';
 import { AdminSellersComponent } from './features/admin/admin-sellers.component';
+import { AdminBrandsComponent } from './features/admin/admin-brands.component';
 import { AdminProductsComponent } from './features/admin/admin-products.component';
 import { AdminCategoriesComponent } from './features/admin/admin-categories.component';
 import { AdminOrdersComponent } from './features/admin/admin-orders.component';
@@ -95,6 +96,7 @@ export const routes: Routes = [
       { path: '',          component: AdminDashboardComponent, title: 'Admin Console · RedStore' },
       { path: 'users',     component: AdminUsersComponent,     title: 'Users · Admin' },
       { path: 'sellers',   component: AdminSellersComponent,   title: 'Sellers · Admin' },
+      { path: 'brands',    component: AdminBrandsComponent,    title: 'Brands · Admin' },
       { path: 'products',  component: AdminProductsComponent,  title: 'Products · Admin' },
       { path: 'categories', component: AdminCategoriesComponent, title: 'Categories · Admin' },
       { path: 'orders',    component: AdminOrdersComponent,    title: 'Orders · Admin' },

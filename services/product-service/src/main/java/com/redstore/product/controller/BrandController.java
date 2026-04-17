@@ -37,8 +37,8 @@ public class BrandController {
 
     @GetMapping
     public List<BrandDto> getAllBrands(
-            @RequestParam(required = false) Set<String> categoryIds,
-            @RequestParam(required = false) String status
+            @RequestParam(value = "categoryIds", required = false) Set<String> categoryIds,
+            @RequestParam(value = "status", required = false) String status
     ) {
         return brandService.listBrands(categoryIds, status);
     }
@@ -59,7 +59,7 @@ public class BrandController {
     @PutMapping("/{brandId}")
     @RequireSeller
     public BrandDto updateBrand(
-            @PathVariable String brandId,
+            @PathVariable("brandId") String brandId,
             @Valid @RequestBody UpdateBrandRequest request
     ) {
         return brandService.updateBrand(brandId, request);
@@ -68,7 +68,7 @@ public class BrandController {
     @PatchMapping("/{brandId}/status")
     @RequireAdmin
     public BrandDto updateBrandStatus(
-            @PathVariable String brandId,
+            @PathVariable("brandId") String brandId,
             @Valid @RequestBody UpdateBrandStatusRequest request
     ) {
         return brandService.updateBrandStatus(brandId, request.status());
