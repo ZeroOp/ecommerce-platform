@@ -2,6 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface MetadataFieldApi {
+  key: string;
+  label: string;
+}
+
 export interface CategoryApiResponse {
   id: string;
   name: string;
@@ -11,6 +16,7 @@ export interface CategoryApiResponse {
   iconUrl?: string | null;
   parentCategoryId?: string | null;
   parentCategoryName?: string | null;
+  metadataFields?: MetadataFieldApi[];
   createdAt: string;
   updatedAt: string;
 }
@@ -21,6 +27,7 @@ export interface CreateCategoryPayload {
   description?: string;
   icon?: string;
   parentCategoryId?: string;
+  metadataTemplate?: MetadataFieldApi[];
 }
 
 export interface PresignedUploadResponse {

@@ -3,6 +3,7 @@ package com.redstore.product.dto;
 import com.redstore.product.entity.Category;
 
 import java.time.Instant;
+import java.util.List;
 
 public record CategoryDto(
         String id,
@@ -13,6 +14,7 @@ public record CategoryDto(
         String iconUrl,
         String parentCategoryId,
         String parentCategoryName,
+        List<MetadataFieldDefinition> metadataFields,
         Instant createdAt,
         Instant updatedAt
 ) {
@@ -26,11 +28,12 @@ public record CategoryDto(
                 null, // iconUrl will be set by service
                 category.getParentCategoryId(),
                 null, // parentCategoryName will be set by service
+                null,
                 category.getCreatedAt(),
                 category.getUpdatedAt()
         );
     }
-    
+
     public static CategoryDto from(Category category, String iconUrl, String parentCategoryName) {
         return new CategoryDto(
                 category.getId(),
@@ -41,6 +44,7 @@ public record CategoryDto(
                 iconUrl,
                 category.getParentCategoryId(),
                 parentCategoryName,
+                null,
                 category.getCreatedAt(),
                 category.getUpdatedAt()
         );

@@ -1,0 +1,202 @@
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.toolbar__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: 42px;
+  background: white;
+  border: 1px solid var(--rs-border);
+  border-radius: var(--rs-radius-pill);
+  flex: 0 1 360px;
+  color: var(--rs-text-subtle);
+}
+.toolbar__search:focus-within {
+  border-color: var(--rs-brand-500);
+  box-shadow: var(--rs-shadow-ring);
+}
+.toolbar__search input {
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  font-size: 13px;
+  color: var(--rs-text);
+}
+
+.toolbar__tabs {
+  display: inline-flex;
+  padding: 4px;
+  background: var(--rs-surface-2);
+  border-radius: var(--rs-radius-pill);
+  gap: 4px;
+}
+.toolbar__tabs button {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rs-text-muted);
+  border-radius: var(--rs-radius-pill);
+}
+.toolbar__tabs button.is-active {
+  background: white;
+  color: var(--rs-text);
+  box-shadow: var(--rs-shadow-xs);
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--rs-border);
+  border-radius: var(--rs-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--rs-shadow-xs);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+th {
+  text-align: left;
+  padding: 14px 20px;
+  color: var(--rs-text-muted);
+  font-weight: 600;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: var(--rs-surface-2);
+}
+td {
+  padding: 14px 20px;
+  border-top: 1px solid var(--rs-border);
+  vertical-align: middle;
+}
+tr:hover td {
+  background: var(--rs-surface-2);
+}
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.product-cell img {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  object-fit: cover;
+  background: var(--rs-surface-3);
+}
+.product-cell__name {
+  font-weight: 600;
+  color: var(--rs-text);
+}
+.product-cell__link {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  color: var(--rs-brand-600);
+}
+.product-cell__link:hover {
+  text-decoration: underline;
+}
+.product-cell__id {
+  font-size: 11px;
+  color: var(--rs-text-subtle);
+}
+.muted {
+  color: var(--rs-text-subtle);
+}
+.actions button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--rs-text-subtle);
+}
+.actions button:hover {
+  background: var(--rs-surface-2);
+  color: var(--rs-text);
+}
+input[type='checkbox'] {
+  accent-color: var(--rs-brand-600);
+}
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 10, 12, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 80;
+  padding: 16px;
+}
+.dialog {
+  width: min(560px, 100%);
+  max-height: min(92vh, 900px);
+  overflow-y: auto;
+  background: white;
+  border: 1px solid var(--rs-border);
+  border-radius: var(--rs-radius-lg);
+  box-shadow: var(--rs-shadow-lg);
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+}
+.dialog h3 {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.dialog p {
+  color: var(--rs-text-muted);
+  font-size: 13px;
+}
+.dialog label {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--rs-text-subtle);
+  font-weight: 600;
+}
+.dialog input[type='text'],
+.dialog input[type='number'],
+.dialog select,
+.dialog textarea {
+  width: 100%;
+  border: 1px solid var(--rs-border);
+  border-radius: var(--rs-radius-md);
+  padding: 10px 12px;
+  font: inherit;
+  color: var(--rs-text);
+  background: white;
+}
+.dialog textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+.dialog input:focus,
+.dialog select:focus,
+.dialog textarea:focus {
+  outline: none;
+  border-color: var(--rs-brand-500);
+  box-shadow: var(--rs-shadow-ring);
+}
+.dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+.hint {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--rs-text-muted);
+}

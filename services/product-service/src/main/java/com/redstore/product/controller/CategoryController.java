@@ -36,6 +36,11 @@ public class CategoryController {
         return categoryService.listCategories();
     }
 
+    @GetMapping("/{categoryId}")
+    public CategoryDto getCategory(@PathVariable String categoryId) {
+        return categoryService.getCategory(categoryId);
+    }
+
     @PostMapping
     @RequireAdmin
     public CategoryDto createCategory(@Valid @RequestBody CreateCategoryRequest request) {

@@ -22,17 +22,20 @@ public class CategoryService {
     private final AuthContextService authContextService;
     private final CategoryCreatedPublisher categoryCreatedPublisher;
     private final CategoryIconUploadService categoryIconUploadService;
+    private final CategoryMetadataTemplateService categoryMetadataTemplateService;
 
     public CategoryService(
             CategoryRepository categoryRepository,
             AuthContextService authContextService,
             CategoryCreatedPublisher categoryCreatedPublisher,
-            CategoryIconUploadService categoryIconUploadService
+            CategoryIconUploadService categoryIconUploadService,
+            CategoryMetadataTemplateService categoryMetadataTemplateService
     ) {
         this.categoryRepository = categoryRepository;
         this.authContextService = authContextService;
         this.categoryCreatedPublisher = categoryCreatedPublisher;
         this.categoryIconUploadService = categoryIconUploadService;
+        this.categoryMetadataTemplateService = categoryMetadataTemplateService;
     }
 
     public List<CategoryDto> listCategories() {
@@ -40,6 +43,12 @@ public class CategoryService {
                 .stream()
                 .map(this::enrichCategoryDto)
                 .toList();
+    }
+
+    public CategoryDto getCategory(String id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException("Category not found"));
+        return enrichCategoryDto(category);
     }
 
     @Transactional
@@ -68,6 +77,7 @@ public class CategoryService {
                 .description(request.description())
                 .icon(request.icon())
                 .parentCategoryId(blankToNull(request.parentCategoryId()))
+                .metadataTemplateJson(categoryMetadataTemplateService.serializeTemplate(request.metadataTemplate()))
                 .build();
 
         Category saved = categoryRepository.save(category);
@@ -114,6 +124,18 @@ public class CategoryService {
             }
         }
 
-        return CategoryDto.from(category, iconUrl, parentCategoryName);
+        return new CategoryDto(
+                category.getId(),
+                category.getName(),
+                category.getSlug(),
+                category.getDescription(),
+                category.getIcon(),
+                iconUrl,
+                category.getParentCategoryId(),
+                parentCategoryName,
+                categoryMetadataTemplateService.resolveTemplate(category),
+                category.getCreatedAt(),
+                category.getUpdatedAt()
+        );
     }
 }

@@ -1,0 +1,119 @@
+<rs-page-header eyebrow="Catalog" title="Products" subtitle="Manage, update, and launch products across your brands.">
+  <rs-button variant="secondary"><rs-icon slot="icon" name="upload" [size]="16"></rs-icon>Import</rs-button>
+  <rs-button variant="primary" (click)="openCreateDialog()"
+    ><rs-icon slot="icon" name="plus" [size]="16"></rs-icon>Add product</rs-button
+  >
+</rs-page-header>
+
+<div class="toolbar">
+  <div class="toolbar__search">
+    <rs-icon name="search" [size]="16"></rs-icon>
+    <input type="search" placeholder="Search products..." [value]="query()" (input)="onSearch($event)" />
+  </div>
+  <div class="toolbar__tabs">
+    <button *ngFor="let t of tabs" [class.is-active]="activeTab() === t" (click)="activeTab.set(t)">{{ t }}</button>
+  </div>
+</div>
+
+<section class="card">
+  <table>
+    <thead>
+      <tr>
+        <th><input type="checkbox" disabled /></th>
+        <th>Product</th>
+        <th>Brand</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of rows()">
+        <td><input type="checkbox" disabled /></td>
+        <td class="product-cell">
+          <img [src]="p.image" [alt]="p.name" />
+          <div>
+            <a class="product-cell__link" [routerLink]="['/product', p.id]">{{ p.name }}</a>
+            <div class="product-cell__id">ID: {{ p.id }}</div>
+          </div>
+        </td>
+        <td>{{ p.brand }}</td>
+        <td><rs-badge [soft]="true" tone="neutral">{{ p.category }}</rs-badge></td>
+        <td>
+          <strong>${{ p.price | number: '1.2-2' }}</strong>
+        </td>
+        <td>
+          <rs-badge *ngIf="p.inStock" tone="success" [soft]="true">In stock</rs-badge>
+          <rs-badge *ngIf="!p.inStock" tone="danger" [soft]="true">Out</rs-badge>
+        </td>
+        <td class="actions">
+          <a [routerLink]="['/product', p.id]" title="View"><rs-icon name="eye" [size]="14"></rs-icon></a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="dialog-backdrop" *ngIf="showCreateDialog()" (click)="closeCreateDialog()">
+  <div class="dialog" (click)="$event.stopPropagation()">
+    <h3>Add product</h3>
+    <p>Select your brand and category, then add details and 3–6 images.</p>
+
+    <label>
+      Brand
+      <select [value]="formBrandId()" (change)="onBrandChange($event)">
+        <option value="" disabled>Choose brand</option>
+        <option *ngFor="let b of myBrands()" [value]="b.id">{{ b.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      Category
+      <select [value]="formCategoryId()" (change)="onCategoryChange($event)" [disabled]="!formBrandId()">
+        <option value="" disabled>Choose category</option>
+        <option *ngFor="let c of categoriesForBrand()" [value]="c.id">{{ c.name }}</option>
+      </select>
+    </label>
+
+    <label>
+      Product name
+      <input type="text" [value]="formName()" (input)="formName.set(($any($event.target)).value)" placeholder="e.g. Galaxy S26" />
+    </label>
+
+    <label>
+      Description
+      <textarea [value]="formDescription()" (input)="formDescription.set(($any($event.target)).value)" placeholder="Describe the product"></textarea>
+    </label>
+
+    <label>
+      Price (USD)
+      <input type="number" min="0.01" step="0.01" [value]="formPrice()" (input)="formPrice.set(+($any($event.target)).value)" />
+    </label>
+
+    <ng-container *ngIf="metadataFields().length">
+      <div *ngFor="let f of metadataFields()" class="meta-field">
+        <label>
+          {{ f.label }}
+          <input
+            type="text"
+            [value]="metaValue(f.key)"
+            (input)="setMeta(f.key, ($any($event.target)).value)"
+            [attr.placeholder]="f.label"
+          />
+        </label>
+      </div>
+    </ng-container>
+
+    <label>
+      Images (3–6 files)
+      <input type="file" accept="image/*" multiple (change)="onImagesPicked($event)" />
+      <span class="hint">{{ imageFiles().length }} file(s) selected</span>
+    </label>
+
+    <div class="dialog__actions">
+      <rs-button variant="secondary" (click)="closeCreateDialog()">Cancel</rs-button>
+      <rs-button variant="primary" [disabled]="saving()" (click)="submitCreate()">{{ saving() ? 'Creating…' : 'Create' }}</rs-button>
+    </div>
+  </div>
+</div>

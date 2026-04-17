@@ -56,6 +56,18 @@
 
 .pd__desc { color: var(--rs-text-muted); margin-top: 18px; line-height: 1.7; font-size: 15px; }
 
+.pd__specs { margin-top: 18px; display: grid; gap: 8px; }
+.pd__spec-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 12px;
+  font-size: 14px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--rs-border);
+}
+.pd__spec-row dt { color: var(--rs-text-muted); font-weight: 600; margin: 0; }
+.pd__spec-row dd { margin: 0; color: var(--rs-text); }
+
 .pd__actions { display: flex; gap: 10px; align-items: center; margin-top: 28px; flex-wrap: wrap; }
 .pd__qty {
   display: inline-flex; align-items: center; gap: 8px;

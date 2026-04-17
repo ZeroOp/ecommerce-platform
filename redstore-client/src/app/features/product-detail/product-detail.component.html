@@ -1,9 +1,11 @@
-<ng-container *ngIf="product() as p; else notFound">
+@if (product() === undefined) {
+  <div class="rs-container pd-404"><p>Loading…</p></div>
+} @else if (product(); as p) {
   <section class="rs-container pd">
     <nav class="pd__breadcrumb">
       <a routerLink="/">Home</a>
       <rs-icon name="chevron-right" [size]="12"></rs-icon>
-      <a [routerLink]="['/category', p.category]">{{ p.category | titlecase }}</a>
+      <a [routerLink]="['/category', categoryLinkSlug(p)]">{{ p.category | titlecase }}</a>
       <rs-icon name="chevron-right" [size]="12"></rs-icon>
       <span>{{ p.name }}</span>
     </nav>
@@ -43,6 +45,13 @@
 
         <p class="pd__desc">{{ p.description }}</p>
 
+        <dl class="pd__specs" *ngIf="p.specs && (p.specs | keyvalue).length">
+          <div *ngFor="let e of p.specs | keyvalue" class="pd__spec-row">
+            <dt>{{ e.key | titlecase }}</dt>
+            <dd>{{ e.value }}</dd>
+          </div>
+        </dl>
+
         <div class="pd__actions">
           <div class="pd__qty">
             <button (click)="dec()" aria-label="Decrease"><rs-icon name="minus" [size]="16"></rs-icon></button>
@@ -69,17 +78,17 @@
     </div>
   </section>
 
-  <section class="rs-container pd-section" *ngIf="related().length">
-    <h2>You may also like</h2>
-    <div class="pd-related">
-      <rs-product-card *ngFor="let r of related()" [product]="r" (add)="addRelated($event)"></rs-product-card>
-    </div>
-  </section>
-</ng-container>
-
-<ng-template #notFound>
+  @if (related().length) {
+    <section class="rs-container pd-section">
+      <h2>You may also like</h2>
+      <div class="pd-related">
+        <rs-product-card *ngFor="let r of related()" [product]="r" (add)="addRelated($event)"></rs-product-card>
+      </div>
+    </section>
+  }
+} @else {
   <div class="rs-container pd-404">
     <h2>Product not found</h2>
     <a routerLink="/">Go back home</a>
   </div>
-</ng-template>
+}

@@ -91,7 +91,7 @@
     <a class="section__link" routerLink="/category/electronics">View all <rs-icon name="arrow-right" [size]="14"></rs-icon></a>
   </div>
   <div class="products-grid">
-    <rs-product-card *ngFor="let p of featured" [product]="p" (add)="add($event)"></rs-product-card>
+    <rs-product-card *ngFor="let p of featured()" [product]="p" (add)="add($event)"></rs-product-card>
   </div>
 </section>
 
@@ -119,6 +119,6 @@
     </div>
   </div>
   <div class="products-grid">
-    <rs-product-card *ngFor="let p of trending" [product]="p" (add)="add($event)"></rs-product-card>
+    <rs-product-card *ngFor="let p of trending()" [product]="p" (add)="add($event)"></rs-product-card>
   </div>
 </section>

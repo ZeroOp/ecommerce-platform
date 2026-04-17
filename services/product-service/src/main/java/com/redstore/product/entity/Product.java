@@ -8,42 +8,55 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 
 @Entity
-@Table(name = "categories")
+@Table(name = "products")
 @Data
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class Product {
 
     @Id
     private String id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    private String sellerId;
+
+    @Column(nullable = false)
+    private String brandId;
+
+    @Column(nullable = false)
+    private String categoryId;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @Column(length = 1000)
+    @Column(length = 8000)
     private String description;
 
-    @Column(length = 255)
-    private String icon;
+    @Column(nullable = false, precision = 14, scale = 2)
+    private BigDecimal price;
 
-    @Column(length = 255)
-    private String parentCategoryId;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(nullable = false, columnDefinition = "jsonb")
+    private List<String> imageKeys;
 
-    /**
-     * Optional JSON array: [{"key":"ram","label":"RAM"},...]. When null, defaults are inferred from category slugs.
-     */
-    @Column(columnDefinition = "TEXT")
-    private String metadataTemplateJson;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(nullable = false, columnDefinition = "jsonb")
+    private Map<String, String> metadata;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

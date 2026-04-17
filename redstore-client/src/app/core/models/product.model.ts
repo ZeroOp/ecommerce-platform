@@ -10,7 +10,12 @@ export interface Product {
   reviews: number;
   image: string;
   images?: string[];
+  /** Display name of category */
   category: string;
+  /** API category id when loaded from catalog */
+  categoryId?: string;
+  /** Slug for `/category/:slug` routes */
+  categorySlug?: string;
   subCategory?: string;
   brand: string;
   inStock: boolean;

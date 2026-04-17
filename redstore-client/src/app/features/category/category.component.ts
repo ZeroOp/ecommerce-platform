@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CATEGORIES, getCategory } from '../../data/mock-categories';
+import { Category } from '../../core/models/product.model';
 import { getProductsByCategory } from '../../data/mock-products';
 import { BRANDS } from '../../data/mock-brands';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
@@ -11,7 +12,10 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { CategoryApiService } from '../../core/services/category-api.service';
+import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
 
 type SortKey = 'featured' | 'priceAsc' | 'priceDesc' | 'rating' | 'newest';
 
@@ -25,14 +29,54 @@ type SortKey = 'featured' | 'priceAsc' | 'priceDesc' | 'rating' | 'newest';
 })
 export class CategoryComponent {
   private route = inject(ActivatedRoute);
+  private categoryApi = inject(CategoryApiService);
+  private productApi = inject(ProductApiService);
   cart = inject(CartService);
   toast = inject(ToastService);
 
   private params = toSignal(this.route.paramMap, { initialValue: this.route.snapshot.paramMap });
   slug = computed(() => this.params()?.get('slug') ?? 'fashion');
-  category = computed(() => getCategory(this.slug()) ?? CATEGORIES[0]);
-  allProducts = computed(() => getProductsByCategory(this.category().slug));
-  relatedBrands = computed(() => BRANDS.filter(b => b.categories.includes(this.category().slug)));
+
+  apiCategories = toSignal(this.categoryApi.getCategories(), { initialValue: [] });
+
+  category = computed((): Category => {
+    const s = this.slug();
+    const api = this.apiCategories().find((c) => c.slug === s);
+    const mock = getCategory(s) ?? CATEGORIES[0];
+    if (api) {
+      return {
+        ...mock,
+        name: api.name,
+        slug: api.slug,
+        description: api.description ?? mock.description,
+        image: api.iconUrl ?? mock.image,
+        icon: mock.icon,
+      };
+    }
+    return mock;
+  });
+
+  apiProducts = toSignal(
+    toObservable(this.slug).pipe(
+      switchMap((slug) =>
+        this.productApi.getProducts({ categorySlug: slug, limit: 96 }).pipe(
+          map((list) => list.map(mapProductApiToModel)),
+          catchError(() => of([] as Product[])),
+        ),
+      ),
+    ),
+    { initialValue: [] },
+  );
+
+  allProducts = computed(() => {
+    const fromApi = this.apiProducts();
+    if (fromApi.length > 0) {
+      return fromApi;
+    }
+    return getProductsByCategory(this.category().slug);
+  });
+
+  relatedBrands = computed(() => BRANDS.filter((b) => b.categories.includes(this.category().slug)));
 
   // filters
   selectedSub = signal<string | null>(null);
@@ -45,16 +89,27 @@ export class CategoryComponent {
 
   products = computed(() => {
     let items = this.allProducts();
-    if (this.selectedSub())   items = items.filter(p => p.subCategory === this.selectedSub());
-    if (this.selectedBrand()) items = items.filter(p => p.brand === this.selectedBrand());
-    items = items.filter(p => p.price >= this.minPrice() && p.price <= this.maxPrice());
-    items = items.filter(p => p.rating >= this.minRating());
+    if (this.selectedSub()) {
+      items = items.filter((p) => p.subCategory === this.selectedSub());
+    }
+    if (this.selectedBrand()) {
+      items = items.filter((p) => p.brand === this.selectedBrand());
+    }
+    items = items.filter((p) => p.price >= this.minPrice() && p.price <= this.maxPrice());
+    items = items.filter((p) => p.rating >= this.minRating());
     const sorted = [...items];
     switch (this.sort()) {
-      case 'priceAsc':  sorted.sort((a, b) => a.price - b.price); break;
-      case 'priceDesc': sorted.sort((a, b) => b.price - a.price); break;
-      case 'rating':    sorted.sort((a, b) => b.rating - a.rating); break;
-      default:          sorted.sort((a, b) => b.reviews - a.reviews);
+      case 'priceAsc':
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case 'priceDesc':
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case 'rating':
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+      default:
+        sorted.sort((a, b) => b.reviews - a.reviews);
     }
     return sorted;
   });

@@ -3,6 +3,8 @@ package com.redstore.product.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
+import java.util.List;
+
 public record CreateCategoryRequest(
         @NotBlank(message = "name is required")
         @Size(max = 120, message = "name cannot exceed 120 characters")
@@ -17,6 +19,9 @@ public record CreateCategoryRequest(
         @Size(max = 255, message = "icon cannot exceed 255 characters")
         String icon,
 
-        String parentCategoryId
+        String parentCategoryId,
+
+        /** Optional JSON-friendly list; when omitted, metadata fields are inferred from slugs at product creation time. */
+        List<MetadataFieldDefinition> metadataTemplate
 ) {
 }

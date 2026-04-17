@@ -87,6 +87,10 @@ spec:
               value: "redstore-main"
             - name: MINIO_BRAND_LOGO_PREFIX
               value: "brand-logos"
+            - name: MINIO_CATEGORY_ICON_PREFIX
+              value: "category-icons"
+            - name: MINIO_PRODUCT_IMAGE_PREFIX
+              value: "product-images"
             - name: MINIO_PRESIGNED_EXPIRY_MINUTES
               value: "15"
           ports:
