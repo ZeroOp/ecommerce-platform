@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snapshot-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snapshot
+  template:
+    metadata:
+      labels:
+        app: snapshot
+    spec:
+      containers:
+        - name: snapshot
+          image: zeroop/redstore-snapshot-service
+          env:
+            # --- Product DB Credentials ---
+            - name: PRODUCT_DB_HOST
+              value: "product-db-cluster-rw"
+            - name: PRODUCT_DB_USER
+              value: "product_admin"
+            - name: PRODUCT_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: product-db-creds
+                  key: password
+            - name: PRODUCT_DB_NAME
+              value: "product_db"
+
+            # --- Identity DB Credentials ---
+            - name: IDENTITY_DB_HOST
+              value: "identity-db-cluster-rw"
+            - name: IDENTITY_DB_USER
+              value: "identity_admin"
+            - name: IDENTITY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: identity-db-creds
+                  key: password
+            - name: IDENTITY_DB_NAME
+              value: "identity_db"
+
+            # --- MinIO Credentials (Using Internal Service Name) ---
+            - name: MINIO_ENDPOINT
+              value: "minio-primary-srv"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secrets
+                  key: access-key
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secrets
+                  key: secret-key
+            - name: MINIO_BUCKET
+              value: "redstore-main"
+            - name: MINIO_USE_SSL
+              value: "false"
+
+            # --- Cron Schedule ---
+            # Runs at minute 0 of every 2nd hour.
+            - name: SNAPSHOT_CRON_SCHEDULE
+              value: "0 */2 * * *"
+          # No ports needed as this is a background worker
