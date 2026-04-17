@@ -13,14 +13,22 @@ RUN find services -type f ! -name "pom.xml" -delete
 
 # 4. Resolve dependencies
 # We target the archive-service here
-RUN mvn dependency:go-offline -B -pl services/archive-service -am
+RUN sh -c 'for i in 1 2 3 4 5; do \
+  mvn -B -U -Dmaven.wagon.http.retryHandler.count=5 dependency:go-offline -pl services/archive-service -am && exit 0; \
+  echo "Retrying Maven dependency download ($i/5)..." && sleep 5; \
+done; \
+echo "Maven dependency resolution failed after retries." && exit 1'
 
 # 5. Copy the actual source code needed for this build
 COPY common/src common/src
 COPY services/archive-service/src services/archive-service/src
 
 # 6. Build the JAR
-RUN mvn clean package -DskipTests -pl services/archive-service -am
+RUN sh -c 'for i in 1 2 3 4 5; do \
+  mvn -B -U clean package -DskipTests -pl services/archive-service -am && exit 0; \
+  echo "Retrying Maven package build ($i/5)..." && sleep 5; \
+done; \
+echo "Maven package build failed after retries." && exit 1'
 
 # 7. Final Runtime Stage
 FROM eclipse-temurin:21-jre-alpine
