@@ -1,0 +1,85 @@
+<ng-container *ngIf="product() as p; else notFound">
+  <section class="rs-container pd">
+    <nav class="pd__breadcrumb">
+      <a routerLink="/">Home</a>
+      <rs-icon name="chevron-right" [size]="12"></rs-icon>
+      <a [routerLink]="['/category', p.category]">{{ p.category | titlecase }}</a>
+      <rs-icon name="chevron-right" [size]="12"></rs-icon>
+      <span>{{ p.name }}</span>
+    </nav>
+
+    <div class="pd__grid">
+      <div class="pd__gallery">
+        <div class="pd__gallery-main">
+          <img [src]="gallery()[activeImage()]" [alt]="p.name" />
+          <div class="pd__gallery-chips">
+            <rs-badge *ngIf="p.badge" tone="dark">{{ p.badge }}</rs-badge>
+            <rs-badge *ngIf="p.discount" tone="brand">-{{ p.discount }}%</rs-badge>
+          </div>
+        </div>
+        <div class="pd__thumbs">
+          <button *ngFor="let g of gallery(); let i = index" (click)="activeImage.set(i)" [class.is-active]="i === activeImage()">
+            <img [src]="g" [alt]="'View ' + (i + 1)" />
+          </button>
+        </div>
+      </div>
+
+      <div class="pd__info">
+        <div class="pd__brand">{{ p.brand }}</div>
+        <h1 class="pd__name">{{ p.name }}</h1>
+        <div class="pd__meta">
+          <rs-rating size="lg" [value]="p.rating" [reviews]="p.reviews"></rs-rating>
+          <span class="pd__stock" [class.is-oos]="!p.inStock">
+            <rs-icon [name]="p.inStock ? 'check' : 'close'" [size]="14"></rs-icon>
+            {{ p.inStock ? 'In stock' : 'Out of stock' }}
+          </span>
+        </div>
+
+        <div class="pd__price">
+          <span class="pd__price-now">\${{ p.price | number: '1.2-2' }}</span>
+          <span *ngIf="p.originalPrice" class="pd__price-was">\${{ p.originalPrice | number: '1.2-2' }}</span>
+          <rs-badge *ngIf="p.discount" tone="success">Save {{ p.discount }}%</rs-badge>
+        </div>
+
+        <p class="pd__desc">{{ p.description }}</p>
+
+        <div class="pd__actions">
+          <div class="pd__qty">
+            <button (click)="dec()" aria-label="Decrease"><rs-icon name="minus" [size]="16"></rs-icon></button>
+            <span>{{ quantity() }}</span>
+            <button (click)="inc()" aria-label="Increase"><rs-icon name="plus" [size]="16"></rs-icon></button>
+          </div>
+          <rs-button size="lg" variant="primary" (click)="addToCart()" [disabled]="!p.inStock">
+            <rs-icon slot="icon" name="cart" [size]="18"></rs-icon>
+            Add to cart
+          </rs-button>
+          <rs-button size="lg" variant="outline">
+            <rs-icon slot="icon" name="heart" [size]="18"></rs-icon>
+            Save
+          </rs-button>
+        </div>
+
+        <div class="pd__perks">
+          <div><rs-icon name="truck" [size]="18"></rs-icon> Free delivery over $50</div>
+          <div><rs-icon name="shield" [size]="18"></rs-icon> 2-year warranty</div>
+          <div><rs-icon name="package" [size]="18"></rs-icon> 30-day easy returns</div>
+          <div><rs-icon name="zap" [size]="18"></rs-icon> Fast checkout & secure payment</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rs-container pd-section" *ngIf="related().length">
+    <h2>You may also like</h2>
+    <div class="pd-related">
+      <rs-product-card *ngFor="let r of related()" [product]="r" (add)="addRelated($event)"></rs-product-card>
+    </div>
+  </section>
+</ng-container>
+
+<ng-template #notFound>
+  <div class="rs-container pd-404">
+    <h2>Product not found</h2>
+    <a routerLink="/">Go back home</a>
+  </div>
+</ng-template>

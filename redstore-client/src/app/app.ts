@@ -1,37 +1,24 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router';
-import { HeaderComponent } from './components/header/header';
-import { FooterComponent } from './components/footer/footer';
-import { CategoryTabsComponent } from './components/category-tabs/category-tabs';
-import { AuthService } from './services/auth.service';
+import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { AuthService } from './core/services/auth.service';
+import { ToastStackComponent } from './shared/components/toast-stack/toast-stack.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, HeaderComponent, FooterComponent, CategoryTabsComponent],
-  templateUrl: './app.html',
-  styleUrls: ['./app.scss']
+  imports: [RouterOutlet, ToastStackComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <router-outlet></router-outlet>
+    <rs-toast-stack></rs-toast-stack>
+  `,
+  styles: [`:host { display: block; }`],
 })
 export class AppComponent implements OnInit {
+  private auth = inject(AuthService);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  ngOnInit() {
-    // Check if user is already logged in on app initialization
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser) {
-      console.log('No active session found');
-    }
-  }
-
-  isAuthPage(): boolean {
-    const currentUrl = this.router.url;
-    return currentUrl.includes('/auth/') || 
-           currentUrl.includes('/seller') || 
-           currentUrl.includes('/admin');
+  ngOnInit(): void {
+    // Silently refresh session on boot (ignored if not signed in / backend unavailable)
+    this.auth.fetchCurrentUser().subscribe();
   }
 }

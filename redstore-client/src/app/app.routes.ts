@@ -1,73 +1,98 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './pages/home/home';
-import { SigninComponent } from './pages/auth/signin/signin';
-import { UserSigninComponent } from './pages/auth/user-signin/user-signin';
-import { SignupComponent } from './pages/auth/signup/signup';
-import { SellerSigninComponent } from './pages/auth/seller-signin/seller-signin';
-import { AdminSigninComponent } from './pages/auth/admin-signin/admin-signin';
-import { RequestSellerComponent } from './pages/auth/request-seller/request-seller';
-import { FashionComponent } from './pages/category/fashion/fashion';
-import { MobilesComponent } from './pages/category/mobiles/mobiles';
-import { ElectronicsComponent } from './pages/category/electronics/electronics';
-import { AppliancesComponent } from './pages/category/appliances/appliances';
-import { SportsComponent } from './pages/category/sports/sports';
-import { BooksComponent } from './pages/category/books/books';
-import { FurnitureComponent } from './pages/category/furniture/furniture';
-import { BeautyComponent } from './pages/category/beauty/beauty';
-import { ToysComponent } from './pages/category/toys/toys';
-import { SellerDashboardComponent } from './pages/seller/seller-dashboard/seller-dashboard';
-import { SellerProductsComponent } from './pages/seller/seller-products/seller-products';
-import { SellerOrdersComponent } from './pages/seller/seller-orders/seller-orders';
-import { SellerAnalyticsComponent } from './pages/seller/seller-analytics/seller-analytics';
-import { SellerBrandsComponent } from './pages/seller/seller-brands/seller-brands';
-import { SellerSettingsComponent } from './pages/seller/seller-settings/seller-settings';
-import { SellerLayoutComponent } from './layouts/seller-layout/seller-layout';
-import { AdminDashboardComponent } from './pages/admin/admin-dashboard/admin-dashboard';
-import { AuthGuard } from './guards/auth.guard.service';
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
+import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
+import { SellerLayoutComponent } from './layouts/seller-layout/seller-layout.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+
+import { HomeComponent } from './features/home/home.component';
+import { CategoryComponent } from './features/category/category.component';
+import { ProductDetailComponent } from './features/product-detail/product-detail.component';
+import { CartComponent } from './features/cart/cart.component';
+import { CheckoutComponent } from './features/checkout/checkout.component';
+import { OrdersComponent } from './features/orders/orders.component';
+import { ProfileComponent } from './features/profile/profile.component';
+import { DealsComponent } from './features/deals/deals.component';
+import { NotFoundComponent } from './features/not-found/not-found.component';
+
+import { SigninComponent } from './features/auth/signin.component';
+import { SignupComponent } from './features/auth/signup.component';
+import { SellerSigninComponent } from './features/auth/seller-signin.component';
+import { AdminSigninComponent } from './features/auth/admin-signin.component';
+import { RequestSellerComponent } from './features/auth/request-seller.component';
+
+import { SellerDashboardComponent } from './features/seller/seller-dashboard.component';
+import { SellerProductsComponent } from './features/seller/seller-products.component';
+import { SellerBrandsComponent } from './features/seller/seller-brands.component';
+import { SellerOrdersComponent } from './features/seller/seller-orders.component';
+import { SellerAnalyticsComponent } from './features/seller/seller-analytics.component';
+import { SellerSettingsComponent } from './features/seller/seller-settings.component';
+
+import { AdminDashboardComponent } from './features/admin/admin-dashboard.component';
+import { AdminUsersComponent } from './features/admin/admin-users.component';
+import { AdminSellersComponent } from './features/admin/admin-sellers.component';
+import { AdminProductsComponent } from './features/admin/admin-products.component';
+import { AdminOrdersComponent } from './features/admin/admin-orders.component';
+import { AdminAnalyticsComponent } from './features/admin/admin-analytics.component';
+import { AdminSettingsComponent } from './features/admin/admin-settings.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'auth/signin', component: UserSigninComponent },
-  { path: 'auth/signup', component: SignupComponent },
-  { path: 'auth/seller-signin', component: SellerSigninComponent },
-  { path: 'auth/admin-signin', component: AdminSigninComponent },
-  { path: 'auth/request-seller', component: RequestSellerComponent },
-  { path: 'category/fashion', component: FashionComponent },
-  { path: 'category/mobiles', component: MobilesComponent },
-  { path: 'category/electronics', component: ElectronicsComponent },
-  { path: 'category/appliances', component: AppliancesComponent },
-  { path: 'category/sports', component: SportsComponent },
-  { path: 'category/books', component: BooksComponent },
-  { path: 'category/furniture', component: FurnitureComponent },
-  { path: 'category/beauty', component: BeautyComponent },
-  { path: 'category/toys', component: ToysComponent },
-  { 
-    path: 'seller', 
+  // Public storefront
+  {
+    path: '',
+    component: MainLayoutComponent,
+    children: [
+      { path: '', component: HomeComponent, title: 'RedStore — Modern Marketplace' },
+      { path: 'category/:slug', component: CategoryComponent },
+      { path: 'product/:id',    component: ProductDetailComponent },
+      { path: 'cart',           component: CartComponent,     title: 'Your cart · RedStore' },
+      { path: 'checkout',       component: CheckoutComponent, title: 'Checkout · RedStore' },
+      { path: 'orders',         component: OrdersComponent,   title: 'My orders · RedStore' },
+      { path: 'profile',        component: ProfileComponent,  title: 'Profile · RedStore' },
+      { path: 'deals',          component: DealsComponent,    title: 'Deals · RedStore' },
+    ],
+  },
+
+  // Auth
+  {
+    path: 'auth',
+    component: AuthLayoutComponent,
+    children: [
+      { path: 'signin',         component: SigninComponent,        title: 'Sign in · RedStore' },
+      { path: 'signup',         component: SignupComponent,        title: 'Sign up · RedStore' },
+      { path: 'seller-signin',  component: SellerSigninComponent,  title: 'Seller sign in · RedStore' },
+      { path: 'admin-signin',   component: AdminSigninComponent,   title: 'Admin sign in · RedStore' },
+      { path: 'request-seller', component: RequestSellerComponent, title: 'Become a seller · RedStore' },
+    ],
+  },
+
+  // Seller Hub
+  {
+    path: 'seller',
     component: SellerLayoutComponent,
-    // canActivate: [AuthGuard], // Bypassed for local development
-    // data: { role: 'seller' }, // Bypassed for local development
     children: [
-      { path: '', component: SellerDashboardComponent },
-      { path: 'products', component: SellerProductsComponent },
-      { path: 'brands', component: SellerBrandsComponent },
-      { path: 'orders', component: SellerOrdersComponent },
-      { path: 'analytics', component: SellerAnalyticsComponent },
-      { path: 'settings', component: SellerSettingsComponent }
-    ]
+      { path: '',          component: SellerDashboardComponent, title: 'Seller Hub · RedStore' },
+      { path: 'products',  component: SellerProductsComponent,  title: 'Products · Seller Hub' },
+      { path: 'brands',    component: SellerBrandsComponent,    title: 'Brands · Seller Hub' },
+      { path: 'orders',    component: SellerOrdersComponent,    title: 'Orders · Seller Hub' },
+      { path: 'analytics', component: SellerAnalyticsComponent, title: 'Analytics · Seller Hub' },
+      { path: 'settings',  component: SellerSettingsComponent,  title: 'Settings · Seller Hub' },
+    ],
   },
-  { 
-    path: 'admin', 
-    canActivate: [AuthGuard],
-    data: { role: 'admin' },
+
+  // Admin Console
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
     children: [
-      { path: '', component: AdminDashboardComponent },
-      { path: 'users', component: AdminDashboardComponent },
-      { path: 'products', component: AdminDashboardComponent },
-      { path: 'orders', component: AdminDashboardComponent },
-      { path: 'sellers', component: AdminDashboardComponent },
-      { path: 'analytics', component: AdminDashboardComponent },
-      { path: 'settings', component: AdminDashboardComponent }
-    ]
+      { path: '',          component: AdminDashboardComponent, title: 'Admin Console · RedStore' },
+      { path: 'users',     component: AdminUsersComponent,     title: 'Users · Admin' },
+      { path: 'sellers',   component: AdminSellersComponent,   title: 'Sellers · Admin' },
+      { path: 'products',  component: AdminProductsComponent,  title: 'Products · Admin' },
+      { path: 'orders',    component: AdminOrdersComponent,    title: 'Orders · Admin' },
+      { path: 'analytics', component: AdminAnalyticsComponent, title: 'Analytics · Admin' },
+      { path: 'settings',  component: AdminSettingsComponent,  title: 'Settings · Admin' },
+    ],
   },
-  { path: '**', redirectTo: '' } // Redirect unknown routes to home
+
+  { path: '**', component: NotFoundComponent, title: 'Not found · RedStore' },
 ];

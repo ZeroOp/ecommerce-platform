@@ -1,0 +1,124 @@
+<!-- HERO -->
+<section class="hero">
+  <div class="hero__bg"></div>
+  <div class="rs-container hero__inner">
+    <div class="hero__content rs-anim-slide">
+      <span class="hero__eyebrow">
+        <rs-icon name="sparkle" [size]="14"></rs-icon>
+        New season, new drops
+      </span>
+      <h1 class="hero__title">
+        Everything you love.<br>
+        <span class="rs-gradient-text">All in one place.</span>
+      </h1>
+      <p class="hero__sub">
+        Shop from 2M+ products across 120k sellers. Curated collections, unbeatable prices, and delivery so fast it feels like magic.
+      </p>
+      <div class="hero__cta">
+        <a class="hero__btn hero__btn--primary" routerLink="/category/fashion">
+          Start shopping <rs-icon name="arrow-right" [size]="16"></rs-icon>
+        </a>
+        <a class="hero__btn hero__btn--ghost" routerLink="/deals">View deals</a>
+      </div>
+      <div class="hero__stats">
+        <div><strong>2M+</strong> products</div>
+        <div><strong>120k</strong> sellers</div>
+        <div><strong>4.9★</strong> rating</div>
+      </div>
+    </div>
+    <div class="hero__visual">
+      <div class="hero__card hero__card--1">
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&auto=format&fit=crop" alt="" />
+        <div class="hero__card-tag">Fashion · 40% OFF</div>
+      </div>
+      <div class="hero__card hero__card--2">
+        <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&auto=format&fit=crop" alt="" />
+        <div class="hero__card-tag">Mobiles</div>
+      </div>
+      <div class="hero__card hero__card--3">
+        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop" alt="" />
+        <div class="hero__card-tag">Audio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Feature bar -->
+<section class="rs-container strip">
+  <div class="strip__item">
+    <rs-icon name="truck" [size]="22"></rs-icon>
+    <div><strong>Free delivery</strong><span>On all orders above $50</span></div>
+  </div>
+  <div class="strip__item">
+    <rs-icon name="shield" [size]="22"></rs-icon>
+    <div><strong>Secure payments</strong><span>100% protected transactions</span></div>
+  </div>
+  <div class="strip__item">
+    <rs-icon name="package" [size]="22"></rs-icon>
+    <div><strong>Easy returns</strong><span>30-day return policy</span></div>
+  </div>
+  <div class="strip__item">
+    <rs-icon name="sparkle" [size]="22"></rs-icon>
+    <div><strong>New arrivals</strong><span>Fresh drops every week</span></div>
+  </div>
+</section>
+
+<!-- Categories -->
+<section class="rs-container section">
+  <div class="section__head">
+    <div>
+      <div class="section__eyebrow">Explore</div>
+      <h2 class="section__title">Shop by category</h2>
+    </div>
+    <a class="section__link" routerLink="/category/fashion">Browse all <rs-icon name="arrow-right" [size]="14"></rs-icon></a>
+  </div>
+  <div class="cats">
+    <a *ngFor="let c of categories" [routerLink]="['/category', c.slug]" class="cat" [style.--cat-color]="c.color">
+      <div class="cat__icon">{{ c.icon }}</div>
+      <div class="cat__name">{{ c.name }}</div>
+      <div class="cat__count">{{ c.productCount | number }} items</div>
+    </a>
+  </div>
+</section>
+
+<!-- Featured -->
+<section class="rs-container section">
+  <div class="section__head">
+    <div>
+      <div class="section__eyebrow">Handpicked for you</div>
+      <h2 class="section__title">Featured products</h2>
+    </div>
+    <a class="section__link" routerLink="/category/electronics">View all <rs-icon name="arrow-right" [size]="14"></rs-icon></a>
+  </div>
+  <div class="products-grid">
+    <rs-product-card *ngFor="let p of featured" [product]="p" (add)="add($event)"></rs-product-card>
+  </div>
+</section>
+
+<!-- Deals banner -->
+<section class="rs-container">
+  <div class="deals-banner">
+    <div class="deals-banner__text">
+      <span class="deals-banner__eyebrow">Limited time</span>
+      <h2>Mega deals on top-rated products</h2>
+      <p>Save up to 40% on fashion, electronics, beauty and more — while stocks last.</p>
+      <a routerLink="/deals" class="hero__btn hero__btn--primary">Grab deals <rs-icon name="arrow-right" [size]="16"></rs-icon></a>
+    </div>
+    <div class="deals-banner__grid">
+      <rs-product-card *ngFor="let p of deals.slice(0, 3)" [product]="p" (add)="add($event)"></rs-product-card>
+    </div>
+  </div>
+</section>
+
+<!-- Trending -->
+<section class="rs-container section">
+  <div class="section__head">
+    <div>
+      <div class="section__eyebrow">What’s hot</div>
+      <h2 class="section__title">Trending right now</h2>
+    </div>
+  </div>
+  <div class="products-grid">
+    <rs-product-card *ngFor="let p of trending" [product]="p" (add)="add($event)"></rs-product-card>
+  </div>
+</section>

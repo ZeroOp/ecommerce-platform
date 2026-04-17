@@ -1,0 +1,68 @@
+<section class="rs-container cart">
+  <header class="cart__head">
+    <h1>Shopping cart</h1>
+    <p *ngIf="cart.count() > 0">{{ cart.count() }} item<span *ngIf="cart.count() > 1">s</span> in your bag</p>
+  </header>
+
+  <div class="cart__body" *ngIf="cart.items().length; else empty">
+    <section class="cart__items">
+      <article *ngFor="let item of cart.items()" class="cart-item">
+        <a [routerLink]="['/product', item.product.id]" class="cart-item__img">
+          <img [src]="item.product.image" [alt]="item.product.name" />
+        </a>
+        <div class="cart-item__body">
+          <div>
+            <div class="cart-item__brand">{{ item.product.brand }}</div>
+            <a [routerLink]="['/product', item.product.id]" class="cart-item__name">{{ item.product.name }}</a>
+            <div class="cart-item__meta">{{ item.product.subCategory | titlecase }} · In stock</div>
+          </div>
+          <button class="cart-item__remove" (click)="remove(item.product.id)" aria-label="Remove">
+            <rs-icon name="trash" [size]="16"></rs-icon>
+          </button>
+        </div>
+        <div class="cart-item__foot">
+          <div class="cart-item__qty">
+            <button (click)="dec(item.product.id, item.quantity)"><rs-icon name="minus" [size]="14"></rs-icon></button>
+            <span>{{ item.quantity }}</span>
+            <button (click)="inc(item.product.id, item.quantity)"><rs-icon name="plus" [size]="14"></rs-icon></button>
+          </div>
+          <div class="cart-item__price">
+            <strong>\${{ (item.product.price * item.quantity) | number: '1.2-2' }}</strong>
+            <span *ngIf="item.product.originalPrice">\${{ (item.product.originalPrice * item.quantity) | number: '1.2-2' }}</span>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <aside class="cart__summary">
+      <h3>Order summary</h3>
+      <div class="cart__row"><span>Subtotal</span><span>\${{ cart.subtotal() | number: '1.2-2' }}</span></div>
+      <div class="cart__row" *ngIf="cart.savings() > 0">
+        <span>You save</span><span class="cart__save">−\${{ cart.savings() | number: '1.2-2' }}</span>
+      </div>
+      <div class="cart__row">
+        <span>Shipping</span>
+        <span>{{ shipping() === 0 ? 'Free' : ('$' + (shipping() | number: '1.2-2')) }}</span>
+      </div>
+      <div class="cart__row"><span>Tax (est.)</span><span>\${{ tax() | number: '1.2-2' }}</span></div>
+      <div class="cart__divider"></div>
+      <div class="cart__row cart__row--total"><span>Total</span><span>\${{ total() | number: '1.2-2' }}</span></div>
+
+      <rs-button variant="primary" size="lg" [block]="true" (click)="checkout()">
+        Checkout <rs-icon slot="icon" name="arrow-right" [size]="16"></rs-icon>
+      </rs-button>
+
+      <div class="cart__perks">
+        <div><rs-icon name="shield" [size]="14"></rs-icon> Secure encrypted checkout</div>
+        <div><rs-icon name="truck" [size]="14"></rs-icon> Free delivery over $50</div>
+        <div><rs-icon name="package" [size]="14"></rs-icon> 30-day returns</div>
+      </div>
+    </aside>
+  </div>
+
+  <ng-template #empty>
+    <rs-empty icon="cart" title="Your cart is empty" message="Add products you love to see them here.">
+      <a routerLink="/" class="cart__cta">Browse products</a>
+    </rs-empty>
+  </ng-template>
+</section>

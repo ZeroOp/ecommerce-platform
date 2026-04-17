@@ -1,0 +1,110 @@
+<section class="cat-hero" [style.--cat-accent]="category().color">
+  <div class="rs-container cat-hero__inner">
+    <nav class="cat-hero__breadcrumb">
+      <a routerLink="/">Home</a>
+      <rs-icon name="chevron-right" [size]="12"></rs-icon>
+      <a routerLink="/">Shop</a>
+      <rs-icon name="chevron-right" [size]="12"></rs-icon>
+      <span>{{ category().name }}</span>
+    </nav>
+    <div class="cat-hero__head">
+      <div>
+        <div class="cat-hero__icon">{{ category().icon }}</div>
+        <h1>{{ category().name }}</h1>
+        <p>{{ category().description }}</p>
+        <div class="cat-hero__meta">
+          <rs-badge tone="dark">{{ category().productCount | number }} products</rs-badge>
+          <rs-badge tone="neutral">{{ relatedBrands().length }} brands</rs-badge>
+        </div>
+      </div>
+      <img [src]="category().image" [alt]="category().name" />
+    </div>
+  </div>
+</section>
+
+<!-- Sub-categories -->
+<section class="rs-container subs" *ngIf="category().subCategories && category().subCategories!.length">
+  <button class="sub" [class.is-active]="selectedSub() === null" (click)="selectedSub.set(null)">
+    All
+  </button>
+  <button *ngFor="let s of category().subCategories" class="sub"
+          [class.is-active]="selectedSub() === s.slug"
+          (click)="selectedSub.set(selectedSub() === s.slug ? null : s.slug)">
+    <img [src]="s.image" [alt]="s.name" />
+    <span>{{ s.name }}</span>
+  </button>
+</section>
+
+<section class="rs-container body">
+  <aside class="filters">
+    <header class="filters__head">
+      <h3>Filters</h3>
+      <button type="button" (click)="resetFilters()">Reset</button>
+    </header>
+
+    <div class="filters__group">
+      <h4>Price range</h4>
+      <div class="filters__price">
+        <input type="range" min="0" max="5000" step="50" [value]="maxPrice()" (input)="onMaxPrice($event)" />
+        <div class="filters__price-labels">
+          <span>${{ minPrice() }}</span>
+          <span>${{ maxPrice() }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filters__group">
+      <h4>Minimum rating</h4>
+      <input type="range" min="0" max="5" step="0.5" [value]="minRating()" (input)="onRating($event)" />
+      <div class="filters__rating">{{ minRating() }}★ & up</div>
+    </div>
+
+    <div class="filters__group" *ngIf="relatedBrands().length">
+      <h4>Brands</h4>
+      <div class="filters__brands">
+        <label *ngFor="let b of relatedBrands()">
+          <input type="radio" name="brand"
+                 [checked]="selectedBrand() === b.name"
+                 (change)="selectedBrand.set(selectedBrand() === b.name ? null : b.name)" />
+          <span class="filters__brand-logo">{{ b.logo }}</span>
+          <span>{{ b.name }}</span>
+        </label>
+      </div>
+    </div>
+  </aside>
+
+  <section class="results">
+    <div class="results__toolbar">
+      <div class="results__count"><strong>{{ products().length }}</strong> products</div>
+      <div class="results__controls">
+        <label class="results__sort">
+          <rs-icon name="filter" [size]="16"></rs-icon>
+          <select (change)="onSort($event)">
+            <option value="featured">Featured</option>
+            <option value="priceAsc">Price: Low to High</option>
+            <option value="priceDesc">Price: High to Low</option>
+            <option value="rating">Top rated</option>
+          </select>
+        </label>
+        <div class="results__view">
+          <button [class.is-active]="view() === 'grid'" (click)="view.set('grid')" aria-label="Grid">
+            <rs-icon name="grid" [size]="16"></rs-icon>
+          </button>
+          <button [class.is-active]="view() === 'list'" (click)="view.set('list')" aria-label="List">
+            <rs-icon name="list" [size]="16"></rs-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="products().length; else empty" class="results__grid" [attr.data-view]="view()">
+      <rs-product-card *ngFor="let p of products()" [product]="p" (add)="add($event)"></rs-product-card>
+    </div>
+
+    <ng-template #empty>
+      <rs-empty icon="search" title="No products found" message="Try adjusting your filters to see more results.">
+        <button class="empty__btn" (click)="resetFilters()">Reset filters</button>
+      </rs-empty>
+    </ng-template>
+  </section>
+</section>
