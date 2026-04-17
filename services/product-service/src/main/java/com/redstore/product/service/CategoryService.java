@@ -21,21 +21,24 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final AuthContextService authContextService;
     private final CategoryCreatedPublisher categoryCreatedPublisher;
+    private final CategoryIconUploadService categoryIconUploadService;
 
     public CategoryService(
             CategoryRepository categoryRepository,
             AuthContextService authContextService,
-            CategoryCreatedPublisher categoryCreatedPublisher
+            CategoryCreatedPublisher categoryCreatedPublisher,
+            CategoryIconUploadService categoryIconUploadService
     ) {
         this.categoryRepository = categoryRepository;
         this.authContextService = authContextService;
         this.categoryCreatedPublisher = categoryCreatedPublisher;
+        this.categoryIconUploadService = categoryIconUploadService;
     }
 
     public List<CategoryDto> listCategories() {
         return categoryRepository.findAll()
                 .stream()
-                .map(CategoryDto::from)
+                .map(this::enrichCategoryDto)
                 .toList();
     }
 
@@ -80,7 +83,7 @@ public class CategoryService {
                         .build()
         );
 
-        return CategoryDto.from(saved);
+        return enrichCategoryDto(saved);
     }
 
     private String toSlug(String raw) {
@@ -95,5 +98,22 @@ public class CategoryService {
         if (value == null) return null;
         String trimmed = value.trim();
         return trimmed.isEmpty() ? null : trimmed;
+    }
+
+    private CategoryDto enrichCategoryDto(Category category) {
+        String iconUrl = null;
+        if (category.getIcon() != null && !category.getIcon().isBlank()) {
+            iconUrl = categoryIconUploadService.createReadUrl(category.getIcon());
+        }
+
+        String parentCategoryName = null;
+        if (category.getParentCategoryId() != null && !category.getParentCategoryId().isBlank()) {
+            Category parent = categoryRepository.findById(category.getParentCategoryId()).orElse(null);
+            if (parent != null) {
+                parentCategoryName = parent.getName();
+            }
+        }
+
+        return CategoryDto.from(category, iconUrl, parentCategoryName);
     }
 }

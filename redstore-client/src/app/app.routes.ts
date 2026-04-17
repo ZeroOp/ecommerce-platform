@@ -31,6 +31,7 @@ import { AdminDashboardComponent } from './features/admin/admin-dashboard.compon
 import { AdminUsersComponent } from './features/admin/admin-users.component';
 import { AdminSellersComponent } from './features/admin/admin-sellers.component';
 import { AdminProductsComponent } from './features/admin/admin-products.component';
+import { AdminCategoriesComponent } from './features/admin/admin-categories.component';
 import { AdminOrdersComponent } from './features/admin/admin-orders.component';
 import { AdminAnalyticsComponent } from './features/admin/admin-analytics.component';
 import { AdminSettingsComponent } from './features/admin/admin-settings.component';
@@ -95,6 +96,7 @@ export const routes: Routes = [
       { path: 'users',     component: AdminUsersComponent,     title: 'Users · Admin' },
       { path: 'sellers',   component: AdminSellersComponent,   title: 'Sellers · Admin' },
       { path: 'products',  component: AdminProductsComponent,  title: 'Products · Admin' },
+      { path: 'categories', component: AdminCategoriesComponent, title: 'Categories · Admin' },
       { path: 'orders',    component: AdminOrdersComponent,    title: 'Orders · Admin' },
       { path: 'analytics', component: AdminAnalyticsComponent, title: 'Analytics · Admin' },
       { path: 'settings',  component: AdminSettingsComponent,  title: 'Settings · Admin' },

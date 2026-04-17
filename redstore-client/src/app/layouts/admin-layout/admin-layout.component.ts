@@ -21,6 +21,7 @@ export class AdminLayoutComponent {
     { label: 'Users',     icon: 'users',     route: '/admin/users' },
     { label: 'Sellers',   icon: 'shield',    route: '/admin/sellers' },
     { label: 'Products',  icon: 'box',       route: '/admin/products' },
+    { label: 'Categories', icon: 'package',   route: '/admin/categories' },
     { label: 'Orders',    icon: 'truck',     route: '/admin/orders' },
     { label: 'Analytics', icon: 'chart',     route: '/admin/analytics' },
     { label: 'Settings',  icon: 'settings',  route: '/admin/settings' },
