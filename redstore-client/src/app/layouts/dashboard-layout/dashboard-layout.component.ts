@@ -230,5 +230,5 @@ export class DashboardLayoutComponent {
   collapsed = signal(false);
 
   toggle() { this.collapsed.update(v => !v); }
-  signOut() { this.auth.logoutLocal(); }
+  signOut() { this.auth.logout(); }
 }

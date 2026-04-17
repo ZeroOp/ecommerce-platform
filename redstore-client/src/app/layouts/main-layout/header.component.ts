@@ -66,7 +66,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
                 <a routerLink="/orders"><rs-icon name="box" [size]="16"></rs-icon> My Orders</a>
                 <a *ngIf="user.role === 'seller'" routerLink="/seller"><rs-icon name="dashboard" [size]="16"></rs-icon> Seller Dashboard</a>
                 <a *ngIf="user.role === 'admin'" routerLink="/admin"><rs-icon name="shield" [size]="16"></rs-icon> Admin Console</a>
-                <button type="button" class="rs-header__menu-danger" (click)="auth.logoutLocal()">
+                <button type="button" class="rs-header__menu-danger" (click)="auth.logout()">
                   <rs-icon name="logout" [size]="16"></rs-icon> Sign out
                 </button>
               </div>

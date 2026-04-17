@@ -14,7 +14,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
   template: `
     <rs-page-header eyebrow="Catalog" title="Products" subtitle="Manage, update, and launch products across your brands.">
       <rs-button variant="secondary"><rs-icon slot="icon" name="upload" [size]="16"></rs-icon>Import</rs-button>
-      <rs-button variant="primary"><rs-icon slot="icon" name="plus" [size]="16"></rs-icon>Add product</rs-button>
+      <rs-button variant="primary" (click)="openCreateDialog()"><rs-icon slot="icon" name="plus" [size]="16"></rs-icon>Add product</rs-button>
     </rs-page-header>
 
     <div class="toolbar">
@@ -67,6 +67,33 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
         </tbody>
       </table>
     </section>
+
+    <div class="dialog-backdrop" *ngIf="showCreateDialog()" (click)="closeCreateDialog()">
+      <div class="dialog" (click)="$event.stopPropagation()">
+        <h3>Add product</h3>
+        <p>Create a new product entry in your catalog.</p>
+        <label>
+          Product name
+          <input type="text" [value]="newName()" (input)="newName.set(($any($event.target)).value)" placeholder="e.g. Galaxy S26" />
+        </label>
+        <label>
+          Brand
+          <input type="text" [value]="newBrand()" (input)="newBrand.set(($any($event.target)).value)" placeholder="e.g. Samsung" />
+        </label>
+        <label>
+          Category
+          <input type="text" [value]="newCategory()" (input)="newCategory.set(($any($event.target)).value)" placeholder="e.g. Mobiles" />
+        </label>
+        <label>
+          Price
+          <input type="number" min="1" [value]="newPrice()" (input)="newPrice.set(+($any($event.target)).value)" placeholder="999" />
+        </label>
+        <div class="dialog__actions">
+          <rs-button variant="secondary" (click)="closeCreateDialog()">Cancel</rs-button>
+          <rs-button variant="primary" (click)="createProduct()">Create</rs-button>
+        </div>
+      </div>
+    </div>
   `,
   styles: [`
     .toolbar { display: flex; justify-content: space-between; gap: 14px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
@@ -101,15 +128,63 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
     .actions button { width: 32px; height: 32px; border-radius: 8px; color: var(--rs-text-subtle); }
     .actions button:hover { background: var(--rs-surface-2); color: var(--rs-text); }
     input[type="checkbox"] { accent-color: var(--rs-brand-600); }
+    .dialog-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 12, 0.45);
+      display: grid;
+      place-items: center;
+      z-index: 80;
+      padding: 16px;
+    }
+    .dialog {
+      width: min(520px, 100%);
+      background: white;
+      border: 1px solid var(--rs-border);
+      border-radius: var(--rs-radius-lg);
+      box-shadow: var(--rs-shadow-lg);
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+    }
+    .dialog h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.02em; }
+    .dialog p { color: var(--rs-text-muted); font-size: 13px; }
+    .dialog label { display: grid; gap: 6px; font-size: 12px; color: var(--rs-text-subtle); font-weight: 600; }
+    .dialog input {
+      width: 100%;
+      border: 1px solid var(--rs-border);
+      border-radius: var(--rs-radius-md);
+      padding: 10px 12px;
+      font: inherit;
+      color: var(--rs-text);
+      background: white;
+    }
+    .dialog input:focus {
+      outline: none;
+      border-color: var(--rs-brand-500);
+      box-shadow: var(--rs-shadow-ring);
+    }
+    .dialog__actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding-top: 4px;
+    }
   `],
 })
 export class SellerProductsComponent {
   tabs = ['All', 'Active', 'Out of stock', 'Drafts'];
   activeTab = signal('All');
   query = signal('');
+  products = signal(PRODUCTS.slice(0, 18));
+  showCreateDialog = signal(false);
+  newName = signal('');
+  newBrand = signal('');
+  newCategory = signal('');
+  newPrice = signal<number>(0);
 
   rows = computed(() => {
-    let items = PRODUCTS.slice(0, 18);
+    let items = this.products();
     const q = this.query().toLowerCase();
     if (q) items = items.filter(p => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
     if (this.activeTab() === 'Active') items = items.filter(p => p.inStock);
@@ -118,4 +193,46 @@ export class SellerProductsComponent {
   });
 
   onSearch(e: Event) { this.query.set((e.target as HTMLInputElement).value); }
+
+  openCreateDialog(): void {
+    this.showCreateDialog.set(true);
+  }
+
+  closeCreateDialog(): void {
+    this.showCreateDialog.set(false);
+  }
+
+  createProduct(): void {
+    const name = this.newName().trim();
+    const brand = this.newBrand().trim() || 'Unbranded';
+    const category = this.newCategory().trim() || 'General';
+    const price = Number(this.newPrice()) || 0;
+    if (!name || price <= 0) return;
+
+    this.products.update((current) => ([
+      {
+        id: `prd-${Date.now()}`,
+        name,
+        slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
+        brand,
+        category,
+        description: 'New product created from Seller Hub.',
+        price,
+        originalPrice: price,
+        discount: 0,
+        rating: 0,
+        reviews: 0,
+        tags: [],
+        image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=900&auto=format&fit=crop',
+        inStock: true,
+      },
+      ...current,
+    ]));
+
+    this.newName.set('');
+    this.newBrand.set('');
+    this.newCategory.set('');
+    this.newPrice.set(0);
+    this.closeCreateDialog();
+  }
 }

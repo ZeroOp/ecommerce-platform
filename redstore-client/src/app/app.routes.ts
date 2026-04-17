@@ -34,6 +34,7 @@ import { AdminProductsComponent } from './features/admin/admin-products.componen
 import { AdminOrdersComponent } from './features/admin/admin-orders.component';
 import { AdminAnalyticsComponent } from './features/admin/admin-analytics.component';
 import { AdminSettingsComponent } from './features/admin/admin-settings.component';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // Public storefront
@@ -69,6 +70,9 @@ export const routes: Routes = [
   {
     path: 'seller',
     component: SellerLayoutComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    data: { role: 'seller' },
     children: [
       { path: '',          component: SellerDashboardComponent, title: 'Seller Hub · RedStore' },
       { path: 'products',  component: SellerProductsComponent,  title: 'Products · Seller Hub' },
@@ -83,6 +87,9 @@ export const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
+    canActivate: [authGuard],
+    canActivateChild: [authGuard],
+    data: { role: 'admin' },
     children: [
       { path: '',          component: AdminDashboardComponent, title: 'Admin Console · RedStore' },
       { path: 'users',     component: AdminUsersComponent,     title: 'Users · Admin' },

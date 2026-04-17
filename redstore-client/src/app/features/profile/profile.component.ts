@@ -24,7 +24,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
           <h2>{{ auth.user()?.name || 'Guest user' }}</h2>
           <div class="profile__email">{{ auth.user()?.email || 'Not signed in' }}</div>
           <div class="profile__chip">{{ (auth.user()?.role || 'guest') | titlecase }}</div>
-          <rs-button variant="outline" (click)="auth.logoutLocal()">
+          <rs-button variant="outline" (click)="auth.logout()">
             <rs-icon slot="icon" name="logout" [size]="16"></rs-icon>
             Sign out
           </rs-button>
