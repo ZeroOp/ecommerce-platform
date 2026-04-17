@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface BrandRepository extends JpaRepository<Brand, String> {
@@ -58,4 +59,13 @@ public interface BrandRepository extends JpaRepository<Brand, String> {
      * Find approved brands for public display
      */
     List<Brand> findByStatusOrderByCreatedAtDesc(BrandStatus status);
+
+    @Query("""
+            SELECT DISTINCT b FROM Brand b
+            LEFT JOIN b.categories c
+            WHERE (:categoryIds IS NULL OR c.id IN :categoryIds)
+            AND (:status IS NULL OR b.status = :status)
+            ORDER BY b.createdAt DESC
+            """)
+    List<Brand> searchBrands(@Param("categoryIds") Set<String> categoryIds, @Param("status") BrandStatus status);
 }

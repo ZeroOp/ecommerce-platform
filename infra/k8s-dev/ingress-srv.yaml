@@ -58,6 +58,34 @@ spec:
                 name: product-srv
                 port:
                   number: 8080
+          - path: /api/brands(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: product-srv
+                port:
+                  number: 8080
+          - path: /api/categories(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: product-srv
+                port:
+                  number: 8080
+          - path: /redstore-main(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: minio-primary-srv
+                port:
+                  number: 9000
+          - path: /redstore-events(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: minio-primary-srv
+                port:
+                  number: 9000
           - path: /(.*) # Catch-all regex to push everything else to the client
             pathType: ImplementationSpecific
             backend:

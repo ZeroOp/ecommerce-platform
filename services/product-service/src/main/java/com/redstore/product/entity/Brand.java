@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.HashSet;
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
 @Table(name = "brands", 
@@ -46,6 +48,15 @@ public class Brand {
 
     @Column(length = 1000)
     private String logo;
+
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "brand_categories",
+            joinColumns = @JoinColumn(name = "brand_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> categories = new HashSet<>();
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)

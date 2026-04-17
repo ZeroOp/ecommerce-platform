@@ -71,5 +71,23 @@ spec:
                 secretKeyRef:
                   name: product-secrets
                   key: NATS_URL
+            - name: MINIO_ENDPOINT
+              value: "https://redstore.zeroop.dev"
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secrets
+                  key: access-key
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: minio-secrets
+                  key: secret-key
+            - name: MINIO_BUCKET
+              value: "redstore-main"
+            - name: MINIO_BRAND_LOGO_PREFIX
+              value: "brand-logos"
+            - name: MINIO_PRESIGNED_EXPIRY_MINUTES
+              value: "15"
           ports:
             - containerPort: 8080

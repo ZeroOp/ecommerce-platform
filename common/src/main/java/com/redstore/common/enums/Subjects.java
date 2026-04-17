@@ -25,6 +25,10 @@ public enum Subjects {
     // Product
     PRODUCT_CREATED("product.created"),
     PRODUCT_UPDATED("product.updated"),
+    BRAND_CREATED("product.brand.created"),
+    BRAND_UPDATED("product.brand.updated"),
+    BRAND_STATUS_UPDATED("product.brand.status.updated"),
+    CATEGORY_CREATED("product.category.created"),
 
     // Orders (Saga Pattern)
     ORDER_CREATED("order.created"),
