@@ -72,6 +72,29 @@ spec:
                   name: cart-redis-secrets
                   key: REDIS_PASSWORD
 
+            # --- Cart-service Postgres (product-catalog replica) ---
+            - name: CART_DB_HOST
+              value: "cart-db-cluster-rw"
+            - name: CART_DB_USER
+              value: "cart_admin"
+            - name: CART_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cart-db-creds
+                  key: password
+            - name: CART_DB_NAME
+              value: "cart_db"
+
+            # --- OpenSearch (search-service index) ---
+            - name: OPENSEARCH_HOST
+              value: "opensearch-srv"
+            - name: OPENSEARCH_PORT
+              value: "9200"
+            - name: OPENSEARCH_SCHEME
+              value: "http"
+            - name: OPENSEARCH_INDEXES
+              value: "products"
+
             # --- Cron Schedule ---
             # Runs at minute 0 of every 2nd hour.
             - name: SNAPSHOT_CRON_SCHEDULE

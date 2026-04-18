@@ -70,13 +70,16 @@
       <div class="section__eyebrow">Explore</div>
       <h2 class="section__title">Shop by category</h2>
     </div>
-    <a class="section__link" routerLink="/category/fashion">Browse all <rs-icon name="arrow-right" [size]="14"></rs-icon></a>
+    <a class="section__link" routerLink="/deals">Browse all <rs-icon name="arrow-right" [size]="14"></rs-icon></a>
   </div>
   <div class="cats">
-    <a *ngFor="let c of categories" [routerLink]="['/category', c.slug]" class="cat" [style.--cat-color]="c.color">
-      <div class="cat__icon">{{ c.icon }}</div>
+    <a *ngFor="let c of parentCategories()" [routerLink]="['/category', c.slug]" class="cat">
+      <div class="cat__icon">
+        <img *ngIf="c.iconUrl" [src]="c.iconUrl" [alt]="" />
+        <span *ngIf="!c.iconUrl && c.icon">{{ c.icon }}</span>
+      </div>
       <div class="cat__name">{{ c.name }}</div>
-      <div class="cat__count">{{ c.productCount | number }} items</div>
+      <div class="cat__count">Shop now</div>
     </a>
   </div>
 </section>
@@ -105,7 +108,7 @@
       <a routerLink="/deals" class="hero__btn hero__btn--primary">Grab deals <rs-icon name="arrow-right" [size]="16"></rs-icon></a>
     </div>
     <div class="deals-banner__grid">
-      <rs-product-card *ngFor="let p of dealsBanner()" [product]="p" (add)="add($event)"></rs-product-card>
+      <rs-product-card *ngFor="let p of deals()" [product]="p" (add)="add($event)"></rs-product-card>
     </div>
   </div>
 </section>

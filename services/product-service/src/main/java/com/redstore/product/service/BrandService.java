@@ -87,7 +87,7 @@ public class BrandService {
                 .description(request.description().trim())
                 .sellerId(sellerId)
                 .status(BrandStatus.PENDING)
-                .logo(blankToNull(request.logo()))
+                .logo(brandLogoUploadService.createReadUrl(blankToNull(request.logo())))
                 .categories(categories)
                 .build();
 
@@ -110,7 +110,7 @@ public class BrandService {
         brand.setName(normalizedName);
         brand.setWebsite(normalizeWebsite(request.website()));
         brand.setDescription(request.description().trim());
-        brand.setLogo(blankToNull(request.logo()));
+        brand.setLogo(brandLogoUploadService.createReadUrl(blankToNull(request.logo())));
         brand.setCategories(resolveCategories(request.categoryIds()));
 
         Brand saved = brandRepository.save(brand);

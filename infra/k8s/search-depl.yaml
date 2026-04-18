@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: search-srv
+spec:
+  selector:
+    app: search
+  ports:
+    - name: search
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search
+  template:
+    metadata:
+      labels:
+        app: search
+    spec:
+      containers:
+        - name: search
+          image: zeroop/redstore-search-service
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: OPENSEARCH_HOST
+              value: opensearch-srv
+            - name: OPENSEARCH_PORT
+              value: "9200"
+            - name: OPENSEARCH_SCHEME
+              value: "http"
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: search-secrets
+                  key: NATS_URL
+            # search-service stores absolute, publicly-readable image URLs in
+            # the OpenSearch index (they're produced once by product-service),
+            # so no MinIO credentials are needed here.
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          ports:
+            - containerPort: 8080

@@ -3,11 +3,8 @@ package com.redstore.product.service;
 import com.redstore.product.dto.PresignedUploadUrlResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 
@@ -20,6 +17,9 @@ import java.util.UUID;
 public class BrandLogoUploadService {
 
     private final S3Presigner s3Presigner;
+
+    @Value("${minio.endpoint}")
+    private String endpoint;
 
     @Value("${minio.bucket}")
     private String bucket;
@@ -66,22 +66,14 @@ public class BrandLogoUploadService {
         );
     }
 
-    public String createReadUrl(String objectKey) {
-        if (objectKey == null || objectKey.isBlank()) {
-            return null;
-        }
-        Duration expiry = Duration.ofMinutes(Math.max(1, expiryMinutes));
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucket)
-                .key(objectKey.trim())
-                .build();
-        PresignedGetObjectRequest presigned = s3Presigner.presignGetObject(
-                GetObjectPresignRequest.builder()
-                        .signatureDuration(expiry)
-                        .getObjectRequest(getObjectRequest)
-                        .build()
-        );
-        return presigned.url().toString();
+    /**
+     * Returns a stable, publicly-readable URL for a brand logo. Brand logos
+     * live under a prefix configured with anonymous read access, so no
+     * presigning is needed. Inputs that are already absolute URLs are
+     * returned unchanged (legacy-row tolerance).
+     */
+    public String createReadUrl(String keyOrUrl) {
+        return PublicObjectUrl.build(endpoint, bucket, keyOrUrl);
     }
 
     private String getSafeExtension(String fileName) {

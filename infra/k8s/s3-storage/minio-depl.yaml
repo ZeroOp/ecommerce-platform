@@ -148,6 +148,60 @@ spec:
               mc mb --ignore-existing primary/redstore-events
               mc mb --ignore-existing backup/redstore-main-backup
               mc mb --ignore-existing backup/redstore-events-backup
+
+              # Anonymous read-only access for PUBLIC image prefixes only.
+              # Uploads still go through service-issued presigned PUT URLs.
+              # Everything else in the bucket stays private.
+              cat > /tmp/public-images-policy.json <<'EOF'
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {"AWS": ["*"]},
+                    "Action": ["s3:GetObject"],
+                    "Resource": [
+                      "arn:aws:s3:::redstore-main/product-images/*",
+                      "arn:aws:s3:::redstore-main/brand-logos/*",
+                      "arn:aws:s3:::redstore-main/category-icons/*"
+                    ]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Principal": {"AWS": ["*"]},
+                    "Action": ["s3:GetBucketLocation"],
+                    "Resource": ["arn:aws:s3:::redstore-main"]
+                  }
+                ]
+              }
+              EOF
+              cat > /tmp/public-images-policy-backup.json <<'EOF'
+              {
+                "Version": "2012-10-17",
+                "Statement": [
+                  {
+                    "Effect": "Allow",
+                    "Principal": {"AWS": ["*"]},
+                    "Action": ["s3:GetObject"],
+                    "Resource": [
+                      "arn:aws:s3:::redstore-main-backup/product-images/*",
+                      "arn:aws:s3:::redstore-main-backup/brand-logos/*",
+                      "arn:aws:s3:::redstore-main-backup/category-icons/*"
+                    ]
+                  },
+                  {
+                    "Effect": "Allow",
+                    "Principal": {"AWS": ["*"]},
+                    "Action": ["s3:GetBucketLocation"],
+                    "Resource": ["arn:aws:s3:::redstore-main-backup"]
+                  }
+                ]
+              }
+              EOF
+              echo "Applying public-read policy to image prefixes on redstore-main..."
+              mc anonymous set-json /tmp/public-images-policy.json primary/redstore-main || true
+              mc anonymous set-json /tmp/public-images-policy-backup.json backup/redstore-main-backup || true
+
               echo "Replication started..."
               mc mirror --watch --remove --overwrite primary/redstore-main backup/redstore-main-backup &
               mc mirror --watch --remove --overwrite primary/redstore-events backup/redstore-events-backup &

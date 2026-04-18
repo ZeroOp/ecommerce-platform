@@ -1,0 +1,39 @@
+# ------------------------------------------------------------------
+# Cart product-catalog replica DB.
+#
+# Cart-service listens to PRODUCTS NATS stream and persists a lightweight
+# copy of every product that the storefront might try to add to a cart.
+# Kept deliberately small (1 instance) because this is a read-through
+# cache in front of the cart Redis cluster, not a primary record.
+# ------------------------------------------------------------------
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: cart-db-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  storage:
+    size: 1Gi
+    storageClass: hostpath
+
+  postgresql:
+    parameters:
+      synchronous_commit: "on"
+      shared_buffers: "128MB"
+
+  bootstrap:
+    initdb:
+      database: cart_db
+      owner: cart_admin
+      secret:
+        name: cart-db-creds

@@ -13,7 +13,7 @@
         <h1>{{ category().name }}</h1>
         <p>{{ category().description }}</p>
         <div class="cat-hero__meta">
-          <rs-badge tone="dark">{{ category().productCount | number }} products</rs-badge>
+          <rs-badge tone="dark">{{ allProducts().length | number }} products</rs-badge>
           <rs-badge tone="neutral">{{ relatedBrands().length }} brands</rs-badge>
         </div>
       </div>
@@ -22,15 +22,23 @@
   </div>
 </section>
 
-<!-- Sub-categories -->
-<section class="rs-container subs" *ngIf="category().subCategories && category().subCategories!.length">
-  <button class="sub" [class.is-active]="selectedSub() === null" (click)="selectedSub.set(null)">
+<!-- Sub-categories (children of the category matching this URL) -->
+<section class="rs-container subs" *ngIf="childCategories().length">
+  <button
+    type="button"
+    class="sub"
+    [class.is-active]="selectedChildCategoryId() === null"
+    (click)="selectedChildCategoryId.set(null)">
     All
   </button>
-  <button *ngFor="let s of category().subCategories" class="sub"
-          [class.is-active]="selectedSub() === s.slug"
-          (click)="selectedSub.set(selectedSub() === s.slug ? null : s.slug)">
-    <img [src]="s.image" [alt]="s.name" />
+  <button
+    *ngFor="let s of childCategories()"
+    type="button"
+    class="sub"
+    [class.is-active]="selectedChildCategoryId() === s.id"
+    (click)="toggleChildFilter(s.id)">
+    <img *ngIf="s.iconUrl" [src]="s.iconUrl" [alt]="s.name" />
+    <span *ngIf="!s.iconUrl && s.icon" class="sub__emoji">{{ s.icon }}</span>
     <span>{{ s.name }}</span>
   </button>
 </section>

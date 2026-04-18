@@ -5,6 +5,7 @@ const Minio = require('minio');
 const fs = require('fs');
 const path = require('path');
 const { performCartSnapshot } = require('./cart-redis-snapshot');
+const { performOpenSearchSnapshot } = require('./opensearch-snapshot');
 
 // --- Configuration from Environment Variables ---
 
@@ -19,6 +20,18 @@ const IDENTITY_DB_HOST = process.env.IDENTITY_DB_HOST || 'identity-db-cluster-rw
 const IDENTITY_DB_USER = process.env.IDENTITY_DB_USER || 'identity_admin';
 const IDENTITY_DB_PASSWORD = process.env.IDENTITY_DB_PASSWORD; // Must be set
 const IDENTITY_DB_NAME = process.env.IDENTITY_DB_NAME || 'identity_db';
+
+// Cart Database (product catalog replica)
+const CART_DB_HOST = process.env.CART_DB_HOST || 'cart-db-cluster-rw';
+const CART_DB_USER = process.env.CART_DB_USER || 'cart_admin';
+const CART_DB_PASSWORD = process.env.CART_DB_PASSWORD;
+const CART_DB_NAME = process.env.CART_DB_NAME || 'cart_db';
+
+// OpenSearch indexes to snapshot (comma separated).
+const OPENSEARCH_INDEXES = (process.env.OPENSEARCH_INDEXES || 'products')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
 
 // MinIO Configuration
 const MINIO_ENDPOINT = process.env.MINIO_ENDPOINT || 'redstore.zeroop.dev';
@@ -132,6 +145,17 @@ async function runSnapshotTask() {
     IDENTITY_DB_NAME
   );
 
+  // Cart-service's product-catalog replica. Still a Postgres dump — the
+  // rows are small but they power the cart's "does this product exist"
+  // check, so they need a restore point.
+  await performSnapshot(
+    'cart',
+    CART_DB_HOST,
+    CART_DB_USER,
+    CART_DB_PASSWORD,
+    CART_DB_NAME
+  );
+
   // Cart carts live only in Redis Cluster — dump them as JSON Lines to MinIO
   // so the platform has a restore point even though the cluster uses no
   // persistent volumes.
@@ -139,6 +163,14 @@ async function runSnapshotTask() {
     await performCartSnapshot(uploadFileToMinio, MINIO_BUCKET);
   } else {
     console.error('Skipping cart redis snapshot: MinIO credentials not provided.');
+  }
+
+  // Search index lives in OpenSearch with an emptyDir volume; scrolling the
+  // docs out to MinIO is our recovery strategy.
+  if (MINIO_ACCESS_KEY && MINIO_SECRET_KEY) {
+    await performOpenSearchSnapshot(uploadFileToMinio, MINIO_BUCKET, OPENSEARCH_INDEXES);
+  } else {
+    console.error('Skipping opensearch snapshot: MinIO credentials not provided.');
   }
 
   console.log(`[${new Date().toISOString()}] Database snapshot task finished.`);

@@ -137,7 +137,17 @@
 }
 .cat:hover { transform: translateY(-4px); box-shadow: var(--rs-shadow-md); border-color: var(--cat-color); }
 .cat:hover::before { opacity: 0.06; }
-.cat__icon { font-size: 34px; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1)); }
+.cat__icon {
+  font-size: 34px;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.1));
+  display: flex; align-items: center; justify-content: center;
+  min-height: 40px;
+}
+.cat__icon img {
+  width: 40px; height: 40px;
+  object-fit: cover;
+  border-radius: 10px;
+}
 .cat__name { font-weight: 700; font-size: 14px; color: var(--rs-text); }
 .cat__count { font-size: 11px; color: var(--rs-text-subtle); }
 .cat > * { position: relative; z-index: 1; }

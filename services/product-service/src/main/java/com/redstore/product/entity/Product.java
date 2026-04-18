@@ -50,9 +50,16 @@ public class Product {
     @Column(nullable = false, precision = 14, scale = 2)
     private BigDecimal price;
 
+    /**
+     * Fully-qualified, publicly-readable image URLs. Clients (storefront,
+     * cart, search) render these directly; image prefixes in MinIO carry an
+     * anonymous read-only policy so no presigning is required on the read
+     * path. Uploads still happen via short-lived presigned PUT URLs issued
+     * by {@code ProductImageUploadService}.
+     */
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(nullable = false, columnDefinition = "jsonb")
-    private List<String> imageKeys;
+    @Column(name = "image_urls", nullable = false, columnDefinition = "jsonb")
+    private List<String> imageUrls;
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(nullable = false, columnDefinition = "jsonb")

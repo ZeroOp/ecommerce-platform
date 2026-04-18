@@ -52,6 +52,7 @@
   white-space: nowrap;
 }
 .sub img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+.sub__emoji { font-size: 20px; line-height: 1; }
 .sub:hover { border-color: var(--rs-text); }
 .sub.is-active { background: #0a0a0a; color: white; border-color: #0a0a0a; }
 

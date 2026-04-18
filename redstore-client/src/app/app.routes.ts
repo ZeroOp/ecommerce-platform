@@ -12,6 +12,7 @@ import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrdersComponent } from './features/orders/orders.component';
 import { ProfileComponent } from './features/profile/profile.component';
 import { DealsComponent } from './features/deals/deals.component';
+import { SearchComponent } from './features/search/search.component';
 import { NotFoundComponent } from './features/not-found/not-found.component';
 
 import { SigninComponent } from './features/auth/signin.component';
@@ -53,6 +54,7 @@ export const routes: Routes = [
       { path: 'orders',         component: OrdersComponent,   title: 'My orders · RedStore' },
       { path: 'profile',        component: ProfileComponent,  title: 'Profile · RedStore' },
       { path: 'deals',          component: DealsComponent,    title: 'Deals · RedStore' },
+      { path: 'search',         component: SearchComponent,   title: 'Search · RedStore' },
     ],
   },
 

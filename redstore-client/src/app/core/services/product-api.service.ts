@@ -35,13 +35,23 @@ export interface CreateProductPayload {
 export class ProductApiService {
   private http = inject(HttpClient);
 
-  getProducts(params?: { categoryId?: string; categorySlug?: string; limit?: number }): Observable<ProductApiResponse[]> {
+  getProducts(params?: {
+    categoryId?: string;
+    categorySlug?: string;
+    productIds?: string[];
+    limit?: number;
+  }): Observable<ProductApiResponse[]> {
     let hp = new HttpParams();
     if (params?.categoryId) {
       hp = hp.set('categoryId', params.categoryId);
     }
     if (params?.categorySlug) {
       hp = hp.set('categorySlug', params.categorySlug);
+    }
+    if (params?.productIds?.length) {
+      for (const id of params.productIds) {
+        hp = hp.append('productIds', id);
+      }
     }
     if (params?.limit != null) {
       hp = hp.set('limit', String(params.limit));

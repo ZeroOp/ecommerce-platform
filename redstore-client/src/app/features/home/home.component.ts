@@ -1,17 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { CATEGORIES } from '../../data/mock-categories';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
-import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { catchError, map, of, switchMap } from 'rxjs';
+import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory } from '../../core/services/inventory-enrich';
+import { CategoryApiService, CategoryApiResponse } from '../../core/services/category-api.service';
+import { mapSearchHitToProduct, SearchApiService } from '../../core/services/search-api.service';
 
 @Component({
   selector: 'rs-home',
@@ -24,14 +24,25 @@ import { enrichWithInventory } from '../../core/services/inventory-enrich';
 export class HomeComponent {
   cart = inject(CartService);
   toast = inject(ToastService);
-  private productApi = inject(ProductApiService);
+  private searchApi = inject(SearchApiService);
+  private categoryApi = inject(CategoryApiService);
   private inventoryApi = inject(InventoryApiService);
 
-  categories = CATEGORIES;
+  /** Top-level categories from the catalog API (admin-created parents only). */
+  parentCategories = toSignal(
+    this.categoryApi.getCategories().pipe(
+      map((rows) => rows.filter((c) => !c.parentCategoryId)),
+      catchError(() => of([] as CategoryApiResponse[])),
+    ),
+    { initialValue: [] as CategoryApiResponse[] },
+  );
 
+  // Storefront listings are served by search-service — it already returns
+  // presigned image URLs and display fields, so no product-service hop is
+  // needed on the read path.
   private catalog = toSignal(
-    this.productApi.getProducts({ limit: 24 }).pipe(
-      map((rows) => rows.map(mapProductApiToModel)),
+    this.searchApi.listProducts({ limit: 24 }).pipe(
+      map((hits) => hits.map(mapSearchHitToProduct)),
       switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
       catchError(() => of([] as Product[])),
     ),
@@ -47,16 +58,7 @@ export class HomeComponent {
     return c.slice(0, 8);
   });
 
-  /** Same catalog as the rest of the page — no mock “deals” products when the API is used. */
-  dealsBanner = computed(() => {
-    const c = this.catalog();
-    if (c.length === 0) return [] as Product[];
-    const onSale = c.filter(
-      (p) => p.originalPrice != null && p.originalPrice > p.price,
-    );
-    const pool = onSale.length >= 3 ? onSale : c;
-    return pool.slice(0, 3);
-  });
+  deals = computed(() => this.catalog().slice(0, 3));
 
   add(p: Product) {
     if (p.stockCount != null && p.stockCount <= 0) {

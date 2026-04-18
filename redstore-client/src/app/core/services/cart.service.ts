@@ -16,8 +16,9 @@ const STORAGE_KEY = 'rs_cart';
  * Dual-mode cart:
  *   • When the user is authenticated with a real (non-demo) account, every
  *     mutation is forwarded to the cart-service backend (Redis Cluster).
- *   • In demo mode or when signed out, the cart is kept in localStorage so
- *     the existing dummy flow continues to work end-to-end.
+ *     cart-service re-signs image URLs from its local catalog projection on
+ *     every response, so the client just trusts what comes back.
+ *   • In demo mode or when signed out, the cart lives in localStorage.
  */
 @Injectable({ providedIn: 'root' })
 export class CartService {

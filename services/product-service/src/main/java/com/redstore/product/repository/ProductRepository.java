@@ -27,4 +27,26 @@ public interface ProductRepository extends JpaRepository<Product, String> {
             @Param("categoryId") String categoryId,
             Pageable pageable
     );
+
+    @Query("""
+            SELECT p FROM Product p
+            WHERE p.brandId IN (SELECT b.id FROM Brand b WHERE b.status = :brandStatus)
+            ORDER BY p.createdAt DESC
+            """)
+    List<Product> findPublishedForStorefrontAll(
+            @Param("brandStatus") BrandStatus brandStatus,
+            Pageable pageable
+    );
+
+    @Query("""
+            SELECT p FROM Product p
+            WHERE p.brandId IN (SELECT b.id FROM Brand b WHERE b.status = :brandStatus)
+            AND p.categoryId IN :categoryIds
+            ORDER BY p.createdAt DESC
+            """)
+    List<Product> findPublishedForStorefrontInCategories(
+            @Param("brandStatus") BrandStatus brandStatus,
+            @Param("categoryIds") List<String> categoryIds,
+            Pageable pageable
+    );
 }

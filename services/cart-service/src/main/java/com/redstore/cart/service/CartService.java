@@ -1,5 +1,7 @@
 package com.redstore.cart.service;
 
+import com.redstore.cart.catalog.ProductCatalogDto;
+import com.redstore.cart.catalog.ProductCatalogService;
 import com.redstore.cart.client.InventoryClient;
 import com.redstore.cart.dto.AddItemRequest;
 import com.redstore.cart.dto.CartDto;
@@ -23,10 +25,16 @@ public class CartService {
 
     private final CartRepository repository;
     private final InventoryClient inventoryClient;
+    private final ProductCatalogService catalogService;
 
-    public CartService(CartRepository repository, InventoryClient inventoryClient) {
+    public CartService(
+            CartRepository repository,
+            InventoryClient inventoryClient,
+            ProductCatalogService catalogService
+    ) {
         this.repository = repository;
         this.inventoryClient = inventoryClient;
+        this.catalogService = catalogService;
     }
 
     public CartDto getCart() {
@@ -38,6 +46,13 @@ public class CartService {
         String userId = requireUserId();
         int requested = request.quantity();
 
+        // Guardrail: we only accept items that have been announced on the
+        // PRODUCTS NATS stream and materialised into our local catalog
+        // replica. This stops clients from ever smuggling arbitrary ids.
+        ProductCatalogDto product = catalogService.find(request.productId())
+                .orElseThrow(() -> new BadRequestException(
+                        "Product not found in catalog — please refresh the page."));
+
         CartItemDto existing = repository.get(userId, request.productId());
         int totalWanted = (existing != null ? existing.quantity() : 0) + requested;
 
@@ -48,15 +63,19 @@ public class CartService {
             );
         }
 
+        Double canonicalPrice = product.price() != null ? product.price().doubleValue() : null;
+        // Image comes from the catalog replica (stable public URL), not
+        // from whatever the client happened to send us.
+        String canonicalImage = firstImageUrl(product);
         CartItemDto merged = new CartItemDto(
                 request.productId(),
                 totalWanted,
-                firstNonNull(request.name(),   existing != null ? existing.name() : null),
-                firstNonNull(request.brand(),  existing != null ? existing.brand() : null),
-                firstNonNull(request.image(),  existing != null ? existing.image() : null),
-                firstNonNull(request.price(),  existing != null ? existing.price() : null),
+                firstNonNull(product.name(), firstNonNull(request.name(), existing != null ? existing.name() : null)),
+                firstNonNull(product.brandName(), firstNonNull(request.brand(), existing != null ? existing.brand() : null)),
+                firstNonNull(canonicalImage, firstNonNull(request.image(), existing != null ? existing.image() : null)),
+                firstNonNull(canonicalPrice,   firstNonNull(request.price(), existing != null ? existing.price() : null)),
                 firstNonNull(request.originalPrice(), existing != null ? existing.originalPrice() : null),
-                firstNonNull(request.slug(),   existing != null ? existing.slug() : null),
+                firstNonNull(product.slug(),   firstNonNull(request.slug(), existing != null ? existing.slug() : null)),
                 available,
                 existing != null && existing.addedAt() != null ? existing.addedAt() : Instant.now()
         );
@@ -194,15 +213,26 @@ public class CartService {
             if (available == null) {
                 available = item.availableQuantity();
             }
+            // Always re-derive display fields from the catalog projection on
+            // the way out so stale names / brands (the client snapshotted at
+            // add-to-cart time) are kept in sync with the authoritative source.
+            ProductCatalogDto projection = catalogService.find(item.productId()).orElse(null);
+            String image = (projection != null)
+                    ? firstNonNull(firstImageUrl(projection), item.image())
+                    : item.image();
+            String name = projection != null ? firstNonNull(projection.name(), item.name()) : item.name();
+            String brand = projection != null ? firstNonNull(projection.brandName(), item.brand()) : item.brand();
+            String slug = projection != null ? firstNonNull(projection.slug(), item.slug()) : item.slug();
+
             decorated.add(new CartItemDto(
                     item.productId(),
                     item.quantity(),
-                    item.name(),
-                    item.brand(),
-                    item.image(),
+                    name,
+                    brand,
+                    image,
                     item.price(),
                     item.originalPrice(),
-                    item.slug(),
+                    slug,
                     available,
                     item.addedAt()
             ));
@@ -227,6 +257,19 @@ public class CartService {
 
     private static <T> T firstNonNull(T a, T b) {
         return a != null ? a : b;
+    }
+
+    /** Picks the first non-blank image URL from the catalog projection. */
+    private static String firstImageUrl(ProductCatalogDto product) {
+        if (product == null || product.imageUrls() == null) {
+            return null;
+        }
+        for (String url : product.imageUrls()) {
+            if (url != null && !url.isBlank()) {
+                return url.trim();
+            }
+        }
+        return null;
     }
 
     private static double round2(double d) {

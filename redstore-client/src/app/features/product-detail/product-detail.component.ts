@@ -11,7 +11,7 @@ import { ProductCardComponent } from '../../shared/components/product-card/produ
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
-import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { mapSearchHitToProduct, SearchApiService } from '../../core/services/search-api.service';
 import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory, applyQuantities } from '../../core/services/inventory-enrich';
 
@@ -25,7 +25,7 @@ import { enrichWithInventory, applyQuantities } from '../../core/services/invent
 })
 export class ProductDetailComponent {
   private route = inject(ActivatedRoute);
-  private productApi = inject(ProductApiService);
+  private searchApi = inject(SearchApiService);
   private inventoryApi = inject(InventoryApiService);
   cart = inject(CartService);
   toast = inject(ToastService);
@@ -39,8 +39,8 @@ export class ProductDetailComponent {
         if (!productId) {
           return of(null);
         }
-        return this.productApi.getProductById(productId).pipe(
-          map(mapProductApiToModel),
+        return this.searchApi.getById(productId).pipe(
+          map(mapSearchHitToProduct),
           switchMap((p) =>
             this.inventoryApi.getBatchQuantities([p.id]).pipe(
               map((qs) => applyQuantities([p], qs)[0]),
@@ -60,13 +60,8 @@ export class ProductDetailComponent {
         if (!p?.categoryId || !p.id) {
           return of([] as Product[]);
         }
-        return this.productApi.getProducts({ categoryId: p.categoryId, limit: 12 }).pipe(
-          map((list) =>
-            list
-              .filter((x) => x.id !== p.id)
-              .slice(0, 4)
-              .map(mapProductApiToModel),
-          ),
+        return this.searchApi.listProducts({ categoryId: p.categoryId, limit: 12 }).pipe(
+          map((hits) => hits.map(mapSearchHitToProduct).filter((x) => x.id !== p.id).slice(0, 4)),
           switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
           catchError(() => of([] as Product[])),
         );

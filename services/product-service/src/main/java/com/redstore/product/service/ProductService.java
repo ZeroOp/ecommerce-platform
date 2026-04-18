@@ -20,11 +20,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -69,12 +73,71 @@ public class ProductService {
             }
         }
         int safeLimit = Math.min(Math.max(limit, 1), 96);
-        List<Product> products = productRepository.findPublishedForStorefront(
-                BrandStatus.APPROVED,
-                resolvedCategoryId,
-                PageRequest.of(0, safeLimit)
-        );
+        List<Product> products;
+        if (resolvedCategoryId == null) {
+            products = productRepository.findPublishedForStorefrontAll(
+                    BrandStatus.APPROVED,
+                    PageRequest.of(0, safeLimit)
+            );
+        } else {
+            List<String> categoryScope = categoryIdsIncludingDescendants(resolvedCategoryId);
+            if (categoryScope.isEmpty()) {
+                return List.of();
+            }
+            products = productRepository.findPublishedForStorefrontInCategories(
+                    BrandStatus.APPROVED,
+                    categoryScope,
+                    PageRequest.of(0, safeLimit)
+            );
+        }
         return products.stream().map(this::toDto).toList();
+    }
+
+    /**
+     * Hydrate storefront DTOs by id (e.g. search hits) with presigned image URLs.
+     * Preserves request order; skips unknown or non-published products.
+     */
+    public List<ProductDto> listStorefrontByProductIds(List<String> productIds, int limit) {
+        if (productIds == null || productIds.isEmpty()) {
+            return List.of();
+        }
+        int safeLimit = Math.min(Math.max(limit, 1), 96);
+        List<String> ids = productIds.stream().filter(Objects::nonNull).map(String::trim)
+                .filter(s -> !s.isEmpty()).distinct().limit(safeLimit).toList();
+        if (ids.isEmpty()) {
+            return List.of();
+        }
+        Map<String, Product> byId = productRepository.findAllById(ids).stream()
+                .filter(this::isPublishedApprovedBrand)
+                .collect(Collectors.toMap(Product::getId, p -> p, (a, b) -> a, LinkedHashMap::new));
+        return ids.stream()
+                .map(byId::get)
+                .filter(Objects::nonNull)
+                .map(this::toDto)
+                .toList();
+    }
+
+    private boolean isPublishedApprovedBrand(Product product) {
+        return brandRepository.findById(product.getBrandId())
+                .map(b -> b.getStatus() == BrandStatus.APPROVED)
+                .orElse(false);
+    }
+
+    /**
+     * Category page should include products in this category and every child category.
+     */
+    private List<String> categoryIdsIncludingDescendants(String rootCategoryId) {
+        List<String> out = new ArrayList<>();
+        Deque<String> q = new ArrayDeque<>();
+        q.add(rootCategoryId);
+        while (!q.isEmpty()) {
+            String id = q.remove();
+            out.add(id);
+            for (Category child : categoryRepository.findByParentCategoryIdOrderByNameAsc(id)) {
+                q.add(child.getId());
+            }
+        }
+        return out;
     }
 
     public ProductDto getById(String productId) {
@@ -152,6 +215,14 @@ public class ProductService {
             }
         }
 
+        // Convert object keys (returned by the presigned-upload flow) into
+        // the stable, publicly-readable URLs we persist and hand out from
+        // here on. We never store raw keys in the DB anymore.
+        List<String> imageUrls = keys.stream()
+                .map(String::trim)
+                .map(productImageUploadService::createReadUrl)
+                .toList();
+
         String slug = uniqueSlug(toSlug(request.name()));
 
         Product product = Product.builder()
@@ -163,7 +234,7 @@ public class ProductService {
                 .slug(slug)
                 .description(request.description().trim())
                 .price(request.price().stripTrailingZeros())
-                .imageKeys(keys.stream().map(String::trim).toList())
+                .imageUrls(imageUrls)
                 .metadata(normalizeMetadata(request.metadata()))
                 .build();
 
@@ -174,10 +245,15 @@ public class ProductService {
                         .productId(saved.getId())
                         .sellerId(saved.getSellerId())
                         .brandId(saved.getBrandId())
+                        .brandName(brand.getName())
                         .categoryId(saved.getCategoryId())
+                        .categorySlug(category.getSlug())
+                        .categoryName(category.getName())
                         .name(saved.getName())
                         .slug(saved.getSlug())
+                        .description(saved.getDescription())
                         .price(saved.getPrice())
+                        .imageUrls(new ArrayList<>(saved.getImageUrls()))
                         .metadata(saved.getMetadata())
                         .createdAt(saved.getCreatedAt() != null ? saved.getCreatedAt() : Instant.now())
                         .build()
@@ -221,7 +297,10 @@ public class ProductService {
         String categoryName = category != null ? category.getName() : "";
         String categorySlug = category != null ? category.getSlug() : "";
 
-        List<String> urls = product.getImageKeys().stream()
+        // Entities already carry absolute URLs; we still funnel them through
+        // createReadUrl so any legacy rows (raw keys) are transparently
+        // upgraded to absolute URLs for the response.
+        List<String> urls = product.getImageUrls().stream()
                 .map(productImageUploadService::createReadUrl)
                 .toList();
 

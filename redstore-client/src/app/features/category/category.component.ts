@@ -14,8 +14,8 @@ import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, switchMap } from 'rxjs';
-import { CategoryApiService } from '../../core/services/category-api.service';
-import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { CategoryApiService, CategoryApiResponse } from '../../core/services/category-api.service';
+import { mapSearchHitToProduct, SearchApiService } from '../../core/services/search-api.service';
 import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory } from '../../core/services/inventory-enrich';
 
@@ -32,7 +32,7 @@ type SortKey = 'featured' | 'priceAsc' | 'priceDesc' | 'rating' | 'newest';
 export class CategoryComponent {
   private route = inject(ActivatedRoute);
   private categoryApi = inject(CategoryApiService);
-  private productApi = inject(ProductApiService);
+  private searchApi = inject(SearchApiService);
   private inventoryApi = inject(InventoryApiService);
   cart = inject(CartService);
   toast = inject(ToastService);
@@ -42,32 +42,81 @@ export class CategoryComponent {
 
   apiCategories = toSignal(this.categoryApi.getCategories(), { initialValue: [] });
 
+  /** Category row for the active slug (parent or child). */
+  private activeApiCategory = computed((): CategoryApiResponse | undefined => {
+    const s = this.slug();
+    return this.apiCategories().find((c) => c.slug === s);
+  });
+
+  /** Direct children in the catalog tree — drives “All / subcategory” chips. */
+  childCategories = computed((): CategoryApiResponse[] => {
+    const row = this.activeApiCategory();
+    if (!row) {
+      return [];
+    }
+    return this.apiCategories()
+      .filter((c) => c.parentCategoryId === row.id)
+      .sort((a, b) => a.name.localeCompare(b.name));
+  });
+
   category = computed((): Category => {
     const s = this.slug();
-    const api = this.apiCategories().find((c) => c.slug === s);
+    const api = this.activeApiCategory();
     const mock = getCategory(s) ?? CATEGORIES[0];
     if (api) {
       return {
         ...mock,
+        id: api.id,
         name: api.name,
         slug: api.slug,
         description: api.description ?? mock.description,
         image: api.iconUrl ?? mock.image,
-        icon: mock.icon,
+        icon: api.icon ?? mock.icon,
+        subCategories: [],
       };
     }
     return mock;
   });
 
+  /** IDs of the active category + every descendant — drives the search query. */
+  private scopeCategoryIds = computed((): string[] => {
+    const root = this.activeApiCategory();
+    if (!root) {
+      return [];
+    }
+    const all = this.apiCategories();
+    const byParent = new Map<string, CategoryApiResponse[]>();
+    for (const c of all) {
+      const pid = c.parentCategoryId ?? '';
+      if (!byParent.has(pid)) {
+        byParent.set(pid, []);
+      }
+      byParent.get(pid)!.push(c);
+    }
+    const out: string[] = [];
+    const stack = [root];
+    while (stack.length) {
+      const node = stack.pop()!;
+      out.push(node.id);
+      for (const child of byParent.get(node.id) ?? []) {
+        stack.push(child);
+      }
+    }
+    return out;
+  });
+
   apiProducts = toSignal(
-    toObservable(this.slug).pipe(
-      switchMap((slug) =>
-        this.productApi.getProducts({ categorySlug: slug, limit: 96 }).pipe(
-          map((list) => list.map(mapProductApiToModel)),
+    toObservable(this.scopeCategoryIds).pipe(
+      switchMap((ids) => {
+        if (!ids.length) {
+          return of([] as Product[]);
+        }
+        return this.searchApi.listProducts({ categoryIds: ids, limit: 96 }).pipe(
+          map((hits) => hits.map(mapSearchHitToProduct)),
           switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
           catchError(() => of([] as Product[])),
-        ),
-      ),
+        );
+      }),
     ),
     { initialValue: [] },
   );
@@ -82,8 +131,7 @@ export class CategoryComponent {
 
   relatedBrands = computed(() => BRANDS.filter((b) => b.categories.includes(this.category().slug)));
 
-  // filters
-  selectedSub = signal<string | null>(null);
+  selectedChildCategoryId = signal<string | null>(null);
   selectedBrand = signal<string | null>(null);
   minPrice = signal<number>(0);
   maxPrice = signal<number>(5000);
@@ -93,8 +141,9 @@ export class CategoryComponent {
 
   products = computed(() => {
     let items = this.allProducts();
-    if (this.selectedSub()) {
-      items = items.filter((p) => p.subCategory === this.selectedSub());
+    const childId = this.selectedChildCategoryId();
+    if (childId) {
+      items = items.filter((p) => p.categoryId === childId);
     }
     if (this.selectedBrand()) {
       items = items.filter((p) => p.brand === this.selectedBrand());
@@ -128,7 +177,7 @@ export class CategoryComponent {
   }
 
   resetFilters() {
-    this.selectedSub.set(null);
+    this.selectedChildCategoryId.set(null);
     this.selectedBrand.set(null);
     this.minPrice.set(0);
     this.maxPrice.set(5000);
@@ -143,5 +192,9 @@ export class CategoryComponent {
   }
   onSort(e: Event) {
     this.sort.set((e.target as HTMLSelectElement).value as SortKey);
+  }
+
+  toggleChildFilter(id: string) {
+    this.selectedChildCategoryId.update((cur) => (cur === id ? null : id));
   }
 }

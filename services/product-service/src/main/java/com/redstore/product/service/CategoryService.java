@@ -75,7 +75,7 @@ public class CategoryService {
                 .name(normalizedName)
                 .slug(slug)
                 .description(request.description())
-                .icon(request.icon())
+                .icon(categoryIconUploadService.createReadUrl(blankToNull(request.icon())))
                 .parentCategoryId(blankToNull(request.parentCategoryId()))
                 .metadataTemplateJson(categoryMetadataTemplateService.serializeTemplate(request.metadataTemplate()))
                 .build();

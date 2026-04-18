@@ -24,8 +24,12 @@ public class ProductController {
     public List<ProductDto> listPublished(
             @RequestParam(value = "categoryId", required = false) String categoryId,
             @RequestParam(value = "categorySlug", required = false) String categorySlug,
+            @RequestParam(value = "productIds", required = false) List<String> productIds,
             @RequestParam(value = "limit", defaultValue = "24") int limit
     ) {
+        if (productIds != null && !productIds.isEmpty()) {
+            return productService.listStorefrontByProductIds(productIds, limit);
+        }
         return productService.listStorefront(categoryId, categorySlug, limit);
     }
 

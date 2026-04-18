@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { getDeals } from '../../data/mock-products';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
 import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
-import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { mapSearchHitToProduct, SearchApiService } from '../../core/services/search-api.service';
 import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory } from '../../core/services/inventory-enrich';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,7 +24,7 @@ import { catchError, map, of, switchMap } from 'rxjs';
         <p>Up to 40% off on hand-picked products across every category. Hurry — stocks are moving fast.</p>
       </div>
       <div class="deals__grid">
-        <rs-product-card *ngFor="let p of displayDeals()" [product]="p" (add)="add($event)"></rs-product-card>
+        <rs-product-card *ngFor="let p of products()" [product]="p" (add)="add($event)"></rs-product-card>
       </div>
     </section>
   `,
@@ -52,31 +51,25 @@ import { catchError, map, of, switchMap } from 'rxjs';
 export class DealsComponent {
   cart = inject(CartService);
   toast = inject(ToastService);
-  private productApi = inject(ProductApiService);
+  private searchApi = inject(SearchApiService);
   private inventoryApi = inject(InventoryApiService);
 
-  private apiList = toSignal(
-    this.productApi.getProducts({ limit: 48 }).pipe(
-      map((rows) => rows.map(mapProductApiToModel)),
+  private catalog = toSignal(
+    this.searchApi.listProducts({ limit: 48 }).pipe(
+      map((hits) => hits.map(mapSearchHitToProduct)),
       switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
       catchError(() => of([] as Product[])),
     ),
     { initialValue: [] as Product[] },
   );
 
-  /** Prefer items with a sale price; otherwise show the live catalog (not mock data). */
-  displayDeals = computed(() => {
-    const list = this.apiList();
-    if (list.length === 0) {
-      return getDeals(20);
-    }
-    const onSale = list.filter(
-      (p) => p.originalPrice != null && p.originalPrice > p.price,
-    );
-    return (onSale.length >= 6 ? onSale : list).slice(0, 24);
-  });
+  products = computed(() => this.catalog().slice(0, 24));
 
   add(p: Product) {
+    if (p.stockCount != null && p.stockCount <= 0) {
+      this.toast.warning('Out of stock', `${p.name} is currently unavailable.`);
+      return;
+    }
     this.cart.add(p);
     this.toast.success('Added to cart', p.name);
   }

@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { CartService } from '../../core/services/cart.service';
-import { CATEGORIES } from '../../data/mock-categories';
+import { CategoryApiService, CategoryApiResponse } from '../../core/services/category-api.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, map, of } from 'rxjs';
 
 @Component({
   selector: 'rs-header',
@@ -26,11 +28,14 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
               Categories <rs-icon name="chevron-down" [size]="14"></rs-icon>
             </button>
             <div class="rs-header__menu">
-              <a *ngFor="let c of categories" [routerLink]="['/category', c.slug]">
-                <span class="rs-header__menu-icon">{{ c.icon }}</span>
+              <a *ngFor="let c of parentCategories()" [routerLink]="['/category', c.slug]">
+                <span class="rs-header__menu-icon">
+                  <img *ngIf="c.iconUrl" [src]="c.iconUrl" [alt]="" />
+                  <ng-container *ngIf="!c.iconUrl">{{ c.icon ?? '📁' }}</ng-container>
+                </span>
                 <span>
                   <span class="rs-header__menu-title">{{ c.name }}</span>
-                  <span class="rs-header__menu-sub">{{ c.productCount | number }} products</span>
+                  <span class="rs-header__menu-sub">Browse category</span>
                 </span>
               </a>
             </div>
@@ -39,11 +44,18 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
           <a routerLink="/auth/request-seller" routerLinkActive="is-active">Sell on RedStore</a>
         </nav>
 
-        <div class="rs-header__search">
+        <form class="rs-header__search" (submit)="onSearchSubmit($event)">
           <rs-icon name="search" [size]="18"></rs-icon>
-          <input type="search" placeholder="Search products, brands, categories..." />
+          <input
+            #searchInput
+            type="search"
+            name="q"
+            autocomplete="off"
+            placeholder="Search products, brands, categories..."
+            [value]="searchTerm()"
+          />
           <kbd>⌘K</kbd>
-        </div>
+        </form>
 
         <div class="rs-header__actions">
           <a class="rs-header__icon-btn" routerLink="/cart" aria-label="Cart">
@@ -158,7 +170,8 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
       width: 100%; text-align: left;
     }
     .rs-header__menu a:hover, .rs-header__menu button:hover { background: var(--rs-surface-2); }
-    .rs-header__menu-icon { font-size: 20px; }
+    .rs-header__menu-icon { font-size: 20px; display: inline-flex; align-items: center; justify-content: center; }
+    .rs-header__menu-icon img { width: 28px; height: 28px; object-fit: cover; border-radius: 8px; }
     .rs-header__menu-title { font-weight: 600; font-size: 14px; color: var(--rs-text); display: block; }
     .rs-header__menu-sub { font-size: 12px; color: var(--rs-text-subtle); display: block; }
     .rs-header__menu-head {
@@ -247,12 +260,29 @@ export class HeaderComponent {
   auth = inject(AuthService);
   cart = inject(CartService);
   private router = inject(Router);
-  categories = CATEGORIES;
+  private categoryApi = inject(CategoryApiService);
+
+  parentCategories = toSignal(
+    this.categoryApi.getCategories().pipe(
+      map((rows) => rows.filter((c) => !c.parentCategoryId)),
+      catchError(() => of([] as CategoryApiResponse[])),
+    ),
+    { initialValue: [] as CategoryApiResponse[] },
+  );
 
   scrolled = signal(false);
+  searchTerm = signal('');
 
   @HostListener('window:scroll')
   onScroll() {
     this.scrolled.set(window.scrollY > 4);
+  }
+
+  onSearchSubmit(event: Event) {
+    event.preventDefault();
+    const input = (event.target as HTMLFormElement)?.querySelector<HTMLInputElement>('input[name="q"]');
+    const q = (input?.value ?? '').trim();
+    this.searchTerm.set(q);
+    this.router.navigate(['/search'], { queryParams: q ? { q } : {} });
   }
 }
