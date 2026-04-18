@@ -69,14 +69,17 @@ import { RatingComponent } from '../rating/rating.component';
       aspect-ratio: 1 / 1;
       overflow: hidden;
       background: var(--rs-surface-2);
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .rs-pc__media img {
       width: 100%; height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      padding: 8px;
       transition: transform var(--rs-dur-slow) var(--rs-ease);
     }
-    .rs-pc:hover .rs-pc__media img { transform: scale(1.06); }
+    .rs-pc:hover .rs-pc__media img { transform: scale(1.03); }
     .rs-pc__chips {
       position: absolute; top: 12px; left: 12px;
       display: flex; flex-direction: column; gap: 6px;

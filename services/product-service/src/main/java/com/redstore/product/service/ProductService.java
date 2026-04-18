@@ -98,6 +98,26 @@ public class ProductService {
                 .toList();
     }
 
+    public List<ProductDto> listAll() {
+        return productRepository.findAll(
+                org.springframework.data.domain.Sort.by(
+                        org.springframework.data.domain.Sort.Direction.DESC, "createdAt"
+                )
+        ).stream().map(this::toDto).toList();
+    }
+
+    /**
+     * Seller-scoped lookup (e.g. inventory service validating ownership).
+     */
+    public ProductDto getByIdForSeller(String sellerId, String productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new BadRequestException("Product not found"));
+        if (!product.getSellerId().equals(sellerId)) {
+            throw new BadRequestException("Product not found");
+        }
+        return toDto(product);
+    }
+
     @Transactional
     public ProductDto create(CreateProductRequest request) {
         authContextService.requireActiveSellerAccount();

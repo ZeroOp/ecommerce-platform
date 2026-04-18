@@ -127,5 +127,18 @@ spec:
                 --defaults \
               || echo "ORDERS stream may already exists , skipping..."
 
+              nats stream add INVENTORY \
+                --server nats://nats-srv:4222 \
+                --subjects "inventory.>" \
+                --retention limits \
+                --max-msgs=-1 \
+                --max-bytes=-1 \
+                --max-age 72h \
+                --storage file \
+                --replicas 2 \
+                --discard old \
+                --defaults \
+              || echo "INVENTORY stream may already exists , skipping..."
+
               echo "Stream setup complete."
               nats stream report --server nats://nats-srv:4222

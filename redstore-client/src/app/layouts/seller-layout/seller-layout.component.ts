@@ -19,6 +19,7 @@ export class SellerLayoutComponent {
   nav: DashNavItem[] = [
     { label: 'Dashboard', icon: 'dashboard', route: '/seller', exact: true },
     { label: 'Products',  icon: 'box',       route: '/seller/products' },
+    { label: 'Inventory', icon: 'package',   route: '/seller/inventory' },
     { label: 'Brands',    icon: 'tag',       route: '/seller/brands' },
     { label: 'Orders',    icon: 'truck',     route: '/seller/orders' },
     { label: 'Analytics', icon: 'chart',     route: '/seller/analytics' },

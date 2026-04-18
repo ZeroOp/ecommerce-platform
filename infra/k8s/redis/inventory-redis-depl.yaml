@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-redis-srv
+spec:
+  selector:
+    app: inventory-redis
+  ports:
+    - name: redis
+      protocol: TCP
+      port: 6379
+      targetPort: 6379
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-redis-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-redis
+  template:
+    metadata:
+      labels:
+        app: inventory-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-redis-secrets
+                  key: password
+          command:
+            - sh
+            - -c
+            - exec redis-server --appendonly yes --requirepass "$REDIS_PASSWORD" --maxmemory 100mb --maxmemory-policy allkeys-lru
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "200m"

@@ -14,6 +14,7 @@
         <module>services/identity-service</module>
         <module>services/archive-service</module>
         <module>services/product-service</module>
+        <module>services/inventory-service</module>
     </modules>
 
     <properties>

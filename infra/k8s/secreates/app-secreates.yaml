@@ -45,3 +45,30 @@ stringData:
   JWT_KEY: redstore-secret-key-2026-zeroop-hmac
   REDIS_PASSWORD: YourSecurePassword
   NATS_URL: nats://nats-srv:4222
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: inventory-db-creds
+type: Opaque
+stringData:
+  username: inventory_admin
+  password: inventory_password_123
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: inventory-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026-zeroop-hmac
+  NATS_URL: nats://nats-srv:4222
+  INVENTORY_INTERNAL_API_KEY: redstore-inventory-internal-2026
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: inventory-redis-secrets
+type: Opaque
+stringData:
+  password: YourSecurePassword

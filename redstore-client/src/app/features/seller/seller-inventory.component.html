@@ -1,0 +1,55 @@
+<rs-page-header
+  eyebrow="Operations"
+  title="Inventory"
+  subtitle="On-hand stock is zero until you add units. Stock is reserved when orders are placed and restored if payment fails."
+/>
+
+<section class="panel" *ngIf="!loading(); else loadingTpl">
+  <div class="toolbar">
+    <p class="muted">Products you sell — add units to make them available to buy.</p>
+    <rs-button variant="ghost" size="sm" (click)="reload()">
+      <rs-icon slot="icon" name="package" /> Refresh
+    </rs-button>
+  </div>
+
+  <div class="empty" *ngIf="rows().length === 0">
+    <p>No products yet. Create a product under <strong>Products</strong> first.</p>
+  </div>
+
+  <div class="grid" *ngIf="rows().length > 0">
+    <article class="card" *ngFor="let row of rows()">
+      <div class="card-head">
+        <h3>{{ row.product.name }}</h3>
+        <rs-badge [tone]="row.quantity > 0 ? 'success' : 'neutral'">
+          {{ row.quantity > 0 ? 'In stock' : 'Out of stock' }}
+        </rs-badge>
+      </div>
+      <p class="muted brand-line">{{ row.product.brand }}</p>
+      <div class="qty-row">
+        <span class="label">On hand</span>
+        <span class="value">{{ row.quantity }}</span>
+      </div>
+      <div class="add-row">
+        <label class="sr-only" [attr.for]="'add-' + row.product.id">Units to add</label>
+        <input
+          type="number"
+          min="1"
+          [id]="'add-' + row.product.id"
+          [ngModel]="row.addInput"
+          (ngModelChange)="setAddInput(row.product.id, $event)"
+        />
+        <rs-button
+          size="sm"
+          [disabled]="savingId() === row.product.id"
+          (click)="addStock(row.product.id)"
+        >
+          Add stock
+        </rs-button>
+      </div>
+    </article>
+  </div>
+</section>
+
+<ng-template #loadingTpl>
+  <p class="muted">Loading inventory…</p>
+</ng-template>

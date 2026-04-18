@@ -1,0 +1,66 @@
+<rs-page-header eyebrow="Catalog" title="All Products" subtitle="View all products across every seller. Stock levels are pulled live from the inventory service.">
+  <rs-button variant="ghost" size="sm" (click)="load()">
+    <rs-icon slot="icon" name="package" [size]="14"></rs-icon> Refresh
+  </rs-button>
+</rs-page-header>
+
+<div class="toolbar">
+  <div class="toolbar__search">
+    <rs-icon name="search" [size]="16"></rs-icon>
+    <input type="search" placeholder="Search products or brands…" [value]="query()" (input)="onSearch($event)" />
+  </div>
+  <div class="toolbar__tabs">
+    <button *ngFor="let t of tabs" [class.is-active]="activeTab() === t" (click)="activeTab.set(t)">{{ t }}</button>
+  </div>
+</div>
+
+<ng-container *ngIf="loading(); else tableBlock">
+  <p class="muted loading-hint">Loading products…</p>
+</ng-container>
+
+<ng-template #tableBlock>
+  <section class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Brand</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Seller ID</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of rows()">
+          <td>
+            <div class="product-cell">
+              <img [src]="p.image" [alt]="p.name" />
+              <div>
+                <a class="product-cell__link" [routerLink]="['/product', p.id]">{{ p.name }}</a>
+                <div class="product-cell__id">{{ p.id }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ p.brand }}</td>
+          <td><rs-badge [soft]="true" tone="neutral">{{ p.category }}</rs-badge></td>
+          <td><strong>${{ p.price | number: '1.2-2' }}</strong></td>
+          <td>
+            <rs-badge *ngIf="p.stock > 0" tone="success" [soft]="true">{{ p.stock }} | In Stock</rs-badge>
+            <rs-badge *ngIf="p.stock === 0" tone="danger" [soft]="true">Out of Stock</rs-badge>
+          </td>
+          <td class="seller-id">{{ p.sellerId || '—' }}</td>
+          <td class="actions">
+            <a [routerLink]="['/product', p.id]" title="View product">
+              <rs-icon name="eye" [size]="14"></rs-icon>
+            </a>
+          </td>
+        </tr>
+        <tr *ngIf="rows().length === 0">
+          <td colspan="7" class="empty-row">No products found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</ng-template>

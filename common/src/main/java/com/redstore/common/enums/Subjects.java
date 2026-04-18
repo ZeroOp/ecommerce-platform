@@ -36,7 +36,12 @@ public enum Subjects {
 
     // Payment
     PAYMENT_CREATED("payment.created"),
-    PAYMENT_FAILED("payment.failed");
+    PAYMENT_FAILED("payment.failed"),
+
+    // Inventory
+    INVENTORY_STOCK_ADDED("inventory.stock.added"),
+    INVENTORY_RESERVED("inventory.reserved"),
+    INVENTORY_RELEASED("inventory.released");
 
     private final String value;
 }

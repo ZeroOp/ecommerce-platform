@@ -27,6 +27,10 @@ build:
       context: .
       docker:
         dockerfile: services/product-service/Dockerfile
+    - image: zeroop/redstore-inventory-service
+      context: .
+      docker:
+        dockerfile: services/inventory-service/Dockerfile
     - image: zeroop/redstore-snapshot-service
       context: services/snapshot-service
       docker:
@@ -39,5 +43,7 @@ manifests:
     - infra/k8s/identity-depl.yaml
     - infra/k8s/archiver-depl.yaml
     - infra/k8s/product-depl.yaml
+    # - infra/k8s/redis/inventory-redis-depl.yaml
+    - infra/k8s/inventory-depl.yaml
     - infra/k8s/snapshot-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

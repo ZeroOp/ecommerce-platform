@@ -58,6 +58,11 @@ export class ProductApiService {
     return this.http.get<ProductApiResponse[]>('/api/seller/products');
   }
 
+  /** Admin catalog — all products from all sellers, requires ADMIN role. */
+  getAdminProducts(): Observable<ProductApiResponse[]> {
+    return this.http.get<ProductApiResponse[]>('/api/admin/products');
+  }
+
   createProduct(payload: CreateProductPayload): Observable<ProductApiResponse> {
     return this.http.post<ProductApiResponse>('/api/seller/products', payload);
   }
@@ -84,6 +89,7 @@ export function mapProductApiToModel(p: ProductApiResponse): Product {
   const primary = p.imageUrls?.[0] ?? '';
   return {
     id: p.id,
+    sellerId: p.sellerId,
     name: p.name,
     slug: p.slug,
     description: p.description,

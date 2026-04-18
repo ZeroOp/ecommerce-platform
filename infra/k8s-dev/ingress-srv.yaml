@@ -30,6 +30,13 @@ spec:
                 name: identity-srv
                 port:
                   number: 8080
+          - path: /api/admin/products(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: product-srv
+                port:
+                  number: 8080
           - path: /api/admin(/|$)(.*)
             pathType: ImplementationSpecific
             backend:
@@ -84,6 +91,13 @@ spec:
             backend:
               service:
                 name: product-srv
+                port:
+                  number: 8080
+          - path: /api/inventory(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: inventory-srv
                 port:
                   number: 8080
           - path: /redstore-main(/|$)(.*)

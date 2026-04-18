@@ -9,6 +9,7 @@ import { IconComponent } from '../../shared/components/icon/icon.component';
 import { CategoryApiService, CategoryApiResponse, MetadataFieldApi } from '../../core/services/category-api.service';
 import { BrandApiService } from '../../core/services/brand-api.service';
 import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { Product } from '../../core/models/product.model';
 import { ToastService } from '../../core/services/toast.service';
 
@@ -28,6 +29,7 @@ export class SellerProductsComponent {
   private productApi = inject(ProductApiService);
   private brandApi = inject(BrandApiService);
   private categoryApi = inject(CategoryApiService);
+  private inventoryApi = inject(InventoryApiService);
   private toast = inject(ToastService);
 
   tabs = ['All', 'Active', 'Out of stock', 'Drafts'];
@@ -35,6 +37,7 @@ export class SellerProductsComponent {
   query = signal('');
 
   products = signal<Product[]>([]);
+  stockByProductId = signal<Record<string, number>>({});
   myBrandsSignal = signal<BrandRow[]>([]);
   categories = signal<CategoryApiResponse[]>([]);
 
@@ -62,6 +65,14 @@ export class SellerProductsComponent {
     this.productApi.getMyProducts().subscribe({
       next: (rows) => this.products.set(rows.map(mapProductApiToModel)),
       error: () => this.products.set([]),
+    });
+    this.inventoryApi.getSellerInventory().subscribe({
+      next: (lines) => {
+        const map: Record<string, number> = {};
+        for (const l of lines) map[l.productId] = l.quantity;
+        this.stockByProductId.set(map);
+      },
+      error: () => this.stockByProductId.set({}),
     });
   }
 
@@ -112,16 +123,20 @@ export class SellerProductsComponent {
   });
 
   rows = computed(() => {
-    let items = this.products();
+    const stockMap = this.stockByProductId();
+    let items = this.products().map((p) => ({
+      ...p,
+      stock: stockMap[p.id] ?? 0,
+    }));
     const q = this.query().toLowerCase();
     if (q) {
       items = items.filter((p) => p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q));
     }
     if (this.activeTab() === 'Active') {
-      items = items.filter((p) => p.inStock);
+      items = items.filter((p) => p.stock > 0);
     }
     if (this.activeTab() === 'Out of stock') {
-      items = items.filter((p) => !p.inStock);
+      items = items.filter((p) => p.stock === 0);
     }
     return items;
   });
@@ -245,6 +260,14 @@ export class SellerProductsComponent {
       this.closeCreateDialog();
       this.productApi.getMyProducts().subscribe({
         next: (rows) => this.products.set(rows.map(mapProductApiToModel)),
+        error: () => undefined,
+      });
+      this.inventoryApi.getSellerInventory().subscribe({
+        next: (lines) => {
+          const map: Record<string, number> = {};
+          for (const l of lines) map[l.productId] = l.quantity;
+          this.stockByProductId.set(map);
+        },
         error: () => undefined,
       });
     } catch {

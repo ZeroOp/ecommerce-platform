@@ -44,8 +44,8 @@
           <strong>${{ p.price | number: '1.2-2' }}</strong>
         </td>
         <td>
-          <rs-badge *ngIf="p.inStock" tone="success" [soft]="true">In stock</rs-badge>
-          <rs-badge *ngIf="!p.inStock" tone="danger" [soft]="true">Out</rs-badge>
+          <rs-badge *ngIf="p.stock > 0" tone="success" [soft]="true">{{ p.stock }} | In Stock</rs-badge>
+          <rs-badge *ngIf="p.stock === 0" tone="danger" [soft]="true">Out of Stock</rs-badge>
         </td>
         <td class="actions">
           <a [routerLink]="['/product', p.id]" title="View"><rs-icon name="eye" [size]="14"></rs-icon></a>
