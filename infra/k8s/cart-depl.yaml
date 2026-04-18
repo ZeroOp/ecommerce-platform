@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-srv
+spec:
+  selector:
+    app: cart
+  ports:
+    - name: cart
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+        - name: cart
+          image: zeroop/redstore-cart-service
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cart-secrets
+                  key: JWT_KEY
+            - name: REDIS_NODES
+              valueFrom:
+                secretKeyRef:
+                  name: cart-redis-secrets
+                  key: REDIS_NODES
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cart-redis-secrets
+                  key: REDIS_PASSWORD
+            - name: INVENTORY_SERVICE_BASE_URL
+              value: http://inventory-srv:8080
+            - name: INVENTORY_INTERNAL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: inventory-secrets
+                  key: INVENTORY_INTERNAL_API_KEY
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          ports:
+            - containerPort: 8080

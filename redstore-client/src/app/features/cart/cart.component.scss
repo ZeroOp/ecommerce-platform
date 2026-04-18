@@ -22,6 +22,20 @@
   transition: border-color var(--rs-dur-fast) var(--rs-ease);
 }
 .cart-item:hover { border-color: var(--rs-border-strong); }
+.cart-item--issue {
+  border-color: rgba(220, 38, 38, 0.45);
+  background: linear-gradient(0deg, rgba(220,38,38,0.03), rgba(220,38,38,0.03)), #fff;
+}
+
+.cart-item__lowstock { color: var(--rs-danger, #dc2626); font-weight: 600; }
+.cart-item__oos      { color: #b91c1c; font-weight: 700; }
+
+.cart__alert {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: -4px;
+  color: var(--rs-danger, #dc2626);
+  font-size: 12px; font-weight: 600;
+}
 .cart-item__img {
   aspect-ratio: 1;
   border-radius: var(--rs-radius-md);

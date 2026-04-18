@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RedStore — Developer Reference</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --brand:    #e11d48;
+      --brand-lt: #fff1f2;
+      --bg:       #f8f9fa;
+      --surface:  #ffffff;
+      --border:   #e5e7eb;
+      --text:     #111827;
+      --muted:    #6b7280;
+      --subtle:   #9ca3af;
+      --success:  #16a34a;
+      --success-lt:#f0fdf4;
+      --warn:     #d97706;
+      --warn-lt:  #fffbeb;
+      --info:     #2563eb;
+      --info-lt:  #eff6ff;
+      --code-bg:  #1e293b;
+      --code-txt: #e2e8f0;
+      --radius:   10px;
+      --sidebar:  260px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--text);
+      background: var(--bg);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: var(--sidebar);
+      min-width: var(--sidebar);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-logo {
+      padding: 22px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo .name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--brand);
+    }
+    .sidebar-logo .sub {
+      font-size: 12px;
+      color: var(--subtle);
+      margin-top: 2px;
+    }
+
+    nav { padding: 10px 0; flex: 1; }
+
+    nav .group-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--subtle);
+      padding: 14px 20px 4px;
+    }
+
+    nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      border-radius: 0;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+      border-left: 3px solid transparent;
+    }
+    nav a:hover { background: var(--bg); color: var(--text); }
+    nav a.active {
+      background: var(--brand-lt);
+      color: var(--brand);
+      font-weight: 700;
+      border-left-color: var(--brand);
+    }
+    nav a .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      max-width: 900px;
+      padding: 40px 48px 80px;
+      overflow-x: hidden;
+    }
+
+    section { display: none; }
+    section.active { display: block; }
+
+    /* ── Typography ── */
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      line-height: 1.2;
+    }
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 36px 0 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+    h3 {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin: 24px 0 8px;
+    }
+    p { margin-bottom: 12px; color: var(--text); }
+    .lead {
+      font-size: 16px;
+      color: var(--muted);
+      margin: 10px 0 28px;
+      max-width: 680px;
+      line-height: 1.7;
+    }
+
+    /* ── Page header ── */
+    .page-header {
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+    .page-header .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    /* ── Badges ── */
+    .tag {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .tag-java   { background: #fff7ed; color: #c2410c; }
+    .tag-node   { background: #f0fdf4; color: #15803d; }
+    .tag-spring { background: #f0fdf4; color: #16a34a; }
+    .tag-redis  { background: #fff1f2; color: #be123c; }
+    .tag-nats   { background: #eff6ff; color: #1d4ed8; }
+    .tag-pg     { background: #f5f3ff; color: #6d28d9; }
+    .tag-s3     { background: #fffbeb; color: #b45309; }
+    .tag-ng     { background: #fdf2f8; color: #9d174d; }
+    .tag-k8s    { background: #eff6ff; color: #1e40af; }
+
+    /* ── Cards / boxes ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .card p { color: var(--muted); font-size: 13.5px; margin: 0; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+    /* ── Lib grid ── */
+    .lib-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+    }
+    .lib-card .lib-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lib-card .lib-desc { font-size: 13px; color: var(--muted); }
+    .lib-card .lib-why {
+      font-size: 12.5px;
+      margin-top: 8px;
+      padding: 8px 10px;
+      background: var(--bg);
+      border-radius: 6px;
+      color: var(--text);
+      border-left: 3px solid var(--brand);
+    }
+
+    /* ── File table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin-bottom: 20px;
+    }
+    thead th {
+      text-align: left;
+      padding: 9px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--subtle);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+    }
+    tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--bg); }
+    .file-name {
+      font-family: 'Courier New', monospace;
+      font-size: 12.5px;
+      color: var(--brand);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .file-kind {
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--bg);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .file-desc { color: var(--muted); font-size: 13px; }
+
+    /* ── Flow steps ── */
+    .flow { display: flex; flex-direction: column; gap: 0; }
+    .flow-step {
+      display: flex;
+      gap: 16px;
+      position: relative;
+    }
+    .flow-step:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--brand);
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+    .step-body { padding: 4px 0 20px; }
+    .step-title { font-weight: 700; font-size: 14px; }
+    .step-desc { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+
+    /* ── Code blocks ── */
+    pre {
+      background: var(--code-bg);
+      color: var(--code-txt);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 12px 0 20px;
+    }
+    code { font-family: 'Courier New', Consolas, monospace; }
+    p code, li code {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 12.5px;
+      color: var(--brand);
+    }
+
+    /* ── Info/warn/note boxes ── */
+    .note {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 13.5px;
+      margin-bottom: 16px;
+      border-left: 4px solid;
+    }
+    .note-info  { background: var(--info-lt);    border-color: var(--info);    color: #1e3a5f; }
+    .note-warn  { background: var(--warn-lt);    border-color: var(--warn);    color: #7c3a00; }
+    .note-good  { background: var(--success-lt); border-color: var(--success); color: #14532d; }
+    .note b { font-weight: 700; }
+
+    /* ── Spacer ── */
+    .spacer { height: 28px; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    @media (max-width: 800px) {
+      body { flex-direction: column; }
+      aside { width: 100%; height: auto; position: static; }
+      main { padding: 24px 20px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════ SIDEBAR ════════════════════════════════ -->
+<aside>
+  <div class="sidebar-logo">
+    <div class="name">RedStore</div>
+    <div class="sub">Developer Reference</div>
+  </div>
+  <nav>
+    <div class="group-label">Overview</div>
+    <a onclick="show('overview')" class="active" id="nav-overview"><span class="dot"></span>Architecture</a>
+
+    <div class="group-label">Java Services</div>
+    <a onclick="show('common')"    id="nav-common"><span class="dot"></span>Common Module</a>
+    <a onclick="show('identity')"  id="nav-identity"><span class="dot"></span>Identity Service</a>
+    <a onclick="show('product')"   id="nav-product"><span class="dot"></span>Product Service</a>
+    <a onclick="show('inventory')" id="nav-inventory"><span class="dot"></span>Inventory Service</a>
+    <a onclick="show('archive')"   id="nav-archive"><span class="dot"></span>Archive Service</a>
+
+    <div class="group-label">Other Services</div>
+    <a onclick="show('snapshot')"  id="nav-snapshot"><span class="dot"></span>Snapshot Service</a>
+
+    <div class="group-label">Frontend</div>
+    <a onclick="show('client')"    id="nav-client"><span class="dot"></span>Angular Client</a>
+
+    <div class="group-label">Infrastructure</div>
+    <a onclick="show('infra')"     id="nav-infra"><span class="dot"></span>Kubernetes / Infra</a>
+  </nav>
+</aside>
+
+<!-- ════════════════════════════════ MAIN ════════════════════════════════ -->
+<main>
+
+<!-- ─────────────────── OVERVIEW ─────────────────── -->
+<section id="overview" class="active">
+  <div class="page-header">
+    <div class="badge tag-k8s">Platform</div>
+    <h1>RedStore — System Architecture</h1>
+    <p class="lead">RedStore is a microservices e-commerce platform. Every service is independently deployed on Kubernetes, owns its own database, and communicates through REST (synchronous) or NATS JetStream events (asynchronous). This document explains what every folder, file, and library is doing and why.</p>
+  </div>
+
+  <h2>Services at a glance</h2>
+  <table>
+    <thead><tr><th>Service</th><th>Language</th><th>Port</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">common</td><td><span class="tag tag-java">Java</span></td><td>—</td><td class="file-desc">Shared library. JWT parsing, role annotations, NATS base publisher, global exception handler. Not a runnable service — it's a Maven module other services import.</td></tr>
+      <tr><td class="file-name">identity-service</td><td><span class="tag tag-java">Java</span></td><td>8081</td><td class="file-desc">Handles signup, login, JWT issuance, Google OAuth, seller registration, admin approval/rejection of sellers.</td></tr>
+      <tr><td class="file-name">product-service</td><td><span class="tag tag-java">Java</span></td><td>8080</td><td class="file-desc">Product catalog — brands, categories, product listings, metadata, image upload to MinIO via presigned URLs.</td></tr>
+      <tr><td class="file-name">inventory-service</td><td><span class="tag tag-java">Java</span></td><td>8083</td><td class="file-desc">Stock management — sellers add stock, orders reserve it, payment failure releases it. Redis caches quantities for fast public reads.</td></tr>
+      <tr><td class="file-name">archive-service</td><td><span class="tag tag-java">Java</span></td><td>—</td><td class="file-desc">Pulls every NATS event using durable subscriptions and writes them to MinIO as a permanent audit log.</td></tr>
+      <tr><td class="file-name">snapshot-service</td><td><span class="tag tag-node">Node.js</span></td><td>—</td><td class="file-desc">Cron job — runs pg_dump on Postgres databases every 2 hours and uploads the SQL files to MinIO for backup.</td></tr>
+      <tr><td class="file-name">redstore-client</td><td><span class="tag tag-ng">Angular 17</span></td><td>4200</td><td class="file-desc">Single-page app — public store, seller dashboard, admin panel. Signal-based reactive state, OnPush change detection.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How a request travels through the system</h2>
+  <p style="color:var(--muted);font-size:13.5px;margin-bottom:20px;">Example: a seller adds stock to a product.</p>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Browser → Angular</div><div class="step-desc">Seller types a quantity, clicks "Add stock". Angular's <code>InventoryApiService</code> fires a POST request.</div></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Angular → Nginx Ingress</div><div class="step-desc">Request hits <code>/api/inventory/seller/products/{id}/add-stock</code>. Nginx Ingress matches <code>/api/inventory/*</code> and routes it to <code>inventory-srv</code> inside the cluster.</div></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">CurrentUserInterceptor (common)</div><div class="step-desc">Before the controller runs, the interceptor reads the JWT from the cookie or Authorization header. It parses it with <code>JwtUtils</code> and stores the user (id, roles) in a <code>ThreadLocal</code> called <code>UserContext</code>.</div></div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">@RequireSeller (AOP in common)</div><div class="step-desc"><code>RoleValidationAspect</code> intercepts the method and checks <code>UserContext</code> for the SELLER role. If missing → HTTP 403 Forbidden, request dies here.</div></div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">ProductOwnershipClient</div><div class="step-desc">inventory-service calls product-service's <code>GET /api/seller/products/{id}</code>, forwarding the original JWT. If the product doesn't belong to this seller → 400 Bad Request.</div></div></div>
+    <div class="flow-step"><div class="step-num">6</div><div class="step-body"><div class="step-title">DB write + Redis cache</div><div class="step-desc">Upserts <code>ProductInventory</code> row in Postgres. Evicts old Redis key, writes new quantity with TTL so the public storefront reads it fast.</div></div></div>
+    <div class="flow-step"><div class="step-num">7</div><div class="step-body"><div class="step-title">NATS JetStream publish</div><div class="step-desc"><code>InventoryStockAddedPublisher</code> serialises the event to JSON and publishes to the <code>INVENTORY</code> stream (<code>inventory.stock.added</code>). Other services (archive, order-saga) can consume it.</div></div></div>
+    <div class="flow-step"><div class="step-num">8</div><div class="step-body"><div class="step-title">Response → browser</div><div class="step-desc">Returns updated <code>{productId, sellerId, quantity}</code>. Angular shows a toast notification and updates the UI signal.</div></div></div>
+  </div>
+
+  <h2>Technology decisions</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">Spring Boot 3 <span class="tag tag-spring">Framework</span></div><div class="lib-desc">Web framework for every Java service. Provides HTTP server (Tomcat), dependency injection, JPA integration, and auto-configuration.</div><div class="lib-why"><b>Why:</b> Removes boilerplate — no manual servlet config, connection pooling, or bean wiring.</div></div>
+    <div class="lib-card"><div class="lib-name">PostgreSQL 16 <span class="tag tag-pg">Database</span></div><div class="lib-desc">Primary relational database. Each service has its own dedicated Postgres cluster (via CloudNativePG operator in Kubernetes).</div><div class="lib-why"><b>Why:</b> Services are isolated — identity-db, product-db, inventory-db. One service's schema change can't break another.</div></div>
+    <div class="lib-card"><div class="lib-name">NATS 2.10 + JetStream <span class="tag tag-nats">Events</span></div><div class="lib-desc">Durable message bus. Publishers write events; consumers pull them at their own pace. Events survive restarts (stored on disk).</div><div class="lib-why"><b>Why:</b> Services don't need to be running at the same time. If archive-service is down, events queue up in NATS and are consumed when it comes back.</div></div>
+    <div class="lib-card"><div class="lib-name">Redis 7 <span class="tag tag-redis">Cache</span></div><div class="lib-desc">In-memory key-value store. Used in inventory-service to cache stock quantities so the public storefront doesn't hit Postgres on every page load.</div><div class="lib-why"><b>Why:</b> Stock reads happen far more often than writes. Redis keeps the DB load low at scale.</div></div>
+    <div class="lib-card"><div class="lib-name">MinIO <span class="tag tag-s3">Object Storage</span></div><div class="lib-desc">S3-compatible object store running inside the cluster. Stores product images, NATS event archives, and Postgres backup files.</div><div class="lib-why"><b>Why:</b> Product images shouldn't be stored in the DB. MinIO keeps them outside the application tier with presigned URLs for direct browser upload/download.</div></div>
+    <div class="lib-card"><div class="lib-name">Kubernetes + Nginx Ingress <span class="tag tag-k8s">Infra</span></div><div class="lib-desc">Orchestrates all containers. Nginx Ingress is the single public entry point that routes requests to the right service by URL prefix.</div><div class="lib-why"><b>Why:</b> Centralised routing, TLS termination, and horizontal scaling without changing any service code.</div></div>
+  </div>
+</section>
+
+<!-- ─────────────────── COMMON ─────────────────── -->
+<section id="common">
+  <div class="page-header">
+    <div class="badge tag-java">Shared Library</div>
+    <h1>Common Module</h1>
+    <p class="lead">A Maven module (<code>common/</code>) that every Java service imports as a dependency. It holds zero business logic — only infrastructure code that would otherwise be copy-pasted into every service. No HTTP server, no database. Just shared utilities.</p>
+  </div>
+
+  <h2>What problem does this solve?</h2>
+  <p>Without this module, every service would have its own copy of JWT parsing, role checking, and exception handling — and they'd drift out of sync. The common module ensures that a role check in identity-service behaves identically to one in inventory-service.</p>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">JJWT 0.12.5 <span class="tag tag-java">Auth</span></div><div class="lib-desc">Java JWT library: <code>jjwt-api</code>, <code>jjwt-impl</code>, <code>jjwt-jackson</code>. Parses and validates JSON Web Tokens.</div><div class="lib-why"><b>Why here:</b> JWT parsing is needed in every service that protects endpoints. Centralised in common so all services use the same key and algorithm (HS256).</div></div>
+    <div class="lib-card"><div class="lib-name">jnats 2.20.0 <span class="tag tag-nats">Events</span></div><div class="lib-desc">Official Java NATS client. Used by <code>BasePublisher</code> to publish events to JetStream.</div><div class="lib-why"><b>Why here:</b> Every service publishes domain events. <code>BasePublisher&lt;T&gt;</code> in common handles JSON serialisation + publish so individual publishers only need to name the subject.</div></div>
+    <div class="lib-card"><div class="lib-name">Spring AOP (AspectJ) <span class="tag tag-spring">Security</span></div><div class="lib-desc"><code>@Aspect</code>, <code>@Around</code> — intercepts annotated methods at runtime.</div><div class="lib-why"><b>Why here:</b> <code>RoleValidationAspect</code> enforces <code>@RequireSeller</code> / <code>@RequireAdmin</code> automatically. Without this, every controller method would need a manual role check.</div></div>
+    <div class="lib-card"><div class="lib-name">Spring Web MVC <span class="tag tag-spring">Interceptor</span></div><div class="lib-desc"><code>HandlerInterceptor</code> — <code>CurrentUserInterceptor</code> runs before every controller method.</div><div class="lib-why"><b>Why here:</b> Parses the JWT once per request, stores the user in <code>ThreadLocal&lt;UserPayload&gt;</code> (UserContext), clears it after the response to prevent memory leaks.</div></div>
+    <div class="lib-card"><div class="lib-name">Spring Validation <span class="tag tag-spring">Validation</span></div><div class="lib-desc">Bean validation with annotations like <code>@NotNull</code>, <code>@Min</code>, <code>@NotBlank</code>.</div><div class="lib-why"><b>Why here:</b> Request DTOs in every service use these annotations. The <code>GlobalExceptionHandler</code> catches <code>MethodArgumentNotValidException</code> and returns a clean 400 JSON error.</div></div>
+    <div class="lib-card"><div class="lib-name">Lombok <span class="tag tag-java">Boilerplate</span></div><div class="lib-desc">Code generation at compile time: <code>@Getter</code>, <code>@Builder</code>, <code>@AllArgsConstructor</code>, <code>@Data</code>.</div><div class="lib-why"><b>Why:</b> Entity and DTO classes need getters, setters, constructors, builders. Lombok generates all of these from annotations — no manual code.</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">utils/JwtUtils.java</td><td><span class="file-kind">Utility</span></td><td class="file-desc">Parses a JWT string using JJWT. Validates the signature with <code>JWT_KEY</code> environment variable. Extracts <code>sub</code> (user id), <code>email</code>, and <code>roles</code> claims into a <code>UserPayload</code> object.</td></tr>
+      <tr><td class="file-name">utils/UserContext.java</td><td><span class="file-kind">Utility</span></td><td class="file-desc">A <code>ThreadLocal&lt;UserPayload&gt;</code>. Holds the currently authenticated user for the duration of one HTTP request. <code>setUser()</code> stores it, <code>getUser()</code> retrieves it, <code>clear()</code> removes it using <code>remove()</code> (not <code>set(null)</code>) to prevent memory leaks in thread pools.</td></tr>
+      <tr><td class="file-name">utils/CurrentUserInterceptor.java</td><td><span class="file-kind">Interceptor</span></td><td class="file-desc">Runs before every controller method. Reads the <code>Authorization: Bearer ...</code> header or <code>token</code> cookie. Calls <code>JwtUtils</code>. Stores result in <code>UserContext</code>. After the response sends, calls <code>UserContext.clear()</code>.</td></tr>
+      <tr><td class="file-name">annotations/RequireAdmin.java</td><td><span class="file-kind">Annotation</span></td><td class="file-desc">A marker annotation (<code>@Target(METHOD)</code>, <code>@Retention(RUNTIME)</code>). Placed on controller methods that only admin can call. The AOP aspect reads this at runtime.</td></tr>
+      <tr><td class="file-name">annotations/RequireSeller.java</td><td><span class="file-kind">Annotation</span></td><td class="file-desc">Same as RequireAdmin but checks for SELLER role.</td></tr>
+      <tr><td class="file-name">annotations/RequireUser.java</td><td><span class="file-kind">Annotation</span></td><td class="file-desc">Requires any authenticated user (any role).</td></tr>
+      <tr><td class="file-name">aspect/RoleValidationAspect.java</td><td><span class="file-kind">AOP Aspect</span></td><td class="file-desc">Spring <code>@Aspect</code> with <code>@Around</code> advice. Fires when a method annotated with <code>@RequireSeller</code>, <code>@RequireAdmin</code>, or <code>@RequireUser</code> is called. Checks <code>UserContext.getUser()</code>. If the user is null or missing the required role → throws <code>ForbiddenException</code> → becomes HTTP 403.</td></tr>
+      <tr><td class="file-name">events/BasePublisher.java</td><td><span class="file-kind">Abstract Class</span></td><td class="file-desc">Generic NATS publisher. Holds a <code>JetStream</code> bean and a Jackson <code>ObjectMapper</code> (with <code>JavaTimeModule</code> so <code>Instant</code> serialises as ISO-8601). <code>publish(T data)</code> serialises data to JSON bytes, builds a NATS message with the subject from <code>getSubject()</code>, and calls <code>js.publish(message)</code>.</td></tr>
+      <tr><td class="file-name">enums/Subjects.java</td><td><span class="file-kind">Enum</span></td><td class="file-desc">Maps every event type to its NATS subject string. e.g. <code>INVENTORY_STOCK_ADDED → "inventory.stock.added"</code>. Prevents typos — publishers reference the enum, not a raw string.</td></tr>
+      <tr><td class="file-name">enums/UserRole.java</td><td><span class="file-kind">Enum</span></td><td class="file-desc"><code>USER</code>, <code>SELLER</code>, <code>ADMIN</code>. Stored in the JWT claims and in <code>UserPayload</code>.</td></tr>
+      <tr><td class="file-name">dto/UserPayload.java</td><td><span class="file-kind">DTO</span></td><td class="file-desc">Immutable record: <code>id</code>, <code>email</code>, <code>roles</code>. Decoded from the JWT by <code>JwtUtils</code> and placed in <code>UserContext</code>.</td></tr>
+      <tr><td class="file-name">exceptions/GlobalExceptionHandler.java</td><td><span class="file-kind">Handler</span></td><td class="file-desc"><code>@ControllerAdvice</code>. Catches <code>BadRequestException → 400</code>, <code>ForbiddenException → 403</code>, <code>NotAuthorizedException → 401</code>, validation errors → 400 with field details. Returns a JSON body every time so the client always gets a consistent error format.</td></tr>
+      <tr><td class="file-name">dto/*EventData.java</td><td><span class="file-kind">Event DTOs</span></td><td class="file-desc">One DTO per domain event — e.g. <code>InventoryStockAddedEventData</code> carries productId, sellerId, quantityAdded, newTotal, timestamp. These are serialised to JSON when published and deserialised by consumers.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─────────────────── IDENTITY ─────────────────── -->
+<section id="identity">
+  <div class="page-header">
+    <div class="badge tag-java">Java · Spring Boot · Port 8081</div>
+    <h1>Identity Service</h1>
+    <p class="lead">The authentication authority of the platform. It is the only service that creates and signs JWTs. Every other service only reads the JWT — it never creates one. Also manages the seller lifecycle (request → admin review → approve/reject).</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">User Authentication</div><p>Email/password login with bcrypt hashing. Issues a signed JWT with user id, email, and roles. Handles token refresh via refresh tokens stored server-side.</p></div>
+    <div class="card"><div class="card-title">Google OAuth</div><p>Accepts Google ID tokens from the frontend, verifies them against Google's API, creates or retrieves the local user account, then issues a RedStore JWT.</p></div>
+    <div class="card"><div class="card-title">Seller Registration</div><p>Any user can request a seller account. The request is stored with status PENDING. Admins approve or reject it through the admin API.</p></div>
+    <div class="card"><div class="card-title">Event Publishing</div><p>Every important auth event (login, logout, seller approved, etc.) is published to the IDENTITY JetStream stream for the archive service to record.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-web <span class="tag tag-spring">HTTP</span></div><div class="lib-desc">Embeds Tomcat, provides <code>@RestController</code>, <code>@PostMapping</code>, JSON serialisation via Jackson.</div><div class="lib-why"><b>Why:</b> The service exposes REST endpoints — signup, login, logout, currentuser, etc. This starter sets all of that up automatically.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-jpa <span class="tag tag-spring">Database</span></div><div class="lib-desc">Spring Data JPA with Hibernate. Manages the <code>User</code> entity and provides <code>UserRepository</code> with methods like <code>findByEmail()</code>.</div><div class="lib-why"><b>Why:</b> User accounts need to be persisted in Postgres. JPA handles SQL generation, connection pooling, and transactions automatically.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-redis <span class="tag tag-redis">Sessions</span></div><div class="lib-desc">Redis client via Spring Data. Used for storing refresh tokens or session data.</div><div class="lib-why"><b>Why:</b> Refresh tokens need to be fast to look up and easy to invalidate (just delete the key). Redis is ideal for this.</div></div>
+    <div class="lib-card"><div class="lib-name">JJWT 0.12.5 <span class="tag tag-java">JWT</span></div><div class="lib-desc">Signs and builds JWTs. Identity-service is the only place that <em>creates</em> JWTs using <code>Jwts.builder().signWith(key)</code>.</div><div class="lib-why"><b>Why:</b> JWTs need to be signed with a secret key (JWT_KEY env var). JJWT is the standard Java library for this. Common module handles verification; identity-service handles creation.</div></div>
+    <div class="lib-card"><div class="lib-name">google-api-client 2.5.0 <span class="tag tag-java">OAuth</span></div><div class="lib-desc">Google's official Java API client. <code>GoogleTokenVerifier</code> calls Google's tokeninfo endpoint to validate Google ID tokens from the frontend.</div><div class="lib-why"><b>Why:</b> You can't just decode a Google ID token on your own — you must call Google to verify it's genuine. This library handles that HTTP call and response parsing.</div></div>
+    <div class="lib-card"><div class="lib-name">postgresql + spring-boot-starter-validation <span class="tag tag-pg">DB + Validation</span></div><div class="lib-desc">JDBC driver for Postgres. Validation enables <code>@Valid</code> on request bodies so email/password format is checked before reaching service layer.</div><div class="lib-why"><b>Why:</b> Without validation, a blank password would reach bcrypt. Input validation happens as early as possible (controller level).</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">NatsConfig.java</td><td><span class="file-kind">Config</span></td><td class="file-desc">Creates the NATS <code>Connection</code> and <code>JetStream</code> beans. Reads <code>NATS_URL</code> env var. Connects with unlimited reconnects so the service recovers automatically if NATS restarts.</td></tr>
+      <tr><td class="file-name">config/WebMvcConfig.java</td><td><span class="file-kind">Config</span></td><td class="file-desc">Registers <code>CurrentUserInterceptor</code> (from common module) so that JWT is decoded on every request. This is why <code>UserContext.getUser()</code> works in AuthService.</td></tr>
+      <tr><td class="file-name">model/User.java</td><td><span class="file-kind">Entity</span></td><td class="file-desc">JPA entity for the <code>users</code> table. Fields: id (UUID), email, passwordHash, role (ENUM), sellerStatus (PENDING/APPROVED/REJECTED), isActive, createdAt, updatedAt.</td></tr>
+      <tr><td class="file-name">repository/UserRepository.java</td><td><span class="file-kind">Repository</span></td><td class="file-desc">Spring Data interface. Methods like <code>findByEmail(String email)</code> become SQL automatically — no manual query needed.</td></tr>
+      <tr><td class="file-name">security/GoogleTokenVerifier.java</td><td><span class="file-kind">Security</span></td><td class="file-desc">Calls Google's token verification API with the ID token provided by the frontend. Returns the verified email and Google subject (unique ID). Used in AuthService for Google sign-in.</td></tr>
+      <tr><td class="file-name">service/AuthService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Core business logic. <code>login()</code>: loads user by email, bcrypt compares hash, calls <code>JwtUtils.sign()</code>. <code>handleGoogleLogin()</code>: verifies Google token, upserts user, signs JWT. <code>requestSellerAccount()</code>: sets user.sellerStatus=PENDING.</td></tr>
+      <tr><td class="file-name">service/AdminSellerService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc"><code>listSellers()</code> for the admin panel. <code>approveSeller(userId)</code> sets status=APPROVED, role=SELLER, publishes <code>SellerApprovedPublisher</code> event. <code>rejectSeller()</code> sets status=REJECTED.</td></tr>
+      <tr><td class="file-name">controller/AuthController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc">Endpoints: <code>POST /api/users/signin</code>, <code>/signup</code>, <code>/logout</code>, <code>/refresh</code>, <code>GET /api/currentuser</code>, and seller-specific <code>/api/seller/signin</code>, <code>/api/sellers/request</code>.</td></tr>
+      <tr><td class="file-name">controller/AdminSellerController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc"><code>GET /api/admin/sellers</code>, <code>POST /api/admin/sellers/{id}/approve</code>, <code>POST /api/admin/sellers/{id}/reject</code>. All methods annotated with <code>@RequireAdmin</code>.</td></tr>
+      <tr><td class="file-name">events/publishers/*.java</td><td><span class="file-kind">Publishers</span></td><td class="file-desc">One class per event: <code>SellerRegisteredPublisher</code>, <code>SellerApprovedPublisher</code>, <code>SellerRejectedPublisher</code>, <code>UserLoginPublisher</code>, <code>UserLogoutPublisher</code>. Each extends <code>BasePublisher</code> and just specifies the subject enum.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Seller lifecycle flow</h2>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">User signs up</div><div class="step-desc">Creates account with role=USER, sellerStatus=null.</div></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Requests seller account</div><div class="step-desc"><code>POST /api/sellers/request</code>. Sets sellerStatus=PENDING. <code>SellerRegisteredPublisher</code> fires.</div></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Admin reviews</div><div class="step-desc">Admin sees the request in <code>GET /api/admin/sellers</code> (admin panel).</div></div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Admin approves</div><div class="step-desc"><code>POST /api/admin/sellers/{id}/approve</code>. Sets role=SELLER, sellerStatus=APPROVED. <code>SellerApprovedPublisher</code> fires.</div></div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Seller logs in</div><div class="step-desc"><code>POST /api/seller/signin</code>. Returns JWT with <code>roles: ["SELLER"]</code>. Now <code>@RequireSeller</code> endpoints are accessible.</div></div></div>
+  </div>
+</section>
+
+<!-- ─────────────────── PRODUCT ─────────────────── -->
+<section id="product">
+  <div class="page-header">
+    <div class="badge tag-java">Java · Spring Boot · Port 8080</div>
+    <h1>Product Service</h1>
+    <p class="lead">The product catalog service. Manages brands, categories, and product listings. Sellers create products under approved brands; admins manage brands and categories. Product images are uploaded directly from the browser to MinIO using presigned URLs — the application server never handles image bytes.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Product Catalog</div><p>Sellers create products with name, description, price, category, 3–6 images, and category-specific metadata (e.g. RAM/Storage for Mobiles). Products are only visible on the storefront if their brand is approved.</p></div>
+    <div class="card"><div class="card-title">Brand Management</div><p>Sellers create brands. Admins approve or reject them. Only products under approved brands appear on the public storefront.</p></div>
+    <div class="card"><div class="card-title">Category & Metadata</div><p>Admins define categories. Each category has a metadata template (JSON) that specifies required fields for products in that category. ProductService validates these on creation.</p></div>
+    <div class="card"><div class="card-title">Image Upload (Presigned URLs)</div><p>Angular requests a presigned PUT URL from the product service. The browser then uploads directly to MinIO. The product service never receives the image bytes — only the resulting object key.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-web <span class="tag tag-spring">HTTP</span></div><div class="lib-desc">REST API server. Handles all incoming HTTP requests for products, brands, categories.</div><div class="lib-why"><b>Why:</b> Core of the service — without this there's no HTTP server.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-jpa <span class="tag tag-spring">Database</span></div><div class="lib-desc">Hibernate + Spring Data. Manages <code>Product</code>, <code>Brand</code>, <code>Category</code> entities in Postgres.</div><div class="lib-why"><b>Why:</b> Product data is relational — brands belong to sellers, categories link to brands (ManyToMany), products link to both. JPA handles these relationships cleanly.</div></div>
+    <div class="lib-card"><div class="lib-name">software.amazon.awssdk:s3 v2.42 <span class="tag tag-s3">Storage</span></div><div class="lib-desc">AWS SDK v2 S3 client. Pointed at MinIO (S3-compatible). Used to generate presigned PUT URLs (upload) and presigned GET URLs (read).</div><div class="lib-why"><b>Why:</b> Images can be large. Routing them through the app server wastes memory and CPU. Presigned URLs let the browser talk to MinIO directly. The SDK handles URL signing so MinIO accepts the upload.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-aop <span class="tag tag-spring">Security</span></div><div class="lib-desc">Enables <code>@Aspect</code> support. Needed so <code>RoleValidationAspect</code> from the common module works in this service.</div><div class="lib-why"><b>Why:</b> AOP must be explicitly enabled in each service's Spring context. Without this starter, <code>@RequireSeller</code> annotations would be silently ignored.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-validation <span class="tag tag-spring">Validation</span></div><div class="lib-desc">Bean validation for request bodies. Ensures product name is not blank, price is positive, image count is between 3 and 6, etc.</div><div class="lib-why"><b>Why:</b> Catches bad input at the controller layer before it reaches the service or database. Returns a clear 400 error via <code>GlobalExceptionHandler</code>.</div></div>
+    <div class="lib-card"><div class="lib-name">h2 (test only) <span class="tag tag-java">Testing</span></div><div class="lib-desc">In-memory database. Used only during unit tests so tests don't need a running Postgres instance.</div><div class="lib-why"><b>Why:</b> Tests run faster and in isolation. No external database dependency during CI.</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">config/S3Config.java</td><td><span class="file-kind">Config</span></td><td class="file-desc">Builds an <code>S3Client</code> bean pointed at MinIO. Reads <code>MINIO_ENDPOINT</code>, <code>MINIO_ACCESS_KEY</code>, <code>MINIO_SECRET_KEY</code> from environment variables. Uses <code>forcePathStyle(true)</code> because MinIO needs path-style URLs.</td></tr>
+      <tr><td class="file-name">config/WebConfig.java</td><td><span class="file-kind">Config</span></td><td class="file-desc">Registers <code>CurrentUserInterceptor</code> on all paths. This is what makes <code>UserContext.getUser()</code> available in every service method without passing the user around manually.</td></tr>
+      <tr><td class="file-name">entity/Product.java</td><td><span class="file-kind">Entity</span></td><td class="file-desc">Table <code>products</code>. Columns: id (prd-UUID), sellerId, brandId, categoryId, name, slug (URL-safe name, unique), description, price (BigDecimal), imageKeys (List stored as JSON array), metadata (Map stored as JSON), createdAt, updatedAt.</td></tr>
+      <tr><td class="file-name">entity/Brand.java</td><td><span class="file-kind">Entity</span></td><td class="file-desc">Table <code>brands</code>. sellerId (owner), name, logo (S3 object key), status (PENDING/APPROVED/REJECTED), ManyToMany relationship with Category (which categories this brand sells in).</td></tr>
+      <tr><td class="file-name">entity/Category.java</td><td><span class="file-kind">Entity</span></td><td class="file-desc">Table <code>categories</code>. name, slug, icon, <code>metadataTemplateJson</code> — a JSON string like <code>[{"key":"ram","label":"RAM"}]</code> that defines what extra fields products in this category must supply.</td></tr>
+      <tr><td class="file-name">repository/ProductRepository.java</td><td><span class="file-kind">Repository</span></td><td class="file-desc">Contains <code>findPublishedForStorefront()</code> — a JPQL query that only returns products whose brand has status=APPROVED and optionally filters by categoryId. With pagination to limit results.</td></tr>
+      <tr><td class="file-name">service/ProductService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc"><code>listStorefront()</code> for public browsing. <code>listMine()</code> for seller. <code>listAll()</code> for admin. <code>create()</code> validates brand ownership, brand approval, category metadata, image count, then saves and publishes <code>ProductCreatedPublisher</code>. <code>toDto()</code> generates presigned read URLs for all image keys.</td></tr>
+      <tr><td class="file-name">service/ProductImageUploadService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc"><code>createUploadUrl(sellerId, fileName, contentType)</code>: generates a unique S3 key and calls S3 <code>presignPutObject</code> with 10-minute expiry. <code>createReadUrl(key)</code>: calls <code>presignGetObject</code> — every product fetch generates fresh read URLs.</td></tr>
+      <tr><td class="file-name">service/CategoryMetadataTemplateService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Parses <code>metadataTemplateJson</code> string into a list of <code>MetadataFieldDefinition</code> objects. <code>resolveTemplate(category)</code> is called during product creation to know which metadata keys are required.</td></tr>
+      <tr><td class="file-name">controller/ProductController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc"><code>GET /api/products</code> (public list, optional categoryId/slug filter), <code>GET /api/products/{id}</code>. No auth required.</td></tr>
+      <tr><td class="file-name">controller/SellerProductController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc"><code>GET /api/seller/products</code> (seller's own products), <code>POST /api/seller/products</code> (create), <code>POST /api/seller/products/images/presigned-upload</code>. All <code>@RequireSeller</code>.</td></tr>
+      <tr><td class="file-name">controller/AdminProductController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc"><code>GET /api/admin/products</code> — returns ALL products from ALL sellers. <code>@RequireAdmin</code>. Used by the admin panel to see the full catalog regardless of brand status.</td></tr>
+      <tr><td class="file-name">events/publishers/*.java</td><td><span class="file-kind">Publishers</span></td><td class="file-desc"><code>ProductCreatedPublisher</code>, <code>BrandCreatedPublisher</code>, <code>BrandStatusUpdatedPublisher</code>, <code>CategoryCreatedPublisher</code>. Each extends <code>BasePublisher</code> and publishes to the PRODUCTS JetStream stream.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Image upload flow (presigned URL)</h2>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Angular requests upload slot</div><div class="step-desc"><code>POST /api/seller/products/images/presigned-upload</code>. Body: <code>{fileName, contentType}</code>.</div></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Service generates presigned URL</div><div class="step-desc">Creates key: <code>products/{sellerId}/{uuid}/{fileName}</code>. Calls <code>S3Client.presignPutObject(key, 10 min)</code>. Returns <code>{uploadUrl, objectKey, expiresAt}</code>.</div></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Browser uploads directly to MinIO</div><div class="step-desc">Angular does <code>PUT uploadUrl</code> with the raw image bytes. The product service never sees the image data.</div></div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Angular creates product with object keys</div><div class="step-desc"><code>POST /api/seller/products</code> includes <code>imageKeys: ["products/..."]</code>. Service saves the keys, not URLs.</div></div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Every read generates fresh URLs</div><div class="step-desc"><code>ProductService.toDto()</code> calls <code>createReadUrl(key)</code> for each image. Returns time-limited signed GET URLs so browsers can display images directly.</div></div></div>
+  </div>
+</section>
+
+<!-- ─────────────────── INVENTORY ─────────────────── -->
+<section id="inventory">
+  <div class="page-header">
+    <div class="badge tag-java">Java · Spring Boot · Port 8083</div>
+    <h1>Inventory Service</h1>
+    <p class="lead">Manages stock levels for every product. Sellers add stock. When a buyer places an order, the order-service atomically reserves the stock. If payment fails, the reservation is released and stock is restored. Quantities are cached in Redis so the public storefront never hits Postgres for reads.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Stock Management</div><p>Sellers add units to their products. The <code>ProductInventory</code> table tracks how many units are physically on hand (after reservations are subtracted).</p></div>
+    <div class="card"><div class="card-title">Reservation System (Saga)</div><p>The <code>StockReservation</code> table tracks which order holds which stock. The reserve operation is atomic — uses a SQL UPDATE WHERE quantity >= requested so two simultaneous orders can't both succeed if only one unit is left.</p></div>
+    <div class="card"><div class="card-title">Redis Cache</div><p>Public stock reads go through Redis first. Cache miss → DB query + cache write. Stock changes always evict + rewrite the cache. TTL prevents stale data if a crash skips the cache update.</p></div>
+    <div class="card"><div class="card-title">Internal API (API Key)</div><p>The internal endpoints (<code>/api/inventory/internal/*</code>) are protected by a shared secret header (<code>X-Internal-Key</code>) — not a JWT. These are called by the order-service machine-to-machine.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-redis <span class="tag tag-redis">Cache</span></div><div class="lib-desc"><code>StringRedisTemplate</code>. Stores stock quantities as strings (e.g. <code>"inventory:prd-123" → "42"</code>) with a configurable TTL.</div><div class="lib-why"><b>Why:</b> The product detail page and category page call <code>/api/inventory/public/products/{id}/quantity</code> for every product viewed. Without caching this would be thousands of DB hits per minute at scale. Redis makes it a microsecond in-memory lookup.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-jpa <span class="tag tag-spring">Database</span></div><div class="lib-desc">JPA + Hibernate for <code>ProductInventory</code> and <code>StockReservation</code> entities.</div><div class="lib-why"><b>Why:</b> The atomic <code>decrementIfSufficient()</code> is a JPQL UPDATE query — this is the critical operation that prevents overselling. Only JPA/Hibernate lets you write this as a Java method and execute it as a single atomic SQL statement.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-aop <span class="tag tag-spring">Security</span></div><div class="lib-desc">Enables AOP so <code>RoleValidationAspect</code> from common module works.</div><div class="lib-why"><b>Why:</b> Same as product-service — needed to activate the <code>@RequireSeller</code> aspect.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-validation <span class="tag tag-spring">Validation</span></div><div class="lib-desc">Validates <code>AddStockRequest</code>: <code>quantity</code> must be <code>@NotNull</code> and <code>@Min(1)</code>.</div><div class="lib-why"><b>Why:</b> Catches invalid input before it hits the service layer. A seller can't add 0 or negative units.</div></div>
+    <div class="lib-card"><div class="lib-name">common (internal) <span class="tag tag-java">Shared</span></div><div class="lib-desc">JWT parsing, <code>CurrentUserInterceptor</code>, <code>@RequireSeller</code>, <code>BasePublisher</code>, exception handling.</div><div class="lib-why"><b>Why:</b> All shared infrastructure — no duplication between services.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-web (RestTemplate) <span class="tag tag-spring">HTTP Client</span></div><div class="lib-desc"><code>RestClientConfig</code> creates a <code>RestTemplate</code> bean. Used by <code>ProductOwnershipClient</code> to call product-service.</div><div class="lib-why"><b>Why:</b> inventory-service needs to verify that a seller actually owns a product before letting them add stock. This is a synchronous HTTP call to product-service.</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">config/InternalInventoryApiFilter.java</td><td><span class="file-kind">Filter</span></td><td class="file-desc"><code>OncePerRequestFilter</code> at <code>HIGHEST_PRECEDENCE</code>. For paths starting with <code>/api/inventory/internal/</code>: reads <code>X-Internal-Key</code> header. If it doesn't match <code>INVENTORY_INTERNAL_API_KEY</code> env var → responds 401 immediately. This protects machine-to-machine endpoints from public access.</td></tr>
+      <tr><td class="file-name">config/WebConfig.java</td><td><span class="file-kind">Config</span></td><td class="file-desc">Registers <code>CurrentUserInterceptor</code> on all paths <em>except</em> <code>/api/inventory/internal/**</code>. This is important — internal endpoints use API key auth, not JWT, so the interceptor must not try to parse a JWT for those paths.</td></tr>
+      <tr><td class="file-name">entity/ProductInventory.java</td><td><span class="file-kind">Entity</span></td><td class="file-desc">Table <code>product_inventory</code>. PK is <code>productId</code>. Columns: <code>sellerId</code>, <code>quantity</code> (net available = total units added − currently reserved). One row per product.</td></tr>
+      <tr><td class="file-name">entity/StockReservation.java</td><td><span class="file-kind">Entity</span></td><td class="file-desc">Table <code>stock_reservations</code>. Columns: id (rsv-UUID), productId, quantity, <code>orderRef</code> (unique — prevents duplicate reservations), createdAt, <code>releasedAt</code> (null while reservation is active, set when released).</td></tr>
+      <tr><td class="file-name">repository/ProductInventoryRepository.java</td><td><span class="file-kind">Repository</span></td><td class="file-desc"><code>decrementIfSufficient(productId, qty)</code>: <code>UPDATE ProductInventory SET quantity = quantity - :qty WHERE productId = :productId AND quantity >= :qty</code>. Returns the number of updated rows. 0 means insufficient stock. This single atomic SQL prevents two simultaneous orders from both reserving the last unit.</td></tr>
+      <tr><td class="file-name">service/InventoryService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Core logic. <code>addStock()</code>: validates ownership, upserts ProductInventory, updates cache, publishes event. <code>reserve()</code>: checks idempotency (orderRef exists?), calls <code>decrementIfSufficient</code>, saves StockReservation, updates cache. <code>release()</code>: restores stock, sets releasedAt, updates cache. <code>getBatchQuantities()</code>: loops through productIds calling <code>getAvailableQuantity()</code> for each.</td></tr>
+      <tr><td class="file-name">service/InventoryCacheService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Wraps <code>StringRedisTemplate</code>. Key format: <code>{prefix}:{productId}</code>. <code>getCachedQuantity()</code>: GET from Redis, parse to Integer. <code>cacheQuantity()</code>: SET with TTL. <code>evict()</code>: DELETE key. TTL (default 60s) is a safety net — if the app crashes after a DB write but before updating Redis, the stale cache expires and falls back to DB.</td></tr>
+      <tr><td class="file-name">client/ProductOwnershipClient.java</td><td><span class="file-kind">HTTP Client</span></td><td class="file-desc">Uses <code>RestTemplate</code> to call <code>GET {product-service}/api/seller/products/{productId}</code>. Forwards the original request's <code>Authorization</code> header and <code>Cookie</code> so the product-service can validate the seller. If the response is 4xx → throws <code>BadRequestException("Product not found")</code>.</td></tr>
+      <tr><td class="file-name">controller/InventoryController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc"><code>GET /api/inventory/seller</code> (list), <code>POST /api/inventory/seller/products/{id}/add-stock</code>, <code>GET /api/inventory/public/products/{id}/quantity</code>, <code>GET /api/inventory/public/quantities?productIds=...</code> (batch, for admin view).</td></tr>
+      <tr><td class="file-name">controller/InternalInventoryController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc"><code>POST /api/inventory/internal/reserve</code>, <code>/release</code>. Called by order-service (machine-to-machine). Protected by <code>InternalInventoryApiFilter</code> not JWT.</td></tr>
+      <tr><td class="file-name">events/publishers/*.java</td><td><span class="file-kind">Publishers</span></td><td class="file-desc"><code>InventoryStockAddedPublisher</code>, <code>InventoryReservedPublisher</code>, <code>InventoryReleasedPublisher</code>. Each extends <code>BasePublisher</code> and publishes to the INVENTORY JetStream stream.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note note-warn"><b>The oversell problem — why the atomic decrement matters:</b><br>If two requests for the last unit arrive simultaneously, a naive check-then-update would both read quantity=1, both decide "enough stock", both decrement to 0 — but the buyer would get 2 orders for 1 unit. The SQL <code>UPDATE WHERE quantity >= requested</code> runs atomically inside the database — only one of the two concurrent updates will match the WHERE clause.</div>
+</section>
+
+<!-- ─────────────────── ARCHIVE ─────────────────── -->
+<section id="archive">
+  <div class="page-header">
+    <div class="badge tag-java">Java · Spring Boot · Background Service</div>
+    <h1>Archive Service</h1>
+    <p class="lead">A background worker with no HTTP API. It subscribes to every NATS JetStream stream using durable pull consumers. Every event published by any other service (user logins, product creations, inventory changes, orders) gets written to MinIO as a permanent JSON file — an immutable audit log.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="card"><div class="card-title">Why an audit log?</div><p>In a microservices system, individual services only know about their own domain. If something goes wrong (e.g. wrong inventory count, a disputed order), you need to reconstruct what happened across all services. The archive is a complete, chronological record of every event in the system — stored outside the databases so it survives even if a database is corrupted or dropped.</p></div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">jnats 2.20.0 <span class="tag tag-nats">NATS</span></div><div class="lib-desc">Java NATS client. The archive-service uses <code>JetStream.subscribe()</code> with durable pull subscriptions to consume events from four streams: IDENTITY, PRODUCTS, ORDERS, INVENTORY.</div><div class="lib-why"><b>Why durable pull consumers:</b> "Durable" means NATS remembers which messages this consumer has already seen. If archive-service restarts, it picks up exactly where it left off — no events are skipped or replayed twice.</div></div>
+    <div class="lib-card"><div class="lib-name">software.amazon.awssdk:s3 v2.42 <span class="tag tag-s3">Storage</span></div><div class="lib-desc">AWS SDK v2 S3 client. Pointed at MinIO. Writes each event as a JSON file to the <code>redstore-events</code> bucket.</div><div class="lib-why"><b>Why MinIO/S3:</b> Object storage is cheap, immutable by design, and unlimited in size. No schema migration needed when new event types are added — just write new JSON files.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter (no web) <span class="tag tag-spring">Runtime</span></div><div class="lib-desc">Uses the basic Spring Boot starter — not <code>spring-boot-starter-web</code>. This means no embedded HTTP server is started.</div><div class="lib-why"><b>Why no web:</b> The service has no API endpoints. It just runs subscription loops in background threads. Starting a Tomcat server would waste memory.</div></div>
+    <div class="lib-card"><div class="lib-name">common (internal) <span class="tag tag-java">Shared</span></div><div class="lib-desc">Gives access to event DTO classes (e.g. <code>InventoryStockAddedEventData</code>) for deserialisation and the <code>BasePublisher</code> infrastructure.</div><div class="lib-why"><b>Why:</b> The event DTOs are defined once in common so publishers and consumers use the same class — changes only need to be made in one place.</div></div>
+  </div>
+
+  <h2>How it works</h2>
+  <div class="flow">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><div class="step-title">NatsConfig creates 4 pull subscriptions on startup</div><div class="step-desc">Durable consumers named <code>archiver-identity</code>, <code>archiver-products</code>, <code>archiver-orders</code>, <code>archiver-payments</code>. Each subscribes to one subject pattern (<code>identity.&gt;</code>, <code>product.&gt;</code>, etc.).</div></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Subscription creation retries</div><div class="step-desc">The <code>createPullSubscription()</code> helper retries up to 10 times with a 30-second delay. NATS cluster might not be ready immediately when the pod starts.</div></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Background threads poll NATS for messages</div><div class="step-desc">Each subscription runs a loop: <code>subscription.fetch(batch, timeout)</code> → for each message: deserialise, write to MinIO, acknowledge the message.</div></div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><div class="step-title">MinIO write</div><div class="step-desc">File path pattern: <code>redstore-events/{stream}/{subject}/{timestamp}_{messageId}.json</code>. Event data written as pretty-printed JSON.</div></div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Acknowledge</div><div class="step-desc">After successful write, calls <code>message.ack()</code>. NATS marks this message as consumed. On restart, only unacknowledged messages are re-delivered.</div></div></div>
+  </div>
+
+  <div class="note note-info"><b>What happens if MinIO is down?</b> The message is not acknowledged, so it stays in NATS and will be reprocessed when MinIO comes back. NATS JetStream's durability means no events are permanently lost.</div>
+</section>
+
+<!-- ─────────────────── SNAPSHOT ─────────────────── -->
+<section id="snapshot">
+  <div class="page-header">
+    <div class="badge tag-node">Node.js · Cron Job</div>
+    <h1>Snapshot Service</h1>
+    <p class="lead">A simple Node.js script that runs <code>pg_dump</code> on the Postgres databases every 2 hours and uploads the SQL dump files to MinIO. It is a database backup service — nothing more, nothing less.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <p>If a database needs to be restored (accidental deletion, corruption, rollback to an earlier state), you can download the latest <code>.sql</code> file from MinIO and run <code>psql</code> to restore it. Without backups, a database failure means permanent data loss.</p>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">node-cron <span class="tag tag-node">Scheduler</span></div><div class="lib-desc">Cron-style task scheduler for Node.js. Runs the snapshot task on a schedule defined by the <code>SNAPSHOT_CRON_SCHEDULE</code> environment variable (default: <code>0 */2 * * *</code> = every 2 hours).</div><div class="lib-why"><b>Why:</b> Node doesn't have a built-in cron. This library translates a standard cron expression into a recurring timer. You can change the schedule by just changing an env var.</div></div>
+    <div class="lib-card"><div class="lib-name">minio (Node SDK) <span class="tag tag-s3">Storage</span></div><div class="lib-desc">MinIO JavaScript client. Used to create the backup bucket if it doesn't exist and upload the <code>.sql</code> file as an object.</div><div class="lib-why"><b>Why:</b> Uploads are streamed from the local filesystem to MinIO without loading the entire file into memory. Essential for large database dumps.</div></div>
+    <div class="lib-card"><div class="lib-name">child_process (built-in) <span class="tag tag-node">System</span></div><div class="lib-desc">Node.js built-in module. Used to run <code>pg_dump</code> as a shell command via <code>exec()</code>.</div><div class="lib-why"><b>Why:</b> There's no pure JS Postgres backup tool. The definitive way to backup Postgres is to run <code>pg_dump</code> — a C binary that ships with Postgres. Node calls it as a child process.</div></div>
+    <div class="lib-card"><div class="lib-name">fs (built-in) <span class="tag tag-node">File I/O</span></div><div class="lib-desc">Node.js built-in filesystem module. Reads the <code>.sql</code> file from <code>/tmp</code> after <code>pg_dump</code> writes it, then streams it to MinIO. After upload, deletes the temp file.</div><div class="lib-why"><b>Why delete after upload:</b> The pod's <code>/tmp</code> disk is limited. Old dumps must be removed to prevent the disk from filling up.</div></div>
+  </div>
+
+  <h2>How it works</h2>
+  <pre><code>// Simplified index.js flow:
+
+// 1. On startup: run the snapshot task immediately (don't wait for first cron tick)
+runSnapshotTask();
+
+// 2. Schedule it on cron (default: every 2 hours)
+cron.schedule(process.env.SNAPSHOT_CRON_SCHEDULE, runSnapshotTask, { timezone: 'UTC' });
+
+// runSnapshotTask():
+//   a. minio.makeBucket('redstore-main')  ← create if doesn't exist
+//   b. For each database (product-db, identity-db):
+//      i.  takePgDump() → runs: pg_dump -h {host} -U {user} {dbname} > /tmp/{timestamp}_{db}.sql
+//      ii. uploadFileToMinio(filePath, destKey) → stream to MinIO under db-snapshots/
+//      iii. fs.unlinkSync(filePath) → delete local temp file</code></pre>
+
+  <div class="note note-info"><b>Why not use Postgres's built-in backup?</b> CloudNativePG (the K8s operator) can do continuous archiving via WAL — but that's complex to set up. This script is simpler: a full SQL dump every 2 hours is good enough for a development/early-production platform. You can restore to any 2-hour window.</div>
+</section>
+
+<!-- ─────────────────── CLIENT ─────────────────── -->
+<section id="client">
+  <div class="page-header">
+    <div class="badge tag-ng">Angular 17 · Standalone Components</div>
+    <h1>Angular Client</h1>
+    <p class="lead">A Single-Page Application (SPA). Three separate layout zones: the public store (anyone can browse), the seller dashboard (requires SELLER JWT), and the admin panel (requires ADMIN JWT). Uses Angular 17's new signal-based reactivity and OnPush change detection for performance.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Public Storefront</div><p>Home page, category browsing, product detail with inventory check, cart, checkout, order history, user profile. Anyone can access without logging in.</p></div>
+    <div class="card"><div class="card-title">Seller Dashboard</div><p>/seller/* routes. Products management (create with image upload), inventory management (add stock), brands, orders. Requires SELLER JWT to access.</p></div>
+    <div class="card"><div class="card-title">Admin Panel</div><p>/admin/* routes. View all products (from all sellers) with real inventory counts, manage brands (approve/reject), categories, sellers, users. Requires ADMIN JWT.</p></div>
+    <div class="card"><div class="card-title">API Communication</div><p>All API calls go through service classes. JWT is sent via cookie (HttpOnly) automatically by the browser, or as an Authorization header. The Angular dev proxy routes /api/* to the correct local service port.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">@angular/core — Signals <span class="tag tag-ng">State</span></div><div class="lib-desc"><code>signal()</code> creates reactive state. <code>computed()</code> derives values. The template calls the signal as a function: <code>products()</code>.</div><div class="lib-why"><b>Why signals instead of RxJS for local state:</b> Signals are simpler — no Subjects, no BehaviorSubject, no subscribe/unsubscribe. They work perfectly with OnPush change detection because Angular knows exactly which components depend on which signals.</div></div>
+    <div class="lib-card"><div class="lib-name">@angular/common/http (HttpClient) <span class="tag tag-ng">HTTP</span></div><div class="lib-desc">Angular's built-in HTTP client. All API service classes inject <code>HttpClient</code> and return <code>Observable&lt;T&gt;</code>.</div><div class="lib-why"><b>Why Observable not async/await:</b> HttpClient integrates with Angular's interceptor pipeline. If you later add a global auth interceptor (to refresh the token), it applies everywhere automatically.</div></div>
+    <div class="lib-card"><div class="lib-name">@angular/router <span class="tag tag-ng">Routing</span></div><div class="lib-desc">Client-side routing. Lazy-loaded route guards (<code>authGuard</code>) check the JWT before allowing navigation to /seller/* or /admin/*.</div><div class="lib-why"><b>Why route guards:</b> Without guards, a user who knows the URL could navigate to /seller/products — they'd get 403 from the API, but the page would still partially render. Guards redirect unauthenticated users to the login page immediately.</div></div>
+    <div class="lib-card"><div class="lib-name">@angular/forms (FormsModule) <span class="tag tag-ng">Forms</span></div><div class="lib-desc">Used for two-way binding in forms like the inventory add-stock input (<code>[(ngModel)]</code>).</div><div class="lib-why"><b>Why:</b> The inventory page needs to track the "units to add" number per product row. ngModel binds the input value directly to a signal-managed state object.</div></div>
+    <div class="lib-card"><div class="lib-name">ChangeDetectionStrategy.OnPush <span class="tag tag-ng">Performance</span></div><div class="lib-desc">Applied to every component. Angular only re-renders a component when one of its input references changes or a signal it reads emits a new value.</div><div class="lib-why"><b>Why:</b> Without OnPush, Angular checks every component on every user interaction. With OnPush + signals, only the components whose data actually changed re-render — dramatically better performance on large lists.</div></div>
+    <div class="lib-card"><div class="lib-name">RxJS (firstValueFrom) <span class="tag tag-ng">Async</span></div><div class="lib-desc">Used in form submissions like product creation where you need to <code>await</code> a sequence of API calls (upload images one by one, then create product).</div><div class="lib-why"><b>Why:</b> <code>firstValueFrom(observable)</code> converts an RxJS Observable to a Promise so you can use <code>async/await</code> syntax in the component methods for linear async flows.</div></div>
+  </div>
+
+  <h2>Route structure</h2>
+  <table>
+    <thead><tr><th>Path prefix</th><th>Layout</th><th>Guard</th><th>Pages</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">/</td><td>MainLayout</td><td>None</td><td class="file-desc">home, /category/:slug, /product/:id, /cart, /checkout, /orders, /profile, /deals</td></tr>
+      <tr><td class="file-name">/auth/*</td><td>AuthLayout</td><td>None</td><td class="file-desc">signin, signup, seller-signin, admin-signin, request-seller</td></tr>
+      <tr><td class="file-name">/seller/*</td><td>SellerLayout</td><td>authGuard(SELLER)</td><td class="file-desc">dashboard, products, inventory, brands, orders, analytics, settings</td></tr>
+      <tr><td class="file-name">/admin/*</td><td>AdminLayout</td><td>authGuard(ADMIN)</td><td class="file-desc">dashboard, products, brands, categories, sellers, orders, users, analytics</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Key service files</h2>
+  <table>
+    <thead><tr><th>File</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">product-api.service.ts</td><td class="file-desc"><code>getProducts()</code> public list, <code>getMyProducts()</code> seller list, <code>getAdminProducts()</code> admin list, <code>createProduct()</code>, presigned upload helpers. Returns <code>Observable&lt;ProductApiResponse[]&gt;</code>.</td></tr>
+      <tr><td class="file-name">inventory-api.service.ts</td><td class="file-desc"><code>getSellerInventory()</code>, <code>addStock(productId, qty)</code>, <code>getPublicQuantity(productId)</code>, <code>getBatchQuantities(productIds[])</code> — calls <code>/api/inventory/public/quantities?productIds=...</code>.</td></tr>
+      <tr><td class="file-name">auth.service.ts</td><td class="file-desc">Stores JWT, exposes <code>currentUser()</code> signal. <code>login()</code>, <code>logout()</code>. Route guard reads this service to know if the user is authenticated and what role they have.</td></tr>
+      <tr><td class="file-name">brand-api.service.ts</td><td class="file-desc">Seller: <code>getMyBrands()</code>, <code>createBrand()</code>. Admin: <code>getAllBrands()</code>, <code>updateBrandStatus(id, APPROVED/REJECTED)</code>.</td></tr>
+      <tr><td class="file-name">toast.service.ts</td><td class="file-desc">Global notification queue. <code>success(title, msg)</code>, <code>error(title)</code>, <code>warning()</code>. Components call this after API responses.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>Proxy config (development)</h2>
+  <p style="color:var(--muted);font-size:13.5px;margin-bottom:10px;">During development (<code>ng serve</code>), <code>proxy.conf.json</code> routes API calls to local service ports so CORS isn't an issue.</p>
+  <pre><code>{
+  "/api/admin/products": { "target": "http://localhost:8080" }, // product-service (specific FIRST)
+  "/api/admin":          { "target": "http://localhost:8081" }, // identity-service
+  "/api/inventory":      { "target": "http://localhost:8083" }, // inventory-service
+  "/api":                { "target": "http://localhost:8080" }  // product-service (catch-all)
+}
+// Order matters: /api/admin/products must come before /api/admin
+// otherwise /api/admin would match it first and route to identity-service (wrong)</code></pre>
+</section>
+
+<!-- ─────────────────── INFRA ─────────────────── -->
+<section id="infra">
+  <div class="page-header">
+    <div class="badge tag-k8s">Kubernetes · NATS · Skaffold</div>
+    <h1>Infrastructure</h1>
+    <p class="lead">All services run on Kubernetes. Databases are managed by the CloudNativePG operator. Events flow through NATS JetStream. Skaffold automates the dev build-deploy loop. All secrets are stored in Kubernetes Secrets and injected as environment variables.</p>
+  </div>
+
+  <h2>Kubernetes manifests</h2>
+  <table>
+    <thead><tr><th>File</th><th>Kind</th><th>What it creates</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">k8s/identity-depl.yaml</td><td><span class="file-kind">Deployment + Service</span></td><td class="file-desc">Runs identity-service pod. Service name <code>identity-srv</code> on port 8080. Env vars: JWT_KEY, Postgres URL, NATS_URL, Google credentials — all from K8s Secrets.</td></tr>
+      <tr><td class="file-name">k8s/product-depl.yaml</td><td><span class="file-kind">Deployment + Service</span></td><td class="file-desc">Runs product-service pod. Service name <code>product-srv</code>. Env vars include MINIO_ENDPOINT, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, S3_BUCKET, NATS_URL, JWT_KEY.</td></tr>
+      <tr><td class="file-name">k8s/inventory-depl.yaml</td><td><span class="file-kind">Deployment + Service</span></td><td class="file-desc">Runs inventory-service pod. Service name <code>inventory-srv</code>. Key env vars: INVENTORY_INTERNAL_API_KEY (shared secret for order-service calls), PRODUCT_SERVICE_BASE_URL=http://product-srv:8080, REDIS_HOST=inventory-redis-srv.</td></tr>
+      <tr><td class="file-name">k8s/databases/inventory-db.yaml</td><td><span class="file-kind">CloudNativePG Cluster</span></td><td class="file-desc">Postgres 16 cluster for inventory. 1 instance (primary only). Database: <code>inventory_db</code>. Owner: <code>inventory_admin</code>. Credentials stored in secret <code>inventory-db-creds</code>. 1Gi storage.</td></tr>
+      <tr><td class="file-name">k8s/redis/inventory-redis-depl.yaml</td><td><span class="file-kind">Deployment + Service</span></td><td class="file-desc">Redis 7 alpine. Configured with: <code>requirepass</code> (password from K8s secret), AOF persistence (survives restarts), <code>maxmemory 100mb</code>, <code>allkeys-lru</code> eviction (removes least-used keys when full).</td></tr>
+      <tr><td class="file-name">k8s/event-bus/nats-depl.yaml</td><td><span class="file-kind">StatefulSet + Service + Job</span></td><td class="file-desc">2-node NATS cluster with JetStream enabled (<code>--js</code> flag). One-time Job (<code>nats-stream-setup</code>) creates IDENTITY, PRODUCTS, ORDERS, and INVENTORY streams on first deploy.</td></tr>
+      <tr><td class="file-name">k8s/secreates/app-secreates.yaml</td><td><span class="file-kind">Secret</span></td><td class="file-desc">K8s Secret holding sensitive values: JWT_KEY, MinIO credentials, NATS URL, INVENTORY_INTERNAL_API_KEY. Mounted into pods as environment variables — never hardcoded in code.</td></tr>
+      <tr><td class="file-name">k8s-dev/ingress-srv.yaml</td><td><span class="file-kind">Ingress</span></td><td class="file-desc">Nginx Ingress. Routes by URL prefix. Key rules: <code>/api/admin/products → product-srv</code> (specific first!), <code>/api/admin → identity-srv</code>, <code>/api/inventory → inventory-srv</code>, <code>/api/seller → product-srv</code>, <code>/* → client-srv</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h2>NATS JetStream streams</h2>
+  <table>
+    <thead><tr><th>Stream name</th><th>Subject filter</th><th>Who publishes</th><th>Who consumes</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">IDENTITY</td><td><code>identity.&gt;</code></td><td class="file-desc">identity-service (user logins, seller registration, approvals)</td><td class="file-desc">archive-service (audit log)</td></tr>
+      <tr><td class="file-name">PRODUCTS</td><td><code>product.&gt;</code></td><td class="file-desc">product-service (product created, brand status updated)</td><td class="file-desc">archive-service</td></tr>
+      <tr><td class="file-name">ORDERS</td><td><code>order.&gt;, payment.&gt;</code></td><td class="file-desc">order-service (future), payment-service (future)</td><td class="file-desc">archive-service, inventory-service (saga)</td></tr>
+      <tr><td class="file-name">INVENTORY</td><td><code>inventory.&gt;</code></td><td class="file-desc">inventory-service (stock added, reserved, released)</td><td class="file-desc">archive-service (once added), order-saga listeners</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note note-warn"><b>The stream must exist before publishing.</b> If you add a new service that publishes to a new subject and the stream doesn't exist, you'll get <code>503 No Responders Available</code>. Always create the stream first — either through the nats-stream-setup Job or manually with nats-box.</div>
+
+  <h2>Skaffold dev loop</h2>
+  <p style="color:var(--muted);font-size:13.5px;margin-bottom:10px;"><code>skaffold dev</code> watches your files and automatically rebuilds and redeployes when you save.</p>
+  <pre><code># skaffold.yaml: each artifact has:
+#   context: .          ← build context is the project ROOT (not the service folder)
+#   dockerfile: services/{service}/Dockerfile
+
+# Why root context?
+# The Dockerfile copies common/pom.xml, services/, common/src/ —
+# all paths relative to the project root, not the service directory.
+# If you accidentally run:
+#   docker build -f services/X/Dockerfile services/X   ← WRONG, will fail
+# The correct command is always:
+#   docker build -f services/X/Dockerfile .            ← correct
+
+# Build stages:
+# Stage 1 (maven:3.9.6):
+#   1. Copy root pom.xml + all service pom.xml files
+#   2. Run: mvn dependency:go-offline -pl services/{service} -am
+#      ← Downloads all Maven deps. This layer is CACHED until pom.xml changes.
+#   3. Copy source code (common/src, services/{service}/src)
+#   4. Run: mvn clean package -DskipTests
+#      ← Builds the JAR
+# Stage 2 (eclipse-temurin:21-jre-alpine):
+#   COPY --from=build *.jar app.jar
+#   ← Final image is tiny: only JRE + the JAR, no Maven, no source code</code></pre>
+
+  <h2>Secret management</h2>
+  <div class="note note-info"><b>How secrets get into pods:</b> <code>app-secreates.yaml</code> defines a Kubernetes Secret. Each Deployment's <code>env:</code> block references it with <code>valueFrom.secretKeyRef</code>. When the pod starts, Kubernetes injects those values as environment variables. Spring Boot reads them with <code>@Value("${jwt.key}")</code> or via <code>application.properties</code> using <code>${JWT_KEY}</code> placeholders.</div>
+  <div class="note note-warn"><b>Never commit real secrets to git.</b> The <code>app-secreates.yaml</code> file in the repo contains placeholder values. In production, real secrets are applied separately and not stored in version control.</div>
+</section>
+
+</main>
+
+<script>
+  function show(id) {
+    // Hide all sections
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+    // Show target
+    document.getElementById(id).classList.add('active');
+    document.getElementById('nav-' + id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

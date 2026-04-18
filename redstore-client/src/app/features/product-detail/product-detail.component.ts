@@ -12,6 +12,8 @@ import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
 import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { InventoryApiService } from '../../core/services/inventory-api.service';
+import { enrichWithInventory, applyQuantities } from '../../core/services/inventory-enrich';
 
 @Component({
   selector: 'rs-product-detail',
@@ -24,6 +26,7 @@ import { mapProductApiToModel, ProductApiService } from '../../core/services/pro
 export class ProductDetailComponent {
   private route = inject(ActivatedRoute);
   private productApi = inject(ProductApiService);
+  private inventoryApi = inject(InventoryApiService);
   cart = inject(CartService);
   toast = inject(ToastService);
 
@@ -38,6 +41,12 @@ export class ProductDetailComponent {
         }
         return this.productApi.getProductById(productId).pipe(
           map(mapProductApiToModel),
+          switchMap((p) =>
+            this.inventoryApi.getBatchQuantities([p.id]).pipe(
+              map((qs) => applyQuantities([p], qs)[0]),
+              catchError(() => of(p)),
+            ),
+          ),
           catchError(() => of(null)),
         );
       }),
@@ -58,6 +67,7 @@ export class ProductDetailComponent {
               .slice(0, 4)
               .map(mapProductApiToModel),
           ),
+          switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
           catchError(() => of([] as Product[])),
         );
       }),
@@ -88,11 +98,27 @@ export class ProductDetailComponent {
     if (!p) {
       return;
     }
-    this.cart.add(p, this.quantity());
-    this.toast.success('Added to cart', `${this.quantity()} × ${p.name}`);
+    if (p.stockCount != null && p.stockCount <= 0) {
+      this.toast.warning('Out of stock', `${p.name} is currently unavailable.`);
+      return;
+    }
+    const q = this.quantity();
+    if (p.stockCount != null && q > p.stockCount) {
+      this.toast.warning(
+        'Not enough stock',
+        `Only ${p.stockCount} left — please lower the quantity.`,
+      );
+      return;
+    }
+    this.cart.add(p, q);
+    this.toast.success('Added to cart', `${q} × ${p.name}`);
   }
 
   addRelated(p: Product) {
+    if (p.stockCount != null && p.stockCount <= 0) {
+      this.toast.warning('Out of stock', `${p.name} is currently unavailable.`);
+      return;
+    }
     this.cart.add(p);
     this.toast.success('Added to cart', p.name);
   }

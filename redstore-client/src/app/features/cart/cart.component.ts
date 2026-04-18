@@ -24,9 +24,41 @@ export class CartComponent {
   tax = computed(() => +(this.cart.subtotal() * 0.08).toFixed(2));
   total = computed(() => +(this.cart.subtotal() + this.shipping() + this.tax()).toFixed(2));
 
-  inc(id: string, q: number) { this.cart.update(id, q + 1); }
+  inc(id: string, q: number, available?: number) {
+    if (available != null && q + 1 > available) {
+      this.toast.warning('Stock limit', `Only ${available} unit(s) in stock.`);
+      return;
+    }
+    this.cart.update(id, q + 1);
+  }
   dec(id: string, q: number) { this.cart.update(id, q - 1); }
-  remove(id: string) { this.cart.remove(id); this.toast.info('Removed from cart'); }
+  remove(id: string) {
+    this.cart.remove(id);
+    this.toast.info('Removed from cart');
+  }
 
-  checkout() { this.router.navigate(['/checkout']); }
+  /** Checkout is blocked client-side if any line exceeds available stock. */
+  async checkout() {
+    if (this.cart.hasStockIssue()) {
+      this.toast.error(
+        'Stock issue',
+        'Some items exceed the available quantity — please adjust or remove them.',
+      );
+      return;
+    }
+    // Run a dry-run against inventory through the cart-service so we catch
+    // any race (someone else reserved the last unit) before the user sees
+    // the payment form.
+    const result = await this.cart.checkout(true).catch(() => null);
+    if (result && !result.ok) {
+      for (const issue of result.issues) {
+        this.toast.error(
+          issue.reason === 'OUT_OF_STOCK' ? 'Out of stock' : 'Not enough stock',
+          `${issue.name ?? issue.productId}: only ${issue.available} available (you have ${issue.requested}).`,
+        );
+      }
+      return;
+    }
+    this.router.navigate(['/checkout']);
+  }
 }

@@ -105,7 +105,7 @@
       <a routerLink="/deals" class="hero__btn hero__btn--primary">Grab deals <rs-icon name="arrow-right" [size]="16"></rs-icon></a>
     </div>
     <div class="deals-banner__grid">
-      <rs-product-card *ngFor="let p of deals.slice(0, 3)" [product]="p" (add)="add($event)"></rs-product-card>
+      <rs-product-card *ngFor="let p of dealsBanner()" [product]="p" (add)="add($event)"></rs-product-card>
     </div>
   </div>
 </section>

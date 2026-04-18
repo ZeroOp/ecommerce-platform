@@ -12,13 +12,13 @@ import { RatingComponent } from '../rating/rating.component';
   imports: [CommonModule, RouterLink, IconComponent, BadgeComponent, RatingComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <article class="rs-pc">
+    <article class="rs-pc" [class.rs-pc--oos]="isOutOfStock">
       <a class="rs-pc__media" [routerLink]="['/product', product.id]">
         <img [src]="product.image" [alt]="product.name" loading="lazy" />
         <div class="rs-pc__chips">
           <rs-badge *ngIf="product.badge" tone="dark">{{ product.badge }}</rs-badge>
           <rs-badge *ngIf="product.discount" tone="brand">-{{ product.discount }}%</rs-badge>
-          <rs-badge *ngIf="!product.inStock" tone="danger">Out of stock</rs-badge>
+          <rs-badge *ngIf="isOutOfStock" tone="danger">Out of stock</rs-badge>
         </div>
         <button
           type="button"
@@ -35,12 +35,26 @@ import { RatingComponent } from '../rating/rating.component';
         <a class="rs-pc__name" [routerLink]="['/product', product.id]">{{ product.name }}</a>
         <rs-rating size="sm" [value]="product.rating" [reviews]="product.reviews"></rs-rating>
 
+        <!-- Low-stock message: < 5 in stock but still buyable -->
+        <div *ngIf="isLowStock" class="rs-pc__lowstock" role="status">
+          <rs-icon name="warning" [size]="14"></rs-icon>
+          Only {{ product.stockCount }} left — order soon!
+        </div>
+        <div *ngIf="isOutOfStock" class="rs-pc__oos" role="status">
+          Sold out
+        </div>
+
         <div class="rs-pc__price-row">
           <div class="rs-pc__price">
             <span class="rs-pc__now">\${{ product.price | number: '1.2-2' }}</span>
             <span *ngIf="product.originalPrice" class="rs-pc__was">\${{ product.originalPrice | number: '1.2-2' }}</span>
           </div>
-          <button type="button" class="rs-pc__add" (click)="add.emit(product)" [disabled]="!product.inStock">
+          <button
+            type="button"
+            class="rs-pc__add"
+            (click)="add.emit(product)"
+            [disabled]="isOutOfStock"
+            [attr.aria-label]="isOutOfStock ? 'Out of stock' : 'Add to cart'">
             <rs-icon name="plus" [size]="18"></rs-icon>
           </button>
         </div>
@@ -119,6 +133,27 @@ import { RatingComponent } from '../rating/rating.component';
     }
     .rs-pc__add:hover:not(:disabled) { transform: scale(1.08) rotate(4deg); }
     .rs-pc__add:disabled { background: var(--rs-surface-3); color: var(--rs-text-subtle); box-shadow: none; cursor: not-allowed; }
+    .rs-pc__lowstock {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 2px;
+      padding: 4px 8px;
+      font-size: 12px; font-weight: 600;
+      color: var(--rs-danger, #dc2626);
+      background: rgba(220, 38, 38, 0.08);
+      border: 1px solid rgba(220, 38, 38, 0.18);
+      border-radius: 999px;
+      width: fit-content;
+    }
+    .rs-pc__oos {
+      margin-top: 2px;
+      padding: 4px 10px;
+      font-size: 12px; font-weight: 700; letter-spacing: 0.02em;
+      color: #b91c1c;
+      background: rgba(220, 38, 38, 0.1);
+      border-radius: 999px;
+      width: fit-content;
+    }
+    .rs-pc--oos .rs-pc__media img { opacity: 0.55; filter: grayscale(0.25); }
   `],
 })
 export class ProductCardComponent {
@@ -126,6 +161,24 @@ export class ProductCardComponent {
   @Input() wished = false;
   @Output() add = new EventEmitter<Product>();
   @Output() wish = new EventEmitter<Product>();
+
+  /**
+   * Out-of-stock when we have explicit stock info that says 0, or the
+   * legacy `inStock=false` flag is set. Unknown stock (undefined count with
+   * inStock !== false) is treated as available.
+   */
+  get isOutOfStock(): boolean {
+    if (this.product.stockCount != null) {
+      return this.product.stockCount <= 0;
+    }
+    return this.product.inStock === false;
+  }
+
+  /** Strictly between 1 and 4 — i.e. "less than 5" per product requirements. */
+  get isLowStock(): boolean {
+    const n = this.product.stockCount;
+    return n != null && n > 0 && n < 5;
+  }
 
   toggleWish(e: Event) {
     e.preventDefault(); e.stopPropagation();

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { getDeals } from '../../data/mock-products';
 import { ProductCardComponent } from '../../shared/components/product-card/product-card.component';
@@ -6,6 +6,11 @@ import { BadgeComponent } from '../../shared/components/badge/badge.component';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
 import { Product } from '../../core/models/product.model';
+import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { InventoryApiService } from '../../core/services/inventory-api.service';
+import { enrichWithInventory } from '../../core/services/inventory-enrich';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, map, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'rs-deals',
@@ -20,11 +25,12 @@ import { Product } from '../../core/models/product.model';
         <p>Up to 40% off on hand-picked products across every category. Hurry — stocks are moving fast.</p>
       </div>
       <div class="deals__grid">
-        <rs-product-card *ngFor="let p of deals" [product]="p" (add)="add($event)"></rs-product-card>
+        <rs-product-card *ngFor="let p of displayDeals()" [product]="p" (add)="add($event)"></rs-product-card>
       </div>
     </section>
   `,
-  styles: [`
+  styles: [
+    `
     .deals { padding: 40px 24px; }
     .deals__hero {
       padding: 48px;
@@ -40,11 +46,38 @@ import { Product } from '../../core/models/product.model';
     .deals__hero h1 { color: white; font-size: clamp(30px, 4vw, 50px); margin-top: 14px; font-weight: 800; letter-spacing: -0.03em; }
     .deals__hero p { margin-top: 12px; max-width: 560px; margin-left: auto; margin-right: auto; font-size: 16px; color: rgba(255,255,255,0.88); }
     .deals__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-  `],
+  `,
+  ],
 })
 export class DealsComponent {
   cart = inject(CartService);
   toast = inject(ToastService);
-  deals = getDeals(20);
-  add(p: Product) { this.cart.add(p); this.toast.success('Added to cart', p.name); }
+  private productApi = inject(ProductApiService);
+  private inventoryApi = inject(InventoryApiService);
+
+  private apiList = toSignal(
+    this.productApi.getProducts({ limit: 48 }).pipe(
+      map((rows) => rows.map(mapProductApiToModel)),
+      switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
+      catchError(() => of([] as Product[])),
+    ),
+    { initialValue: [] as Product[] },
+  );
+
+  /** Prefer items with a sale price; otherwise show the live catalog (not mock data). */
+  displayDeals = computed(() => {
+    const list = this.apiList();
+    if (list.length === 0) {
+      return getDeals(20);
+    }
+    const onSale = list.filter(
+      (p) => p.originalPrice != null && p.originalPrice > p.price,
+    );
+    return (onSale.length >= 6 ? onSale : list).slice(0, 24);
+  });
+
+  add(p: Product) {
+    this.cart.add(p);
+    this.toast.success('Added to cart', p.name);
+  }
 }

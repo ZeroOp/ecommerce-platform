@@ -4,6 +4,7 @@ const cron = require('node-cron');
 const Minio = require('minio');
 const fs = require('fs');
 const path = require('path');
+const { performCartSnapshot } = require('./cart-redis-snapshot');
 
 // --- Configuration from Environment Variables ---
 
@@ -130,6 +131,15 @@ async function runSnapshotTask() {
     IDENTITY_DB_PASSWORD,
     IDENTITY_DB_NAME
   );
+
+  // Cart carts live only in Redis Cluster — dump them as JSON Lines to MinIO
+  // so the platform has a restore point even though the cluster uses no
+  // persistent volumes.
+  if (MINIO_ACCESS_KEY && MINIO_SECRET_KEY) {
+    await performCartSnapshot(uploadFileToMinio, MINIO_BUCKET);
+  } else {
+    console.error('Skipping cart redis snapshot: MinIO credentials not provided.');
+  }
 
   console.log(`[${new Date().toISOString()}] Database snapshot task finished.`);
 }

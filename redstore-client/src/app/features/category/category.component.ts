@@ -16,6 +16,8 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, switchMap } from 'rxjs';
 import { CategoryApiService } from '../../core/services/category-api.service';
 import { mapProductApiToModel, ProductApiService } from '../../core/services/product-api.service';
+import { InventoryApiService } from '../../core/services/inventory-api.service';
+import { enrichWithInventory } from '../../core/services/inventory-enrich';
 
 type SortKey = 'featured' | 'priceAsc' | 'priceDesc' | 'rating' | 'newest';
 
@@ -31,6 +33,7 @@ export class CategoryComponent {
   private route = inject(ActivatedRoute);
   private categoryApi = inject(CategoryApiService);
   private productApi = inject(ProductApiService);
+  private inventoryApi = inject(InventoryApiService);
   cart = inject(CartService);
   toast = inject(ToastService);
 
@@ -61,6 +64,7 @@ export class CategoryComponent {
       switchMap((slug) =>
         this.productApi.getProducts({ categorySlug: slug, limit: 96 }).pipe(
           map((list) => list.map(mapProductApiToModel)),
+          switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
           catchError(() => of([] as Product[])),
         ),
       ),
@@ -115,6 +119,10 @@ export class CategoryComponent {
   });
 
   add(p: Product) {
+    if (p.stockCount != null && p.stockCount <= 0) {
+      this.toast.warning('Out of stock', `${p.name} is currently unavailable.`);
+      return;
+    }
     this.cart.add(p);
     this.toast.success('Added to cart', p.name);
   }

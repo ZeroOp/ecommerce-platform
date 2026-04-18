@@ -95,7 +95,7 @@ export class AuthService {
   // ---------- helpers ----------
   private normalize(res: AuthResponse): User {
     return {
-      id: res.id,
+      id: String(res.id ?? ''),
       email: res.email,
       name: res.name ?? res.email?.split('@')[0],
       role: this.mapRole(res.role),
@@ -135,7 +135,12 @@ export class AuthService {
   private loadFromStorage(): User | null {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? (JSON.parse(raw) as User) : null;
-    } catch { return null; }
+      if (!raw) return null;
+      const u = JSON.parse(raw) as User;
+      if (!u?.email) return null;
+      return { ...u, id: String(u.id ?? '') };
+    } catch {
+      return null;
+    }
   }
 }

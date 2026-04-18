@@ -1,18 +1,34 @@
-import { Injectable, computed, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { catchError, firstValueFrom, of } from 'rxjs';
 import { Product } from '../models/product.model';
+import { AuthService } from './auth.service';
+import { CartApiService, CartApiResponse, CheckoutResult } from './cart-api.service';
 
 export interface CartItem {
   product: Product;
   quantity: number;
+  availableQuantity?: number;
 }
 
 const STORAGE_KEY = 'rs_cart';
 
+/**
+ * Dual-mode cart:
+ *   • When the user is authenticated with a real (non-demo) account, every
+ *     mutation is forwarded to the cart-service backend (Redis Cluster).
+ *   • In demo mode or when signed out, the cart is kept in localStorage so
+ *     the existing dummy flow continues to work end-to-end.
+ */
 @Injectable({ providedIn: 'root' })
 export class CartService {
-  private _items = signal<CartItem[]>(this.load());
+  private cartApi = inject(CartApiService);
+  private auth = inject(AuthService);
+
+  private _items = signal<CartItem[]>(this.loadLocal());
+  private _syncing = signal(false);
 
   readonly items = this._items.asReadonly();
+  readonly syncing = this._syncing.asReadonly();
   readonly count = computed(() =>
     this._items().reduce((n, it) => n + it.quantity, 0)
   );
@@ -21,51 +37,197 @@ export class CartService {
   );
   readonly savings = computed(() =>
     this._items().reduce(
-      (s, it) => s + Math.max(0, (it.product.originalPrice ?? it.product.price) - it.product.price) * it.quantity,
+      (s, it) =>
+        s +
+        Math.max(0, (it.product.originalPrice ?? it.product.price) - it.product.price) *
+          it.quantity,
       0
     )
   );
+  readonly hasStockIssue = computed(() =>
+    this._items().some(
+      (it) => it.availableQuantity != null && it.quantity > it.availableQuantity
+    )
+  );
 
-  add(product: Product, quantity = 1): void {
-    const existing = this._items().find(i => i.product.id === product.id);
+  constructor() {
+    effect(() => {
+      const user = this.auth.user();
+      if (this.isRemote(user)) {
+        void this.refresh();
+      } else {
+        this._items.set(this.loadLocal());
+      }
+    });
+  }
+
+  async refresh(): Promise<void> {
+    if (!this.isRemote(this.auth.user())) {
+      return;
+    }
+    this._syncing.set(true);
+    try {
+      const cart = await firstValueFrom(
+        this.cartApi.getCart().pipe(catchError(() => of<CartApiResponse | null>(null)))
+      );
+      if (cart) {
+        this._items.set(this.fromApi(cart));
+      }
+    } finally {
+      this._syncing.set(false);
+    }
+  }
+
+  async add(product: Product, quantity = 1): Promise<void> {
+    if (this.isRemote(this.auth.user())) {
+      try {
+        await this.mutate(() =>
+          this.cartApi.addItem({
+            productId: product.id,
+            quantity,
+            name: product.name,
+            brand: product.brand,
+            image: product.image,
+            price: product.price,
+            originalPrice: product.originalPrice,
+            slug: product.slug,
+          })
+        );
+      } catch {
+        // Errors already trigger a refresh + toast path; don't leak.
+      }
+      return;
+    }
+    const existing = this._items().find((i) => i.product.id === product.id);
     if (existing) {
-      this._items.update(list => list.map(i => i.product.id === product.id
-        ? { ...i, quantity: i.quantity + quantity }
-        : i));
+      this._items.update((list) =>
+        list.map((i) =>
+          i.product.id === product.id ? { ...i, quantity: i.quantity + quantity } : i
+        )
+      );
     } else {
-      this._items.update(list => [...list, { product, quantity }]);
+      this._items.update((list) => [...list, { product, quantity }]);
     }
     this.persist();
   }
 
-  update(productId: string, quantity: number): void {
-    if (quantity <= 0) return this.remove(productId);
-    this._items.update(list =>
-      list.map(i => i.product.id === productId ? { ...i, quantity } : i)
+  async update(productId: string, quantity: number): Promise<void> {
+    if (quantity <= 0) {
+      return this.remove(productId);
+    }
+    if (this.isRemote(this.auth.user())) {
+      await this.mutate(() => this.cartApi.updateQuantity(productId, quantity));
+      return;
+    }
+    this._items.update((list) =>
+      list.map((i) => (i.product.id === productId ? { ...i, quantity } : i))
     );
     this.persist();
   }
 
-  remove(productId: string): void {
-    this._items.update(list => list.filter(i => i.product.id !== productId));
+  async remove(productId: string): Promise<void> {
+    if (this.isRemote(this.auth.user())) {
+      await this.mutate(() => this.cartApi.removeItem(productId));
+      return;
+    }
+    this._items.update((list) => list.filter((i) => i.product.id !== productId));
     this.persist();
   }
 
-  clear(): void {
+  async clear(): Promise<void> {
+    if (this.isRemote(this.auth.user())) {
+      await this.mutate(() => this.cartApi.clear());
+      return;
+    }
     this._items.set([]);
     this.persist();
   }
 
-  private load(): CartItem[] {
+  /**
+   * Validates / places the order against inventory. On remote carts this
+   * goes through the backend; locally we only simulate success.
+   */
+  async checkout(dryRun = false): Promise<CheckoutResult | null> {
+    if (!this.isRemote(this.auth.user())) {
+      if (!dryRun) {
+        this._items.set([]);
+        this.persist();
+      }
+      return null;
+    }
+    this._syncing.set(true);
+    try {
+      const result = await firstValueFrom(this.cartApi.checkout(dryRun));
+      if (result?.cart) {
+        this._items.set(this.fromApi(result.cart));
+      }
+      return result;
+    } finally {
+      this._syncing.set(false);
+    }
+  }
+
+  // ------------ helpers ------------
+
+  /** Remote path only kicks in for real, logged-in users (not demo). */
+  private isRemote(user: ReturnType<AuthService['user']>): boolean {
+    const id = user?.id != null ? String(user.id) : '';
+    return !!user && !id.startsWith('demo-');
+  }
+
+  private async mutate(
+    call: () => ReturnType<CartApiService['addItem']>
+  ): Promise<void> {
+    this._syncing.set(true);
+    try {
+      const cart = await firstValueFrom(call());
+      this._items.set(this.fromApi(cart));
+    } catch (err) {
+      // Network / auth failures: re-sync from the server so the UI stays
+      // in lock-step with the authoritative cart in Redis.
+      await this.refresh().catch(() => {});
+      throw err;
+    } finally {
+      this._syncing.set(false);
+    }
+  }
+
+  private fromApi(cart: CartApiResponse): CartItem[] {
+    return cart.items.map((it) => ({
+      quantity: it.quantity,
+      availableQuantity: it.availableQuantity,
+      product: {
+        id: it.productId,
+        name: it.name ?? '',
+        slug: it.slug ?? '',
+        description: '',
+        price: Number(it.price ?? 0),
+        originalPrice: it.originalPrice,
+        rating: 0,
+        reviews: 0,
+        image: it.image ?? '',
+        category: '',
+        brand: it.brand ?? '',
+        inStock: (it.availableQuantity ?? 1) > 0,
+        stockCount: it.availableQuantity,
+      },
+    }));
+  }
+
+  private loadLocal(): CartItem[] {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch { return []; }
+      return raw ? (JSON.parse(raw) as CartItem[]) : [];
+    } catch {
+      return [];
+    }
   }
 
   private persist(): void {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this._items()));
-    } catch {}
+    } catch {
+      // ignore storage quota errors
+    }
   }
 }

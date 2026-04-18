@@ -6,7 +6,9 @@
 
   <div class="cart__body" *ngIf="cart.items().length; else empty">
     <section class="cart__items">
-      <article *ngFor="let item of cart.items()" class="cart-item">
+      <article *ngFor="let item of cart.items()"
+               class="cart-item"
+               [class.cart-item--issue]="item.availableQuantity != null && item.quantity > item.availableQuantity">
         <a [routerLink]="['/product', item.product.id]" class="cart-item__img">
           <img [src]="item.product.image" [alt]="item.product.name" />
         </a>
@@ -14,7 +16,25 @@
           <div>
             <div class="cart-item__brand">{{ item.product.brand }}</div>
             <a [routerLink]="['/product', item.product.id]" class="cart-item__name">{{ item.product.name }}</a>
-            <div class="cart-item__meta">{{ item.product.subCategory | titlecase }} · In stock</div>
+            <div class="cart-item__meta">
+              <ng-container *ngIf="item.availableQuantity == null">
+                {{ item.product.subCategory | titlecase }} · In stock
+              </ng-container>
+              <ng-container *ngIf="item.availableQuantity != null && item.availableQuantity > 0 && item.availableQuantity >= item.quantity">
+                {{ item.availableQuantity }} in stock
+              </ng-container>
+              <span *ngIf="item.availableQuantity != null && item.availableQuantity === 0" class="cart-item__oos">
+                Out of stock
+              </span>
+              <span *ngIf="item.availableQuantity != null && item.availableQuantity > 0 && item.availableQuantity < item.quantity"
+                    class="cart-item__lowstock">
+                Only {{ item.availableQuantity }} available — please adjust
+              </span>
+              <span *ngIf="item.availableQuantity != null && item.availableQuantity > 0 && item.availableQuantity < 5 && item.availableQuantity >= item.quantity"
+                    class="cart-item__lowstock">
+                Only {{ item.availableQuantity }} left in stock
+              </span>
+            </div>
           </div>
           <button class="cart-item__remove" (click)="remove(item.product.id)" aria-label="Remove">
             <rs-icon name="trash" [size]="16"></rs-icon>
@@ -24,7 +44,10 @@
           <div class="cart-item__qty">
             <button (click)="dec(item.product.id, item.quantity)"><rs-icon name="minus" [size]="14"></rs-icon></button>
             <span>{{ item.quantity }}</span>
-            <button (click)="inc(item.product.id, item.quantity)"><rs-icon name="plus" [size]="14"></rs-icon></button>
+            <button (click)="inc(item.product.id, item.quantity, item.availableQuantity)"
+                    [disabled]="item.availableQuantity != null && item.quantity >= item.availableQuantity">
+              <rs-icon name="plus" [size]="14"></rs-icon>
+            </button>
           </div>
           <div class="cart-item__price">
             <strong>\${{ (item.product.price * item.quantity) | number: '1.2-2' }}</strong>
@@ -48,9 +71,15 @@
       <div class="cart__divider"></div>
       <div class="cart__row cart__row--total"><span>Total</span><span>\${{ total() | number: '1.2-2' }}</span></div>
 
-      <rs-button variant="primary" size="lg" [block]="true" (click)="checkout()">
+      <rs-button variant="primary" size="lg" [block]="true"
+                 [disabled]="cart.hasStockIssue() || cart.syncing()"
+                 (click)="checkout()">
         Checkout <rs-icon slot="icon" name="arrow-right" [size]="16"></rs-icon>
       </rs-button>
+      <div *ngIf="cart.hasStockIssue()" class="cart__alert">
+        <rs-icon name="warning" [size]="14"></rs-icon>
+        One or more items exceed the available stock. Please adjust before checkout.
+      </div>
 
       <div class="cart__perks">
         <div><rs-icon name="shield" [size]="14"></rs-icon> Secure encrypted checkout</div>

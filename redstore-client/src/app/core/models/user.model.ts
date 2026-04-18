@@ -9,7 +9,8 @@ export interface User {
 }
 
 export interface AuthResponse {
-  id: string;
+  /** Backend may send a number (JSON) for DB ids — always normalize to string in the client. */
+  id: string | number;
   email: string;
   role: string | string[];
   name?: string;

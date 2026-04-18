@@ -72,3 +72,25 @@ metadata:
 type: Opaque
 stringData:
   password: YourSecurePassword
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cart-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026-zeroop-hmac
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cart-redis-secrets
+type: Opaque
+stringData:
+  # All 6 pods of the cart-redis StatefulSet; cart-service uses Lettuce in
+  # cluster mode and topology-refreshes from this seed list.
+  REDIS_NODES: "cart-redis-0.cart-redis-srv:6379,cart-redis-1.cart-redis-srv:6379,cart-redis-2.cart-redis-srv:6379,cart-redis-3.cart-redis-srv:6379,cart-redis-4.cart-redis-srv:6379,cart-redis-5.cart-redis-srv:6379"
+  # Empty for the local alpine setup (no requirepass in redis.conf).
+  REDIS_PASSWORD: ""
+  # Same snapshot job connects with ioredis, so we reuse this secret there.
+  REDIS_CART_URL: "redis://cart-redis-0.cart-redis-srv:6379"

@@ -1,0 +1,165 @@
+# Cart Redis Cluster — 3 shards × 2 nodes (master + replica) = 6 pods.
+# Self-healing: StatefulSet brings pods back; Redis Cluster promotes the
+# replica of a failed master automatically and the restored pod rejoins
+# as the new replica using its persisted nodes.conf.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-redis-cluster-config
+data:
+  redis.conf: |
+    port 6379
+    cluster-enabled yes
+    cluster-config-file nodes.conf
+    cluster-node-timeout 5000
+    cluster-require-full-coverage no
+    # No persistence — cart is ephemeral and snapshotted by the snapshot-service.
+    appendonly no
+    save ""
+    maxmemory 150mb
+    maxmemory-policy allkeys-lru
+    # Auth is disabled for the intra-cluster gossip to simplify local setup.
+    # If you enable requirepass, also set masterauth to the same value below.
+    # requirepass ""
+    # masterauth  ""
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-redis-srv
+  labels:
+    app: cart-redis
+spec:
+  clusterIP: None
+  ports:
+    - name: client
+      port: 6379
+      targetPort: 6379
+    - name: gossip
+      port: 16379
+      targetPort: 16379
+  selector:
+    app: cart-redis
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: cart-redis
+spec:
+  serviceName: cart-redis-srv
+  replicas: 6   # 3 masters + 3 replicas (one per shard)
+  selector:
+    matchLabels:
+      app: cart-redis
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: cart-redis
+    spec:
+      terminationGracePeriodSeconds: 20
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          command: ["redis-server", "/conf/redis.conf"]
+          ports:
+            - name: client
+              containerPort: 6379
+            - name: gossip
+              containerPort: 16379
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 6379
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+          volumeMounts:
+            - name: conf
+              mountPath: /conf
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: conf
+          configMap:
+            name: cart-redis-cluster-config
+        - name: data
+          emptyDir: {}
+---
+# PodDisruptionBudget — at least 3 pods must remain so every shard keeps
+# a working node during voluntary disruptions (node drain, rollouts).
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: cart-redis-pdb
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: cart-redis
+---
+# One-shot Job that runs `redis-cli --cluster create` after all 6 pods come
+# up. It's idempotent — if the cluster is already formed it exits cleanly.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cart-redis-cluster-init
+spec:
+  backoffLimit: 20
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: cart-redis-cluster-init
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: init
+          image: redis:7-alpine
+          command:
+            - sh
+            - -c
+            - |
+              set -eu
+              NODES="cart-redis-0.cart-redis-srv cart-redis-1.cart-redis-srv cart-redis-2.cart-redis-srv cart-redis-3.cart-redis-srv cart-redis-4.cart-redis-srv cart-redis-5.cart-redis-srv"
+
+              echo "[init] waiting for all 6 cart-redis pods to accept connections…"
+              for n in $NODES; do
+                until redis-cli -h "$n" -p 6379 ping >/dev/null 2>&1; do
+                  echo "[init]   still waiting for $n…"
+                  sleep 2
+                done
+                echo "[init]   $n is up"
+              done
+
+              # If any node already thinks it's part of a cluster with >=3 masters,
+              # assume the cluster is healthy and exit.
+              STATE=$(redis-cli -h cart-redis-0.cart-redis-srv -p 6379 cluster info | tr -d '\r' | awk -F: '/^cluster_state:/{print $2}')
+              SIZE=$(redis-cli -h cart-redis-0.cart-redis-srv -p 6379 cluster info  | tr -d '\r' | awk -F: '/^cluster_size:/{print $2}')
+              if [ "$STATE" = "ok" ] && [ "${SIZE:-0}" -ge 3 ]; then
+                echo "[init] cluster already healthy (state=$STATE size=$SIZE) — nothing to do"
+                exit 0
+              fi
+
+              echo "[init] forming 3-shard cluster with 1 replica per master…"
+              ADDRS=""
+              for n in $NODES; do
+                IP=$(getent hosts "$n" | awk '{print $1}')
+                ADDRS="$ADDRS $IP:6379"
+              done
+              echo "[init] node addresses:$ADDRS"
+
+              redis-cli --cluster create $ADDRS --cluster-replicas 1 --cluster-yes
+
+              echo "[init] cluster bootstrapped"

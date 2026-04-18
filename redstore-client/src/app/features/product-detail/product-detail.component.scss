@@ -50,6 +50,18 @@
 }
 .pd__stock.is-oos { color: #991b1b; background: #fee2e2; }
 
+.pd__lowstock {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: rgba(220, 38, 38, 0.08);
+  color: var(--rs-danger, #dc2626);
+  border: 1px solid rgba(220, 38, 38, 0.22);
+  border-radius: 999px;
+  font-size: 13px; font-weight: 600;
+  width: fit-content;
+}
+
 .pd__price { display: flex; align-items: baseline; gap: 12px; margin-top: 22px; flex-wrap: wrap; }
 .pd__price-now { font-size: 34px; font-weight: 800; letter-spacing: -0.03em; font-family: var(--rs-font-display); }
 .pd__price-was { font-size: 16px; color: var(--rs-text-subtle); text-decoration: line-through; }

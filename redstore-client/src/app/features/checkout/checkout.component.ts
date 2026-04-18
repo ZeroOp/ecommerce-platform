@@ -149,18 +149,34 @@ export class CheckoutComponent {
   tax = computed(() => +(this.cart.subtotal() * 0.08).toFixed(2));
   total = computed(() => +(this.cart.subtotal() + this.shipping() + this.tax()).toFixed(2));
 
-  place(e: Event) {
+  async place(e: Event) {
     e.preventDefault();
     if (this.cart.items().length === 0) {
       this.toast.warning('Your cart is empty');
       return;
     }
     this.placing.set(true);
-    setTimeout(() => {
-      this.placing.set(false);
-      this.cart.clear();
+    try {
+      const result = await this.cart.checkout(false);
+      if (result && !result.ok) {
+        for (const issue of result.issues) {
+          this.toast.error(
+            issue.reason === 'OUT_OF_STOCK' ? 'Out of stock' : 'Not enough stock',
+            `${issue.name ?? issue.productId}: only ${issue.available} available (you had ${issue.requested}).`,
+          );
+        }
+        return;
+      }
+      // Local/demo mode returns null — treat that as a successful placeholder.
+      if (!result) {
+        this.cart.clear();
+      }
       this.toast.success('Order placed!', 'We\u2019ll email your confirmation shortly.');
       this.router.navigate(['/orders']);
-    }, 1200);
+    } catch (err) {
+      this.toast.error('Checkout failed', 'Please try again in a moment.');
+    } finally {
+      this.placing.set(false);
+    }
   }
 }

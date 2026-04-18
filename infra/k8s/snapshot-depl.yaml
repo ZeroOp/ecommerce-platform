@@ -60,6 +60,18 @@ spec:
             - name: MINIO_USE_SSL
               value: "false"
 
+            # --- Cart Redis Cluster (for cart snapshots into MinIO) ---
+            - name: CART_REDIS_NODES
+              valueFrom:
+                secretKeyRef:
+                  name: cart-redis-secrets
+                  key: REDIS_NODES
+            - name: CART_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cart-redis-secrets
+                  key: REDIS_PASSWORD
+
             # --- Cron Schedule ---
             # Runs at minute 0 of every 2nd hour.
             - name: SNAPSHOT_CRON_SCHEDULE

@@ -33,8 +33,14 @@
           <rs-rating size="lg" [value]="p.rating" [reviews]="p.reviews"></rs-rating>
           <span class="pd__stock" [class.is-oos]="!p.inStock">
             <rs-icon [name]="p.inStock ? 'check' : 'close'" [size]="14"></rs-icon>
-            {{ p.inStock ? 'In stock' : 'Out of stock' }}
+            {{ p.inStock ? (p.stockCount != null ? p.stockCount + ' in stock' : 'In stock') : 'Out of stock' }}
           </span>
+        </div>
+        <div *ngIf="p.inStock && p.stockCount != null && p.stockCount < 5 && p.stockCount > 0"
+             class="pd__lowstock"
+             role="status">
+          <rs-icon name="warning" [size]="14"></rs-icon>
+          Hurry — only {{ p.stockCount }} left!
         </div>
 
         <div class="pd__price">
