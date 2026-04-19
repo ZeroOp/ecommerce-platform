@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-srv
+spec:
+  selector:
+    app: order
+  ports:
+    - name: order
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: zeroop/redstore-order-service
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: order-secrets
+                  key: JWT_KEY
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://order-db-cluster-rw:5432/order_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: order-db-creds
+                  key: username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: order-db-creds
+                  key: password
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: order-secrets
+                  key: NATS_URL
+            # No INVENTORY_SERVICE_BASE_URL on purpose: order-service has zero
+            # synchronous calls to other services. UI sends the full cart
+            # snapshot in POST /api/orders; inventory reserves async via
+            # NATS on order.created.
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          ports:
+            - containerPort: 8080

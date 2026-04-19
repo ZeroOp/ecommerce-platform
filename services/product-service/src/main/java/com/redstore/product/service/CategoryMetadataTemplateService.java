@@ -12,6 +12,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Resolves the metadata field template a seller must fill in for a product.
+ *
+ * The storefront taxonomy mirrors {@code docs/images/Categories/} exactly:
+ *   Mobiles     > Google | Samsung | Realme | Poco | Iphone
+ *   Electronics > Audio | Wearables | Camara | Laptops | Storage | Tablet | Gaming
+ *   Fashion     > Jeans | Shirts | Wedding | Watches | Shoes
+ *   Furniture   > Dining | Sofas | Office chairs | Recliners | Tv Units | Beds | Mattresses
+ *   Appliances  > Microwawe | Laundry | ACs | Television
+ *
+ * If a category has its own {@code metadataTemplateJson} (set by an admin) we
+ * honour it. Otherwise we walk up the parent chain, join the slugs, and match
+ * the most specific subcategory first, falling back to the parent, then a
+ * tiny generic set.
+ */
 @Service
 public class CategoryMetadataTemplateService {
 
@@ -28,8 +43,7 @@ public class CategoryMetadataTemplateService {
             try {
                 List<MetadataFieldDefinition> parsed = objectMapper.readValue(
                         category.getMetadataTemplateJson(),
-                        new TypeReference<>() {
-                        }
+                        new TypeReference<>() {}
                 );
                 if (parsed != null && !parsed.isEmpty()) {
                     return parsed;
@@ -61,55 +75,210 @@ public class CategoryMetadataTemplateService {
         return matchByKeywords(combined);
     }
 
-    private List<MetadataFieldDefinition> matchByKeywords(String haystack) {
-        if (containsAny(haystack, "laptop", "notebook", "chromebook", "macbook")) {
-            return List.of(
-                    field("processor", "Processor"),
-                    field("ram", "RAM"),
-                    field("storage", "Storage"),
-                    field("os", "Operating system"),
-                    field("screenSize", "Screen size"),
-                    field("color", "Color")
-            );
-        }
-        if (containsAny(haystack, "phone", "smartphone", "mobile")) {
+    /**
+     * Subcategory-first matching. Most specific leaf wins; parent-only matches
+     * are a last-resort before the generic default.
+     */
+    private List<MetadataFieldDefinition> matchByKeywords(String h) {
+        // ---------- Mobiles subcategories (all phones) ----------
+        if (containsAny(h, "mobile", "iphone", "samsung", "google", "poco", "realme", "smartphone")) {
             return List.of(
                     field("ram", "RAM"),
                     field("storage", "Storage"),
                     field("camera", "Camera"),
                     field("battery", "Battery"),
-                    field("processor", "Processor"),
-                    field("color", "Color")
+                    field("display", "Display")
             );
         }
-        if (containsAny(haystack, "tablet", "ipad")) {
+
+        // ---------- Electronics subcategories ----------
+        if (containsAny(h, "laptop", "notebook", "chromebook", "macbook")) {
             return List.of(
+                    field("processor", "Processor"),
+                    field("ram", "RAM"),
                     field("storage", "Storage"),
-                    field("screenSize", "Screen size"),
-                    field("battery", "Battery"),
-                    field("processor", "Processor"),
-                    field("color", "Color")
+                    field("display", "Display"),
+                    field("os", "Operating system")
             );
         }
-        if (containsAny(haystack, "headphone", "earbud", "earphone", "headset")) {
+        if (containsAny(h, "tablet", "ipad")) {
             return List.of(
+                    field("processor", "Processor"),
+                    field("ram", "RAM"),
+                    field("storage", "Storage"),
+                    field("display", "Display"),
+                    field("os", "Operating system")
+            );
+        }
+        if (containsAny(h, "audio", "headphone", "earbud", "earphone", "headset", "speaker", "soundbar")) {
+            return List.of(
+                    field("type", "Type"),
                     field("connectivity", "Connectivity"),
-                    field("driver", "Driver / size"),
                     field("batteryLife", "Battery life"),
-                    field("impedance", "Impedance"),
+                    field("driver", "Driver / size"),
                     field("color", "Color")
             );
         }
-        if (containsAny(haystack, "fridge", "refrigerator", "freezer")) {
+        if (containsAny(h, "wearable", "smartwatch", "fitness-band", "fitness")) {
+            return List.of(
+                    field("display", "Display"),
+                    field("batteryLife", "Battery life"),
+                    field("waterResistance", "Water resistance"),
+                    field("connectivity", "Connectivity"),
+                    field("compatibility", "Compatibility")
+            );
+        }
+        if (containsAny(h, "camara", "camera", "dslr", "mirrorless", "lens")) {
+            return List.of(
+                    field("sensor", "Sensor"),
+                    field("resolution", "Resolution"),
+                    field("zoom", "Zoom"),
+                    field("battery", "Battery"),
+                    field("lensMount", "Lens mount")
+            );
+        }
+        if (containsAny(h, "storage", "ssd", "hdd", "nvme", "pendrive", "flash", "memory-card")) {
             return List.of(
                     field("capacity", "Capacity"),
-                    field("energyRating", "Energy rating"),
-                    field("defrost", "Defrost type"),
-                    field("color", "Color"),
-                    field("dimensions", "Dimensions")
+                    field("interface", "Interface"),
+                    field("readSpeed", "Read speed"),
+                    field("writeSpeed", "Write speed"),
+                    field("formFactor", "Form factor")
             );
         }
-        if (containsAny(haystack, "washing", "washer", "laundry")) {
+        if (containsAny(h, "gaming", "console", "playstation", "xbox", "nintendo")) {
+            return List.of(
+                    field("platform", "Platform"),
+                    field("genre", "Genre"),
+                    field("edition", "Edition"),
+                    field("media", "Media"),
+                    field("ageRating", "Age rating")
+            );
+        }
+
+        // ---------- Fashion subcategories ----------
+        if (containsAny(h, "jeans", "denim")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("fit", "Fit"),
+                    field("material", "Material"),
+                    field("wash", "Wash"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "shirt", "tshirt", "t-shirt")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("fit", "Fit"),
+                    field("material", "Material"),
+                    field("sleeve", "Sleeve"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "wedding", "sherwani", "lehenga", "saree", "ethnic")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("material", "Material"),
+                    field("color", "Color"),
+                    field("style", "Style"),
+                    field("occasion", "Occasion")
+            );
+        }
+        if (containsAny(h, "watch", "watches")) {
+            return List.of(
+                    field("movement", "Movement"),
+                    field("material", "Case material"),
+                    field("waterResistance", "Water resistance"),
+                    field("band", "Band"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "shoe", "shoes", "sneaker", "footwear", "boot")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("material", "Material"),
+                    field("style", "Style"),
+                    field("gender", "Gender"),
+                    field("color", "Color")
+            );
+        }
+
+        // ---------- Furniture subcategories ----------
+        if (containsAny(h, "dining")) {
+            return List.of(
+                    field("material", "Material"),
+                    field("seatingCapacity", "Seating capacity"),
+                    field("dimensions", "Dimensions"),
+                    field("finish", "Finish"),
+                    field("assembly", "Assembly")
+            );
+        }
+        if (containsAny(h, "sofa", "couch", "sectional")) {
+            return List.of(
+                    field("material", "Material"),
+                    field("seatingCapacity", "Seating capacity"),
+                    field("dimensions", "Dimensions"),
+                    field("style", "Style"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "office-chair", "office chairs", "office")) {
+            return List.of(
+                    field("material", "Material"),
+                    field("adjustableHeight", "Adjustable height"),
+                    field("armrests", "Armrests"),
+                    field("weightCapacity", "Weight capacity"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "recliner")) {
+            return List.of(
+                    field("material", "Material"),
+                    field("recliningPositions", "Reclining positions"),
+                    field("motor", "Motor"),
+                    field("weightCapacity", "Weight capacity"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "tv-unit", "tv units", "tv-units", "entertainment-unit")) {
+            return List.of(
+                    field("material", "Material"),
+                    field("dimensions", "Dimensions"),
+                    field("storage", "Storage"),
+                    field("finish", "Finish"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "bed", "beds")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("material", "Material"),
+                    field("storage", "Storage"),
+                    field("headboard", "Headboard"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "mattress", "mattresses")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("thickness", "Thickness"),
+                    field("type", "Type"),
+                    field("firmness", "Firmness"),
+                    field("material", "Material")
+            );
+        }
+
+        // ---------- Appliances subcategories ----------
+        if (containsAny(h, "microwawe", "microwave", "oven")) {
+            return List.of(
+                    field("capacity", "Capacity"),
+                    field("power", "Power"),
+                    field("modes", "Modes"),
+                    field("type", "Type"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "laundry", "washer", "washing")) {
             return List.of(
                     field("capacity", "Load capacity"),
                     field("loadType", "Load type"),
@@ -118,16 +287,54 @@ public class CategoryMetadataTemplateService {
                     field("color", "Color")
             );
         }
-        if (containsAny(haystack, "dishwasher", "dish-washer")) {
+        if (containsAny(h, "ac ", "acs", "air-conditioner", "air conditioner")) {
             return List.of(
-                    field("placeSettings", "Place settings"),
-                    field("noiseLevel", "Noise level"),
-                    field("energyRating", "Energy rating"),
-                    field("cycles", "Wash programs"),
+                    field("capacityTons", "Capacity (tons)"),
+                    field("starRating", "Star rating"),
+                    field("type", "Type"),
+                    field("coolingCapacity", "Cooling capacity"),
                     field("color", "Color")
             );
         }
-        if (containsAny(haystack, "furniture", "sofa", "chair", "desk", "table", "bed", "wardrobe")) {
+        if (containsAny(h, "television", "tv", "oled", "qled", "led")) {
+            return List.of(
+                    field("screenSize", "Screen size"),
+                    field("resolution", "Resolution"),
+                    field("refreshRate", "Refresh rate"),
+                    field("hdr", "HDR"),
+                    field("smartFeatures", "Smart features")
+            );
+        }
+
+        // ---------- Parent-category fallbacks (anything under a parent but not a known leaf) ----------
+        if (containsAny(h, "mobiles")) {
+            return List.of(
+                    field("ram", "RAM"),
+                    field("storage", "Storage"),
+                    field("camera", "Camera"),
+                    field("battery", "Battery"),
+                    field("display", "Display")
+            );
+        }
+        if (containsAny(h, "electronics")) {
+            return List.of(
+                    field("brand", "Brand"),
+                    field("warranty", "Warranty"),
+                    field("power", "Power"),
+                    field("connectivity", "Connectivity"),
+                    field("color", "Color")
+            );
+        }
+        if (containsAny(h, "fashion", "apparel", "clothing")) {
+            return List.of(
+                    field("size", "Size"),
+                    field("material", "Material"),
+                    field("fit", "Fit"),
+                    field("color", "Color"),
+                    field("care", "Care instructions")
+            );
+        }
+        if (containsAny(h, "furniture")) {
             return List.of(
                     field("material", "Material"),
                     field("dimensions", "Dimensions"),
@@ -136,63 +343,17 @@ public class CategoryMetadataTemplateService {
                     field("color", "Color")
             );
         }
-        if (containsAny(haystack, "fashion", "apparel", "clothing", "shoes", "sneaker", "watch", "bag")) {
-            return List.of(
-                    field("color", "Color"),
-                    field("material", "Material"),
-                    field("size", "Size"),
-                    field("fit", "Fit"),
-                    field("care", "Care instructions")
-            );
-        }
-        if (containsAny(haystack, "tv", "television", "oled", "qled", "monitor")) {
-            return List.of(
-                    field("screenSize", "Screen size"),
-                    field("resolution", "Resolution"),
-                    field("refreshRate", "Refresh rate"),
-                    field("hdr", "HDR"),
-                    field("ports", "Ports"),
-                    field("color", "Color")
-            );
-        }
-        if (containsAny(haystack, "ssd", "hdd", "nvme", "storage", "pendrive", "flash")) {
-            return List.of(
-                    field("capacity", "Capacity"),
-                    field("interface", "Interface"),
-                    field("formFactor", "Form factor"),
-                    field("readSpeed", "Read speed"),
-                    field("writeSpeed", "Write speed"),
-                    field("color", "Color")
-            );
-        }
-        if (containsAny(haystack, "camera", "lens", "dslr", "mirrorless")) {
-            return List.of(
-                    field("sensor", "Sensor"),
-                    field("resolution", "Resolution"),
-                    field("zoom", "Zoom"),
-                    field("battery", "Battery"),
-                    field("color", "Color")
-            );
-        }
-        if (containsAny(haystack, "microwave", "oven", "appliance", "cooker")) {
+        if (containsAny(h, "appliances", "appliance")) {
             return List.of(
                     field("capacity", "Capacity"),
                     field("power", "Power"),
                     field("energyRating", "Energy rating"),
-                    field("modes", "Modes"),
+                    field("warranty", "Warranty"),
                     field("color", "Color")
             );
         }
-        if (containsAny(haystack, "electronics", "gadget")) {
-            return List.of(
-                    field("warranty", "Warranty"),
-                    field("power", "Power"),
-                    field("connectivity", "Connectivity"),
-                    field("color", "Color"),
-                    field("dimensions", "Dimensions")
-            );
-        }
-        // Generic catalog defaults (3–7 fields)
+
+        // ---------- Ultimate default (kept tiny on purpose) ----------
         return List.of(
                 field("color", "Color"),
                 field("material", "Material"),

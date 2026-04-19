@@ -107,6 +107,13 @@ spec:
                 name: cart-srv
                 port:
                   number: 8080
+          - path: /api/orders(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: order-srv
+                port:
+                  number: 8080
           - path: /api/search(/|$)(.*)
             pathType: ImplementationSpecific
             backend:

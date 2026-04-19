@@ -65,7 +65,7 @@ spec:
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: nats-stream-setup
+  name: nats-stream-setup-v2
 spec:
   backoffLimit: 5
   template:
@@ -139,6 +139,30 @@ spec:
                 --discard old \
                 --defaults \
               || echo "INVENTORY stream may already exists , skipping..."
+
+              nats stream add DEALS \
+                --server nats://nats-srv:4222 \
+                --subjects "deal.>" \
+                --retention limits \
+                --max-msgs=-1 \
+                --max-bytes=-1 \
+                --max-age 168h \
+                --storage file \
+                --replicas 2 \
+                --discard old \
+                --defaults \
+              || nats stream update DEALS \
+                --server nats://nats-srv:4222 \
+                --subjects "deal.>" \
+                --retention limits \
+                --max-msgs=-1 \
+                --max-bytes=-1 \
+                --max-age 168h \
+                --storage file \
+                --replicas 2 \
+                --discard old \
+                --defaults \
+              || echo "DEALS stream add/update failed."
 
               echo "Stream setup complete."
               nats stream report --server nats://nats-srv:4222

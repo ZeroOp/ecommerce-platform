@@ -1,0 +1,39 @@
+# ------------------------------------------------------------------
+# Expiration service Postgres cluster.
+#
+# Single-instance CloudNativePG cluster. One tiny table
+# (expiration_jobs) — we're not going to out-scale a single Postgres
+# pod with scheduled timers any time soon. The scheduler uses
+# FOR UPDATE SKIP LOCKED, so if we ever add replicas the poll is safe.
+# ------------------------------------------------------------------
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: expiration-db-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  storage:
+    size: 1Gi
+    storageClass: hostpath
+
+  postgresql:
+    parameters:
+      synchronous_commit: "on"
+      shared_buffers: "128MB"
+
+  bootstrap:
+    initdb:
+      database: expiration_db
+      owner: expiration_admin
+      secret:
+        name: expiration-db-creds

@@ -30,9 +30,17 @@ public enum Subjects {
     BRAND_STATUS_UPDATED("product.brand.status.updated"),
     CATEGORY_CREATED("product.category.created"),
 
-    // Orders (Saga Pattern)
+    // Orders
     ORDER_CREATED("order.created"),
     ORDER_CANCELLED("order.cancelled"),
+    ORDER_COMPLETED("order.completed"),
+    ORDER_EXPIRED("order.expired"),
+    ORDER_IN_PROGRESS("order.in_progress"),
+
+    // Deals / Offers
+    DEAL_CREATED("deal.created"),
+    DEAL_CANCELLED("deal.cancelled"),
+    DEAL_EXPIRED("deal.expired"),
 
     // Payment
     PAYMENT_CREATED("payment.created"),

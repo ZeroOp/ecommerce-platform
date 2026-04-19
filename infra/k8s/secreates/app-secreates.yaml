@@ -102,6 +102,41 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
+  name: order-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026-zeroop-hmac
+  NATS_URL: nats://nats-srv:4222
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: order-db-creds
+type: Opaque
+stringData:
+  username: order_admin
+  password: order_password_123
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: expiration-secrets
+type: Opaque
+stringData:
+  NATS_URL: nats://nats-srv:4222
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: expiration-db-creds
+type: Opaque
+stringData:
+  username: expiration_admin
+  password: expiration_password_123
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: cart-redis-secrets
 type: Opaque
 stringData:

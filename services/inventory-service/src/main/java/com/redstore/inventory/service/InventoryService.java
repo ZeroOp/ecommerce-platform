@@ -3,6 +3,7 @@ package com.redstore.inventory.service;
 import com.redstore.common.dto.InventoryReleasedEventData;
 import com.redstore.common.dto.InventoryReservedEventData;
 import com.redstore.common.dto.InventoryStockAddedEventData;
+import com.redstore.common.dto.OrderItemData;
 import com.redstore.common.dto.UserPayload;
 import com.redstore.common.enums.UserRole;
 import com.redstore.common.exceptions.BadRequestException;
@@ -201,6 +202,112 @@ public class InventoryService {
         ));
 
         return OperationResultDto.ok();
+    }
+
+    // ------------------------------------------------------------------
+    // Event-driven reservation lifecycle (driven by order-service events)
+    //
+    // A multi-item order produces N reservation rows, one per distinct
+    // productId, each keyed on {@code orderId:productId}. That gives us:
+    //   - idempotent consumption (redelivery won't double-reserve),
+    //   - per-line granularity when releasing (partial cancellations later
+    //     could release a subset; not needed today but free to support),
+    //   - no schema change — we reuse the existing {@code orderRef}
+    //     uniqueness guarantee.
+    //
+    // Note: these methods run *asynchronously* from order creation — the
+    // user already got a response from POST /api/orders before we got here.
+    // If {@code decrementIfSufficient} fails we currently just log and move
+    // on; order-service's timeout loop (via expiration-service) will release
+    // whatever did reserve when the order expires. A future improvement is
+    // to publish inventory.reservation_failed and have order-service flip
+    // the order to CANCELLED immediately — out of scope for this turn.
+    // ------------------------------------------------------------------
+
+    /** Idempotent per-item reservation for a whole order. */
+    @Transactional
+    public void reserveForOrder(String orderId, List<OrderItemData> items) {
+        if (orderId == null || items == null || items.isEmpty()) return;
+
+        for (OrderItemData item : items) {
+            String orderRef = orderRefFor(orderId, item.getProductId());
+            var existing = reservationRepository.findByOrderRef(orderRef);
+            if (existing.isPresent()) {
+                continue;
+            }
+
+            int updated = inventoryRepository.decrementIfSufficient(item.getProductId(), item.getQuantity());
+            if (updated == 0) {
+                // Stock already gone / never existed. Log and skip — we
+                // don't throw because other items in the same order may be
+                // reservable; failing the whole batch would make partial
+                // releases ambiguous later.
+                // TODO: publish inventory.reservation_failed once order-service
+                //       is wired to auto-cancel on it.
+                continue;
+            }
+
+            ProductInventory inv = inventoryRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new BadRequestException("Inventory row missing after update"));
+
+            reservationRepository.save(StockReservation.builder()
+                    .id("rsv-" + UUID.randomUUID())
+                    .productId(item.getProductId())
+                    .quantity(item.getQuantity())
+                    .orderRef(orderRef)
+                    .createdAt(Instant.now())
+                    .releasedAt(null)
+                    .build());
+
+            cacheService.evict(item.getProductId());
+            cacheService.cacheQuantity(item.getProductId(), inv.getQuantity());
+
+            reservedPublisher.publish(new InventoryReservedEventData(
+                    item.getProductId(),
+                    orderRef,
+                    item.getQuantity(),
+                    inv.getQuantity(),
+                    Instant.now()
+            ));
+        }
+    }
+
+    /** Idempotent per-item release for a whole order (cancel / expire). */
+    @Transactional
+    public void releaseForOrder(String orderId, List<OrderItemData> items) {
+        if (orderId == null || items == null || items.isEmpty()) return;
+
+        for (OrderItemData item : items) {
+            String orderRef = orderRefFor(orderId, item.getProductId());
+            var opt = reservationRepository.findByOrderRef(orderRef);
+            if (opt.isEmpty()) {
+                continue;
+            }
+            StockReservation r = opt.get();
+            if (r.getReleasedAt() != null) {
+                continue;
+            }
+
+            inventoryRepository.increment(r.getProductId(), r.getQuantity());
+            r.setReleasedAt(Instant.now());
+            reservationRepository.save(r);
+
+            ProductInventory inv = inventoryRepository.findById(r.getProductId()).orElseThrow();
+            cacheService.evict(r.getProductId());
+            cacheService.cacheQuantity(r.getProductId(), inv.getQuantity());
+
+            releasedPublisher.publish(new InventoryReleasedEventData(
+                    r.getProductId(),
+                    orderRef,
+                    r.getQuantity(),
+                    inv.getQuantity(),
+                    Instant.now()
+            ));
+        }
+    }
+
+    private static String orderRefFor(String orderId, String productId) {
+        return "order:" + orderId + ":" + productId;
     }
 
     /** Public read: hot path for product page (cache-backed). */
