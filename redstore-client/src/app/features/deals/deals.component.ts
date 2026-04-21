@@ -10,6 +10,7 @@ import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory } from '../../core/services/inventory-enrich';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, map, of, switchMap } from 'rxjs';
+import { applyBestDeals, DealApiService } from '../../core/services/deal-api.service';
 
 @Component({
   selector: 'rs-deals',
@@ -53,17 +54,31 @@ export class DealsComponent {
   toast = inject(ToastService);
   private searchApi = inject(SearchApiService);
   private inventoryApi = inject(InventoryApiService);
+  private dealApi = inject(DealApiService);
 
   private catalog = toSignal(
     this.searchApi.listProducts({ limit: 48 }).pipe(
       map((hits) => hits.map(mapSearchHitToProduct)),
       switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
+      switchMap((list) => {
+        const ids = list.map((p) => p.id);
+        if (!ids.length) return of(list);
+        return this.dealApi.bestByProducts(ids).pipe(
+          map((deals) => applyBestDeals(list, deals)),
+          catchError(() => of(list)),
+        );
+      }),
       catchError(() => of([] as Product[])),
     ),
     { initialValue: [] as Product[] },
   );
 
-  products = computed(() => this.catalog().slice(0, 24));
+  products = computed(() =>
+    this.catalog()
+      .filter((p) => (p.discount ?? 0) > 0)
+      .sort((a, b) => (b.discount ?? 0) - (a.discount ?? 0))
+      .slice(0, 24),
+  );
 
   add(p: Product) {
     if (p.stockCount != null && p.stockCount <= 0) {

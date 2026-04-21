@@ -85,6 +85,7 @@ public class ExpirationService {
                 .dealId(evt.getDealId())
                 .scope(evt.getScope())
                 .productId(evt.getProductId())
+                .brandId(evt.getBrandId())
                 .categoryId(evt.getCategoryId())
                 .sellerId(evt.getSellerId())
                 .expiredAt(evt.getExpiresAt())

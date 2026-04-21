@@ -1,10 +1,19 @@
-FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
+﻿FROM maven:3.9.6-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
 COPY pom.xml .
 COPY common/pom.xml common/
-COPY services/ services/
-RUN find services -type f ! -name 'pom.xml' -delete
+
+# 3. Copy ALL poms explicitly to preserve Docker cache
+COPY services/identity-service/pom.xml services/identity-service/
+COPY services/archive-service/pom.xml services/archive-service/
+COPY services/product-service/pom.xml services/product-service/
+COPY services/inventory-service/pom.xml services/inventory-service/
+COPY services/cart-service/pom.xml services/cart-service/
+COPY services/search-service/pom.xml services/search-service/
+COPY services/order-service/pom.xml services/order-service/
+COPY services/expiration-service/pom.xml services/expiration-service/
+COPY services/deal-service/pom.xml services/deal-service/
 
 RUN sh -c 'for i in 1 2 3 4 5; do \
   mvn -B -U -Dmaven.wagon.http.retryHandler.count=5 dependency:go-offline -pl services/expiration-service -am && exit 0; \

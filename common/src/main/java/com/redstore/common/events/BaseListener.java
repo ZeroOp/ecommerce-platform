@@ -1,6 +1,8 @@
 package com.redstore.common.events;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.redstore.common.enums.Subjects;
 import io.nats.client.*;
 import io.nats.client.api.AckPolicy;
@@ -20,7 +22,9 @@ public abstract class BaseListener<T> {
     private final Connection natsConnection;
     private final JetStream js;
     private final Class<T> targetType;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     /**
      * @param natsConnection The core NATS connection required to create a Dispatcher
@@ -57,7 +61,13 @@ public abstract class BaseListener<T> {
                 T parsedData = objectMapper.readValue(msg.getData(), targetType);
                 onMessage(parsedData, msg);
             } catch (Exception e) {
-                log.error("Error processing NATS message: ", e);
+                log.error("Error processing NATS message for subject={} queue={}", getSubject().getValue(), getQueueGroupName(), e);
+                try {
+                    // Prevent poison messages from being left unacked forever.
+                    msg.nak();
+                } catch (Exception nakError) {
+                    log.error("Failed to NAK message for subject={} queue={}", getSubject().getValue(), getQueueGroupName(), nakError);
+                }
             }
         });
 

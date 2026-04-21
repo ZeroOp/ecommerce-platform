@@ -28,6 +28,7 @@ import { SellerOrdersComponent } from './features/seller/seller-orders.component
 import { SellerAnalyticsComponent } from './features/seller/seller-analytics.component';
 import { SellerSettingsComponent } from './features/seller/seller-settings.component';
 import { SellerInventoryComponent } from './features/seller/seller-inventory.component';
+import { SellerDealsComponent } from './features/seller/seller-deals.component';
 
 import { AdminDashboardComponent } from './features/admin/admin-dashboard.component';
 import { AdminUsersComponent } from './features/admin/admin-users.component';
@@ -83,6 +84,7 @@ export const routes: Routes = [
       { path: 'products',  component: SellerProductsComponent,  title: 'Products · Seller Hub' },
       { path: 'inventory', component: SellerInventoryComponent, title: 'Inventory · Seller Hub' },
       { path: 'brands',    component: SellerBrandsComponent,    title: 'Brands · Seller Hub' },
+      { path: 'deals',     component: SellerDealsComponent,     title: 'Deals · Seller Hub' },
       { path: 'orders',    component: SellerOrdersComponent,    title: 'Orders · Seller Hub' },
       { path: 'analytics', component: SellerAnalyticsComponent, title: 'Analytics · Seller Hub' },
       { path: 'settings',  component: SellerSettingsComponent,  title: 'Settings · Seller Hub' },

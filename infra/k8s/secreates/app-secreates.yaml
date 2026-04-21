@@ -137,6 +137,24 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
+  name: deal-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026-zeroop-hmac
+  NATS_URL: nats://nats-srv:4222
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: deal-db-creds
+type: Opaque
+stringData:
+  username: deal_admin
+  password: deal_password_123
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: cart-redis-secrets
 type: Opaque
 stringData:

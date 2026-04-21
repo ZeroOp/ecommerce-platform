@@ -32,6 +32,8 @@ public class DealCreatedEventData {
     private String scope;
     /** Null unless scope = PRODUCT. */
     private String productId;
+    /** Null unless scope = BRAND. */
+    private String brandId;
     /** Null unless scope = CATEGORY. */
     private String categoryId;
     /** Null for GLOBAL-scoped offers (admin-wide). */

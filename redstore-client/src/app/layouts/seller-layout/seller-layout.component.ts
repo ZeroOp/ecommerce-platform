@@ -21,6 +21,7 @@ export class SellerLayoutComponent {
     { label: 'Products',  icon: 'box',       route: '/seller/products' },
     { label: 'Inventory', icon: 'package',   route: '/seller/inventory' },
     { label: 'Brands',    icon: 'tag',       route: '/seller/brands' },
+    { label: 'Deals',     icon: 'sparkle',   route: '/seller/deals' },
     { label: 'Orders',    icon: 'truck',     route: '/seller/orders' },
     { label: 'Analytics', icon: 'chart',     route: '/seller/analytics' },
     { label: 'Settings',  icon: 'settings',  route: '/seller/settings' },

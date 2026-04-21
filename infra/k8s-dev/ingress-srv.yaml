@@ -121,6 +121,13 @@ spec:
                 name: search-srv
                 port:
                   number: 8080
+          - path: /api/deals(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: deal-srv
+                port:
+                  number: 8080
           - path: /redstore-main(/|$)(.*)
             pathType: ImplementationSpecific
             backend:

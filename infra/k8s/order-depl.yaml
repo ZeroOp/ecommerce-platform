@@ -53,6 +53,8 @@ spec:
                 secretKeyRef:
                   name: order-secrets
                   key: NATS_URL
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=20"
             # No INVENTORY_SERVICE_BASE_URL on purpose: order-service has zero
             # synchronous calls to other services. UI sends the full cart
             # snapshot in POST /api/orders; inventory reserves async via
@@ -69,3 +71,10 @@ spec:
             periodSeconds: 20
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "192Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"

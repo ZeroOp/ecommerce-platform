@@ -47,6 +47,10 @@ build:
       context: .
       docker:
         dockerfile: services/expiration-service/Dockerfile
+    - image: zeroop/redstore-deal-service
+      context: .
+      docker:
+        dockerfile: services/deal-service/Dockerfile
     - image: zeroop/redstore-snapshot-service
       context: services/snapshot-service
       docker:
@@ -66,5 +70,6 @@ manifests:
     - infra/k8s/search-depl.yaml
     - infra/k8s/order-depl.yaml
     - infra/k8s/expiration-depl.yaml
+    - infra/k8s/deal-depl.yaml
     - infra/k8s/snapshot-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

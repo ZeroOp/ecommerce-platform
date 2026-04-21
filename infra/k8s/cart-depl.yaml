@@ -70,6 +70,8 @@ spec:
                 secretKeyRef:
                   name: inventory-secrets
                   key: INVENTORY_INTERNAL_API_KEY
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=20"
             # cart-service stores absolute, publicly-readable image URLs in
             # the catalog projection (produced once by product-service), so
             # no MinIO credentials are needed here.
@@ -85,3 +87,10 @@ spec:
             periodSeconds: 20
           ports:
             - containerPort: 8080
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "192Mi"
+            limits:
+              cpu: "300m"
+              memory: "512Mi"

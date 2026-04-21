@@ -3,6 +3,7 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 import { Product } from '../models/product.model';
 import { AuthService } from './auth.service';
 import { CartApiService, CartApiResponse, CheckoutResult } from './cart-api.service';
+import { DealApiService } from './deal-api.service';
 
 export interface CartItem {
   product: Product;
@@ -24,6 +25,7 @@ const STORAGE_KEY = 'rs_cart';
 export class CartService {
   private cartApi = inject(CartApiService);
   private auth = inject(AuthService);
+  private dealApi = inject(DealApiService);
 
   private _items = signal<CartItem[]>(this.loadLocal());
   private _syncing = signal(false);
@@ -57,7 +59,7 @@ export class CartService {
       if (this.isRemote(user)) {
         void this.refresh();
       } else {
-        this._items.set(this.loadLocal());
+        void this.repriceLocal();
       }
     });
   }
@@ -72,7 +74,7 @@ export class CartService {
         this.cartApi.getCart().pipe(catchError(() => of<CartApiResponse | null>(null)))
       );
       if (cart) {
-        this._items.set(this.fromApi(cart));
+        this._items.set(await this.withBestDeals(this.fromApi(cart)));
       }
     } finally {
       this._syncing.set(false);
@@ -109,6 +111,7 @@ export class CartService {
     } else {
       this._items.update((list) => [...list, { product, quantity }]);
     }
+    this._items.set(await this.withBestDeals(this._items()));
     this.persist();
   }
 
@@ -123,6 +126,7 @@ export class CartService {
     this._items.update((list) =>
       list.map((i) => (i.product.id === productId ? { ...i, quantity } : i))
     );
+    this._items.set(await this.withBestDeals(this._items()));
     this.persist();
   }
 
@@ -182,7 +186,7 @@ export class CartService {
     this._syncing.set(true);
     try {
       const cart = await firstValueFrom(call());
-      this._items.set(this.fromApi(cart));
+      this._items.set(await this.withBestDeals(this.fromApi(cart)));
     } catch (err) {
       // Network / auth failures: re-sync from the server so the UI stays
       // in lock-step with the authoritative cart in Redis.
@@ -221,6 +225,38 @@ export class CartService {
       return raw ? (JSON.parse(raw) as CartItem[]) : [];
     } catch {
       return [];
+    }
+  }
+
+  private async repriceLocal(): Promise<void> {
+    const base = this.loadLocal();
+    this._items.set(await this.withBestDeals(base));
+  }
+
+  private async withBestDeals(items: CartItem[]): Promise<CartItem[]> {
+    const ids = Array.from(new Set(items.map((i) => i.product.id).filter(Boolean)));
+    if (!ids.length) return items;
+    try {
+      const deals = await firstValueFrom(this.dealApi.bestByProducts(ids));
+      const byProduct = new Map(deals.map((d) => [d.productId, d]));
+      return items.map((it) => {
+        const d = byProduct.get(it.product.id);
+        if (!d || !(d.discountPercentage > 0)) return it;
+        const baseOriginal = Number(it.product.originalPrice ?? it.product.price ?? 0);
+        const discounted = Math.max(0, baseOriginal - (baseOriginal * Number(d.discountPercentage)) / 100);
+        return {
+          ...it,
+          product: {
+            ...it.product,
+            originalPrice: Number(baseOriginal.toFixed(2)),
+            price: Number(discounted.toFixed(2)),
+            discount: Number(d.discountPercentage),
+            badge: it.product.badge ?? 'Deal',
+          },
+        };
+      });
+    } catch {
+      return items;
     }
   }
 

@@ -12,6 +12,7 @@ import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory } from '../../core/services/inventory-enrich';
 import { CategoryApiService, CategoryApiResponse } from '../../core/services/category-api.service';
 import { mapSearchHitToProduct, SearchApiService } from '../../core/services/search-api.service';
+import { applyBestDeals, DealApiService } from '../../core/services/deal-api.service';
 
 @Component({
   selector: 'rs-home',
@@ -27,6 +28,7 @@ export class HomeComponent {
   private searchApi = inject(SearchApiService);
   private categoryApi = inject(CategoryApiService);
   private inventoryApi = inject(InventoryApiService);
+  private dealApi = inject(DealApiService);
 
   /** Top-level categories from the catalog API (admin-created parents only). */
   parentCategories = toSignal(
@@ -44,6 +46,14 @@ export class HomeComponent {
     this.searchApi.listProducts({ limit: 24 }).pipe(
       map((hits) => hits.map(mapSearchHitToProduct)),
       switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
+      switchMap((list) => {
+        const ids = list.map((p) => p.id);
+        if (!ids.length) return of(list);
+        return this.dealApi.bestByProducts(ids).pipe(
+          map((deals) => applyBestDeals(list, deals)),
+          catchError(() => of(list)),
+        );
+      }),
       catchError(() => of([] as Product[])),
     ),
     { initialValue: [] as Product[] },

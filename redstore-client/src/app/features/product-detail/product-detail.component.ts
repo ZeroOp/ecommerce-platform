@@ -14,6 +14,7 @@ import { Product } from '../../core/models/product.model';
 import { mapSearchHitToProduct, SearchApiService } from '../../core/services/search-api.service';
 import { InventoryApiService } from '../../core/services/inventory-api.service';
 import { enrichWithInventory, applyQuantities } from '../../core/services/inventory-enrich';
+import { applyBestDeals, DealApiService } from '../../core/services/deal-api.service';
 
 @Component({
   selector: 'rs-product-detail',
@@ -27,6 +28,7 @@ export class ProductDetailComponent {
   private route = inject(ActivatedRoute);
   private searchApi = inject(SearchApiService);
   private inventoryApi = inject(InventoryApiService);
+  private dealApi = inject(DealApiService);
   cart = inject(CartService);
   toast = inject(ToastService);
 
@@ -47,6 +49,12 @@ export class ProductDetailComponent {
               catchError(() => of(p)),
             ),
           ),
+          switchMap((p) =>
+            this.dealApi.bestByProducts([p.id]).pipe(
+              map((deals) => applyBestDeals([p], deals)[0]),
+              catchError(() => of(p)),
+            ),
+          ),
           catchError(() => of(null)),
         );
       }),
@@ -63,6 +71,14 @@ export class ProductDetailComponent {
         return this.searchApi.listProducts({ categoryId: p.categoryId, limit: 12 }).pipe(
           map((hits) => hits.map(mapSearchHitToProduct).filter((x) => x.id !== p.id).slice(0, 4)),
           switchMap((list) => enrichWithInventory(list, this.inventoryApi)),
+          switchMap((list) => {
+            const ids = list.map((x) => x.id);
+            if (!ids.length) return of(list);
+            return this.dealApi.bestByProducts(ids).pipe(
+              map((deals) => applyBestDeals(list, deals)),
+              catchError(() => of(list)),
+            );
+          }),
           catchError(() => of([] as Product[])),
         );
       }),

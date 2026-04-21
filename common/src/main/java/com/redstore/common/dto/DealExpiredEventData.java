@@ -21,6 +21,7 @@ public class DealExpiredEventData {
     private String dealId;
     private String scope;
     private String productId;
+    private String brandId;
     private String categoryId;
     private String sellerId;
     private Instant expiredAt;

@@ -99,4 +99,11 @@ spec:
             # Runs at minute 0 of every 2nd hour.
             - name: SNAPSHOT_CRON_SCHEDULE
               value: "0 */2 * * *"
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "64Mi"
+            limits:
+              cpu: "150m"
+              memory: "256Mi"
           # No ports needed as this is a background worker

@@ -1,0 +1,34 @@
+# ------------------------------------------------------------------
+# Deal service Postgres cluster.
+# ------------------------------------------------------------------
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: deal-db-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:16
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  storage:
+    size: 1Gi
+    storageClass: hostpath
+
+  postgresql:
+    parameters:
+      synchronous_commit: "on"
+      shared_buffers: "128MB"
+
+  bootstrap:
+    initdb:
+      database: deal_db
+      owner: deal_admin
+      secret:
+        name: deal-db-creds
