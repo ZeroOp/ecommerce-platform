@@ -8,4 +8,8 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<OrderEntity, String> {
 
     List<OrderEntity> findByUserIdOrderByCreatedAtDesc(String userId);
+
+    List<OrderEntity> findAllByOrderByCreatedAtDesc();
+
+    List<OrderEntity> findDistinctByItemsSellerIdOrderByCreatedAtDesc(String sellerId);
 }

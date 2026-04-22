@@ -1,9 +1,14 @@
 package com.redstore.order.service;
 
 import com.redstore.common.dto.OrderCancelledEventData;
+import com.redstore.common.dto.OrderCompletedEventData;
 import com.redstore.common.dto.OrderCreatedEventData;
+import com.redstore.common.dto.OrderInProgressEventData;
 import com.redstore.common.dto.OrderItemData;
+import com.redstore.common.dto.OrderShippedEventData;
+import com.redstore.common.dto.PaymentOrderCompleteEventData;
 import com.redstore.common.dto.UserPayload;
+import com.redstore.common.enums.UserRole;
 import com.redstore.common.exceptions.BadRequestException;
 import com.redstore.common.exceptions.NotAuthorizedException;
 import com.redstore.common.utils.UserContext;
@@ -14,7 +19,10 @@ import com.redstore.order.entity.OrderEntity;
 import com.redstore.order.entity.OrderItemEntity;
 import com.redstore.order.entity.OrderStatus;
 import com.redstore.order.events.publishers.OrderCancelledPublisher;
+import com.redstore.order.events.publishers.OrderCompletedPublisher;
 import com.redstore.order.events.publishers.OrderCreatedPublisher;
+import com.redstore.order.events.publishers.OrderInProgressPublisher;
+import com.redstore.order.events.publishers.OrderShippedPublisher;
 import com.redstore.order.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -53,6 +61,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderCreatedPublisher orderCreatedPublisher;
     private final OrderCancelledPublisher orderCancelledPublisher;
+    private final OrderInProgressPublisher orderInProgressPublisher;
+    private final OrderCompletedPublisher orderCompletedPublisher;
+    private final OrderShippedPublisher orderShippedPublisher;
 
     @Value("${order.expiry.minutes}")
     private long expiryMinutes;
@@ -60,11 +71,17 @@ public class OrderService {
     public OrderService(
             OrderRepository orderRepository,
             OrderCreatedPublisher orderCreatedPublisher,
-            OrderCancelledPublisher orderCancelledPublisher
+            OrderCancelledPublisher orderCancelledPublisher,
+            OrderInProgressPublisher orderInProgressPublisher,
+            OrderCompletedPublisher orderCompletedPublisher,
+            OrderShippedPublisher orderShippedPublisher
     ) {
         this.orderRepository = orderRepository;
         this.orderCreatedPublisher = orderCreatedPublisher;
         this.orderCancelledPublisher = orderCancelledPublisher;
+        this.orderInProgressPublisher = orderInProgressPublisher;
+        this.orderCompletedPublisher = orderCompletedPublisher;
+        this.orderShippedPublisher = orderShippedPublisher;
     }
 
     // ------------------------------------------------------------------
@@ -75,6 +92,24 @@ public class OrderService {
     public List<OrderDto> listMyOrders() {
         UserPayload user = requireUser();
         return orderRepository.findByUserIdOrderByCreatedAtDesc(user.getId())
+                .stream()
+                .map(OrderDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderDto> listSellerOrders() {
+        UserPayload user = requireUserWithRole(UserRole.SELLER);
+        return orderRepository.findDistinctByItemsSellerIdOrderByCreatedAtDesc(user.getId())
+                .stream()
+                .map(OrderDto::from)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderDto> listAdminOrders() {
+        requireUserWithRole(UserRole.ADMIN);
+        return orderRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
                 .map(OrderDto::from)
                 .toList();
@@ -206,6 +241,127 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    @Transactional
+    public void markInProgressFromPayment(PaymentOrderCompleteEventData paymentEvent) {
+        if (paymentEvent == null || paymentEvent.getOrderId() == null) return;
+        OrderEntity order = orderRepository.findById(paymentEvent.getOrderId()).orElse(null);
+        if (order == null) return;
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.EXPIRED) return;
+        if (order.getStatus() == OrderStatus.IN_PROGRESS || order.getStatus() == OrderStatus.SHIPPED || order.getStatus() == OrderStatus.COMPLETED) return;
+        order.setStatus(OrderStatus.IN_PROGRESS);
+        OrderEntity saved = orderRepository.save(order);
+        orderInProgressPublisher.publish(OrderInProgressEventData.builder()
+                .orderId(saved.getId())
+                .userId(saved.getUserId())
+                .paymentRef(paymentEvent.getProviderRef())
+                .updatedAt(Instant.now())
+                .build());
+    }
+
+    @Transactional
+    public OrderDto shipBySeller(String orderId) {
+        UserPayload seller = requireUserWithRole(UserRole.SELLER);
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BadRequestException("Order not found"));
+        ensureSellerOwnsOrder(seller.getId(), order);
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.EXPIRED) {
+            throw new BadRequestException("Cancelled/expired orders cannot be shipped");
+        }
+        if (order.getStatus() == OrderStatus.CREATED) {
+            throw new BadRequestException("Order is not paid yet");
+        }
+        if (order.getStatus() == OrderStatus.SHIPPED || order.getStatus() == OrderStatus.COMPLETED) {
+            return OrderDto.from(order);
+        }
+        order.setStatus(OrderStatus.SHIPPED);
+        OrderEntity saved = orderRepository.save(order);
+        orderShippedPublisher.publish(OrderShippedEventData.builder()
+                .orderId(saved.getId())
+                .userId(saved.getUserId())
+                .sellerId(seller.getId())
+                .items(toEventItems(saved))
+                .shippedAt(Instant.now())
+                .build());
+        return OrderDto.from(saved);
+    }
+
+    @Transactional
+    public OrderDto cancelBySeller(String orderId, String reason) {
+        UserPayload seller = requireUserWithRole(UserRole.SELLER);
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BadRequestException("Order not found"));
+        ensureSellerOwnsOrder(seller.getId(), order);
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new BadRequestException("Completed orders cannot be cancelled");
+        }
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.EXPIRED) {
+            return OrderDto.from(order);
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setCancelledAt(Instant.now());
+        order.setCancellationReason(blankToNull(reason));
+        OrderEntity saved = orderRepository.save(order);
+        orderCancelledPublisher.publish(OrderCancelledEventData.builder()
+                .orderId(saved.getId())
+                .userId(saved.getUserId())
+                .items(toEventItems(saved))
+                .reason(saved.getCancellationReason())
+                .cancelledAt(saved.getCancelledAt())
+                .build());
+        return OrderDto.from(saved);
+    }
+
+    @Transactional
+    public OrderDto closeByAdmin(String orderId) {
+        requireUserWithRole(UserRole.ADMIN);
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BadRequestException("Order not found"));
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.EXPIRED) {
+            throw new BadRequestException("Cancelled/expired orders cannot be closed");
+        }
+        if (order.getStatus() != OrderStatus.SHIPPED && order.getStatus() != OrderStatus.COMPLETED) {
+            throw new BadRequestException("Only shipped orders can be closed");
+        }
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            return OrderDto.from(order);
+        }
+        order.setStatus(OrderStatus.COMPLETED);
+        order.setCompletedAt(Instant.now());
+        OrderEntity saved = orderRepository.save(order);
+        orderCompletedPublisher.publish(OrderCompletedEventData.builder()
+                .orderId(saved.getId())
+                .userId(saved.getUserId())
+                .items(toEventItems(saved))
+                .completedAt(saved.getCompletedAt())
+                .build());
+        return OrderDto.from(saved);
+    }
+
+    @Transactional
+    public OrderDto cancelByAdmin(String orderId, String reason) {
+        requireUserWithRole(UserRole.ADMIN);
+        OrderEntity order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BadRequestException("Order not found"));
+        if (order.getStatus() == OrderStatus.COMPLETED) {
+            throw new BadRequestException("Completed orders cannot be cancelled");
+        }
+        if (order.getStatus() == OrderStatus.CANCELLED || order.getStatus() == OrderStatus.EXPIRED) {
+            return OrderDto.from(order);
+        }
+        order.setStatus(OrderStatus.CANCELLED);
+        order.setCancelledAt(Instant.now());
+        order.setCancellationReason(blankToNull(reason));
+        OrderEntity saved = orderRepository.save(order);
+        orderCancelledPublisher.publish(OrderCancelledEventData.builder()
+                .orderId(saved.getId())
+                .userId(saved.getUserId())
+                .items(toEventItems(saved))
+                .reason(saved.getCancellationReason())
+                .cancelledAt(saved.getCancelledAt())
+                .build());
+        return OrderDto.from(saved);
+    }
+
     // ------------------------------------------------------------------
     // helpers
     // ------------------------------------------------------------------
@@ -237,5 +393,24 @@ public class OrderService {
             throw new NotAuthorizedException();
         }
         return user;
+    }
+
+    private UserPayload requireUserWithRole(UserRole role) {
+        UserPayload user = requireUser();
+        if (user.getRoles() == null || !user.getRoles().contains(role)) {
+            throw new NotAuthorizedException();
+        }
+        return user;
+    }
+
+    private void ensureSellerOwnsOrder(String sellerId, OrderEntity order) {
+        if (order.getItems() == null || order.getItems().isEmpty()) {
+            throw new NotAuthorizedException();
+        }
+        boolean hasSellerLine = order.getItems().stream()
+                .anyMatch(i -> sellerId.equals(i.getSellerId()));
+        if (!hasSellerLine) {
+            throw new NotAuthorizedException();
+        }
     }
 }

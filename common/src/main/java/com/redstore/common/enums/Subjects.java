@@ -34,6 +34,7 @@ public enum Subjects {
     ORDER_CREATED("order.created"),
     ORDER_CANCELLED("order.cancelled"),
     ORDER_COMPLETED("order.completed"),
+    ORDER_SHIPPED("order.shipped"),
     ORDER_EXPIRED("order.expired"),
     ORDER_IN_PROGRESS("order.in_progress"),
 
@@ -44,6 +45,7 @@ public enum Subjects {
 
     // Payment
     PAYMENT_CREATED("payment.created"),
+    PAYMENT_ORDER_COMPLETE("payment.order.complete"),
     PAYMENT_FAILED("payment.failed"),
 
     // Inventory

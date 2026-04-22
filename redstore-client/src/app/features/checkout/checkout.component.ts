@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { CartService } from '../../core/services/cart.service';
 import { ToastService } from '../../core/services/toast.service';
+import { AuthService } from '../../core/services/auth.service';
+import { OrderApiService } from '../../core/services/order-api.service';
 import { IconComponent } from '../../shared/components/icon/icon.component';
 import { ButtonComponent } from '../../shared/components/button/button.component';
 import { InputComponent } from '../../shared/components/input/input.component';
@@ -142,6 +145,8 @@ import { InputComponent } from '../../shared/components/input/input.component';
 export class CheckoutComponent {
   cart = inject(CartService);
   toast = inject(ToastService);
+  private auth = inject(AuthService);
+  private orderApi = inject(OrderApiService);
   private router = inject(Router);
 
   placing = signal(false);
@@ -151,7 +156,15 @@ export class CheckoutComponent {
 
   async place(e: Event) {
     e.preventDefault();
-    if (this.cart.items().length === 0) {
+    const checkoutItems = this.cart.items().map((it) => ({
+      productId: it.product.id,
+      name: it.product.name,
+      imageUrl: it.product.image,
+      quantity: it.quantity,
+      unitPrice: Number(it.product.price ?? 0),
+    }));
+
+    if (checkoutItems.length === 0) {
       this.toast.warning('Your cart is empty');
       return;
     }
@@ -167,12 +180,21 @@ export class CheckoutComponent {
         }
         return;
       }
-      // Local/demo mode returns null — treat that as a successful placeholder.
-      if (!result) {
+      const isDemo = String(this.auth.user()?.id ?? '').startsWith('demo-');
+      if (isDemo || !result) {
         this.cart.clear();
+        this.toast.success('Order placed!', 'We\u2019ll email your confirmation shortly.');
+        this.router.navigate(['/orders']);
+        return;
       }
-      this.toast.success('Order placed!', 'We\u2019ll email your confirmation shortly.');
-      this.router.navigate(['/orders']);
+      const order = await firstValueFrom(
+        this.orderApi.create({
+          items: checkoutItems,
+        }),
+      );
+      await this.cart.clear();
+      this.toast.success('Order created', 'Complete payment before the timer ends.');
+      this.router.navigate(['/orders', order.id]);
     } catch (err) {
       this.toast.error('Checkout failed', 'Please try again in a moment.');
     } finally {

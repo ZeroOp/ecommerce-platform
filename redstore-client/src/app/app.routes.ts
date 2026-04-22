@@ -10,6 +10,7 @@ import { ProductDetailComponent } from './features/product-detail/product-detail
 import { CartComponent } from './features/cart/cart.component';
 import { CheckoutComponent } from './features/checkout/checkout.component';
 import { OrdersComponent } from './features/orders/orders.component';
+import { OrderDetailComponent } from './features/orders/order-detail.component';
 import { ProfileComponent } from './features/profile/profile.component';
 import { DealsComponent } from './features/deals/deals.component';
 import { SearchComponent } from './features/search/search.component';
@@ -53,6 +54,7 @@ export const routes: Routes = [
       { path: 'cart',           component: CartComponent,     title: 'Your cart · RedStore' },
       { path: 'checkout',       component: CheckoutComponent, title: 'Checkout · RedStore' },
       { path: 'orders',         component: OrdersComponent,   title: 'My orders · RedStore' },
+      { path: 'orders/:id',     component: OrderDetailComponent, title: 'Order details · RedStore' },
       { path: 'profile',        component: ProfileComponent,  title: 'Profile · RedStore' },
       { path: 'deals',          component: DealsComponent,    title: 'Deals · RedStore' },
       { path: 'search',         component: SearchComponent,   title: 'Search · RedStore' },

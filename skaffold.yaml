@@ -51,14 +51,19 @@ build:
       context: .
       docker:
         dockerfile: services/deal-service/Dockerfile
-    - image: zeroop/redstore-snapshot-service
-      context: services/snapshot-service
+    - image: zeroop/redstore-payment-service
+      context: .
       docker:
-        dockerfile: services/snapshot-service/Dockerfile
+        dockerfile: services/payment-service/Dockerfile
+    - image: zeroop/redstore-analytics-service
+      context: .
+      docker:
+        dockerfile: services/analytics-service/Dockerfile
 manifests:
   rawYaml:
 #    - infra/k8s/databases/
 #    - infra/k8s/secreates/app-secreates.yaml
+    # - infra/k8s/clickhouse/gate-keeper.yaml
     - infra/k8s/client-depl.yaml
     - infra/k8s/identity-depl.yaml
     - infra/k8s/archiver-depl.yaml
@@ -71,5 +76,7 @@ manifests:
     - infra/k8s/order-depl.yaml
     - infra/k8s/expiration-depl.yaml
     - infra/k8s/deal-depl.yaml
+    - infra/k8s/payment-depl.yaml
     - infra/k8s/snapshot-depl.yaml
+    - infra/k8s/analytics-depl.yaml
     - infra/k8s-dev/ingress-srv.yaml

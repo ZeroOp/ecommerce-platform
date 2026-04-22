@@ -3,7 +3,7 @@ package com.redstore.order.entity;
 /**
  * Lifecycle:
  * <pre>
- *   CREATED ──► IN_PROGRESS ──► COMPLETED
+ *   CREATED ──► IN_PROGRESS ──► SHIPPED ──► COMPLETED
  *     │             │
  *     ├─► CANCELLED ┘
  *     └─► EXPIRED   (auto-transition by scheduler if stale)
@@ -11,13 +11,15 @@ package com.redstore.order.entity;
  *
  * CREATED: order placed, stock reservation requested from inventory.
  * IN_PROGRESS: payment-service has accepted payment; fulfilment in progress.
- * COMPLETED: payment succeeded and order is done. Inventory consumes reservation.
+ * SHIPPED: seller has dispatched the order for delivery.
+ * COMPLETED: admin has closed the shipped order lifecycle.
  * CANCELLED: user or system cancelled. Inventory releases reservation.
  * EXPIRED: order sat in CREATED past {@code order.expiry.minutes}. Inventory releases.
  */
 public enum OrderStatus {
     CREATED,
     IN_PROGRESS,
+    SHIPPED,
     COMPLETED,
     CANCELLED,
     EXPIRED

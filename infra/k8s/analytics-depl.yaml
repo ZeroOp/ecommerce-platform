@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: analytics-srv
+spec:
+  selector:
+    app: analytics
+  ports:
+    - name: analytics
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: analytics-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: analytics
+  template:
+    metadata:
+      labels:
+        app: analytics
+    spec:
+      containers:
+        - name: analytics
+          image: zeroop/redstore-analytics-service
+          env:
+            - name: SERVER_PORT
+              value: "8080"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: analytics-secrets
+                  key: JWT_KEY
+            - name: NATS_URL
+              valueFrom:
+                secretKeyRef:
+                  name: analytics-secrets
+                  key: NATS_URL
+            - name: CLICKHOUSE_ENDPOINT
+              valueFrom:
+                secretKeyRef:
+                  name: analytics-secrets
+                  key: CLICKHOUSE_ENDPOINT
+            - name: CLICKHOUSE_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: analytics-secrets
+                  key: CLICKHOUSE_DATABASE
+            - name: CLICKHOUSE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: analytics-secrets
+                  key: CLICKHOUSE_USER
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: analytics-secrets
+                  key: CLICKHOUSE_PASSWORD
+            - name: JAVA_TOOL_OPTIONS
+              value: "-XX:MaxRAMPercentage=70 -XX:InitialRAMPercentage=20"
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "96Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"

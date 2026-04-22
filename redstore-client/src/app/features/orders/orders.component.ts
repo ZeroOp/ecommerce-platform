@@ -1,6 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
+import { OrderApi, OrderApiService } from '../../core/services/order-api.service';
 import { ORDERS } from '../../data/mock-orders';
 import { BadgeComponent, BadgeTone } from '../../shared/components/badge/badge.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
@@ -14,7 +17,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
     <section class="rs-container orders">
       <header class="orders__head">
         <h1>My orders</h1>
-        <p>{{ orders.length }} orders · Track shipments, returns, and more</p>
+        <p>{{ orders().length }} orders · Track shipments, returns, and more</p>
       </header>
 
       <div class="orders__tabs">
@@ -30,7 +33,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
               <div class="order__id">#{{ o.id }}</div>
               <div class="order__date">Placed {{ o.placedAt | date:'mediumDate' }}</div>
             </div>
-            <rs-badge [tone]="badgeFor(o.status)" [soft]="true">{{ o.status }}</rs-badge>
+            <rs-badge [tone]="badgeFor(o.status)" [soft]="true">{{ friendlyStatus(o.status) }}</rs-badge>
           </header>
           <div class="order__items">
             <div *ngFor="let it of o.items" class="order__item">
@@ -47,7 +50,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
               <div class="order__total">\${{ o.total | number: '1.2-2' }}</div>
             </div>
             <div class="order__actions">
-              <button>Track order</button>
+              <a [routerLink]="['/orders', o.id]">View order</a>
               <button>Invoice</button>
             </div>
           </footer>
@@ -92,15 +95,18 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
     .order__total-label { font-size: 12px; color: var(--rs-text-subtle); text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; }
     .order__total { font-family: var(--rs-font-display); font-weight: 800; font-size: 20px; }
     .order__actions { display: flex; gap: 8px; }
-    .order__actions button {
+    .order__actions button, .order__actions a {
       padding: 8px 14px; background: var(--rs-surface-2); border-radius: var(--rs-radius-pill); font-size: 13px; font-weight: 600;
     }
-    .order__actions button:hover { background: var(--rs-surface-3); }
+    .order__actions button:hover, .order__actions a:hover { background: var(--rs-surface-3); }
 
     .orders__cta { padding: 12px 24px; background: #0a0a0a; color: white; border-radius: var(--rs-radius-pill); font-weight: 600; }
   `],
 })
 export class OrdersComponent {
+  private auth = inject(AuthService);
+  private orderApi = inject(OrderApiService);
+
   tabs = [
     { label: 'All', value: 'all' as const },
     { label: 'Pending', value: 'pending' as const },
@@ -108,19 +114,87 @@ export class OrdersComponent {
     { label: 'Cancelled', value: 'cancelled' as const },
   ];
   tab = signal<'all' | 'pending' | 'delivered' | 'cancelled'>('all');
-  orders = ORDERS;
+  orders = signal(ORDERS);
 
-  filtered = () => this.tab() === 'all' ? this.orders : this.orders.filter(o => o.status === this.tab());
+  constructor() {
+    void this.load();
+  }
+
+  filtered = computed(() => {
+    if (this.tab() === 'all') return this.orders();
+    return this.orders().filter((o) => this.tabForStatus(o.status) === this.tab());
+  });
+
+  private async load(): Promise<void> {
+    const isDemo = String(this.auth.user()?.id ?? '').startsWith('demo-');
+    if (isDemo) {
+      this.orders.set(ORDERS);
+      return;
+    }
+    try {
+      const apiOrders = await firstValueFrom(this.orderApi.listMine());
+      this.orders.set(apiOrders.map((o) => this.fromApi(o)));
+    } catch {
+      this.orders.set(ORDERS);
+    }
+  }
+
+  private fromApi(o: OrderApi) {
+    return {
+      id: o.id,
+      customer: o.userEmail,
+      customerEmail: o.userEmail,
+      status: o.status,
+      placedAt: o.createdAt,
+      expiresAt: o.expiresAt,
+      completedAt: o.completedAt,
+      cancelledAt: o.cancelledAt,
+      shippingAddress: '—',
+      paymentMethod: 'Card',
+      total: Number(o.subtotal ?? 0),
+      items: (o.items ?? []).map((it) => ({
+        productId: it.productId,
+        name: it.name ?? 'Product',
+        image: it.imageUrl ?? '',
+        price: Number(it.unitPrice ?? 0),
+        quantity: Number(it.quantity ?? 1),
+      })),
+    };
+  }
 
   badgeFor(s: string): BadgeTone {
     switch (s) {
+      case 'COMPLETED':
       case 'delivered':  return 'success';
+      case 'IN_PROGRESS':
+      case 'SHIPPED':
       case 'shipped':    return 'info';
+      case 'CREATED':
       case 'processing': return 'info';
       case 'pending':    return 'warning';
+      case 'CANCELLED':
+      case 'EXPIRED':
       case 'cancelled':  return 'danger';
       case 'returned':   return 'danger';
       default: return 'neutral';
     }
+  }
+
+  friendlyStatus(s: string): string {
+    switch (s) {
+      case 'CREATED': return 'Pending payment';
+      case 'IN_PROGRESS': return 'In progress';
+      case 'SHIPPED': return 'Shipped';
+      case 'COMPLETED': return 'Delivered';
+      case 'CANCELLED': return 'Cancelled';
+      case 'EXPIRED': return 'Cancelled';
+      default: return s;
+    }
+  }
+
+  private tabForStatus(s: string): 'pending' | 'delivered' | 'cancelled' {
+    if (s === 'COMPLETED' || s === 'delivered') return 'delivered';
+    if (s === 'CANCELLED' || s === 'EXPIRED' || s === 'cancelled' || s === 'returned') return 'cancelled';
+    return 'pending';
   }
 }

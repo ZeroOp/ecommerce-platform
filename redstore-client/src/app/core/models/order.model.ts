@@ -1,4 +1,16 @@
-export type OrderStatus = 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled' | 'returned';
+export type OrderStatus =
+  | 'CREATED'
+  | 'IN_PROGRESS'
+  | 'SHIPPED'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'EXPIRED'
+  | 'pending'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+  | 'returned';
 
 export interface OrderItem {
   productId: string;
@@ -16,6 +28,9 @@ export interface Order {
   total: number;
   status: OrderStatus;
   placedAt: string;
+  expiresAt?: string;
+  completedAt?: string;
+  cancelledAt?: string;
   shippingAddress: string;
   paymentMethod: string;
 }

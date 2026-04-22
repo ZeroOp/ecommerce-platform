@@ -37,8 +37,9 @@ public class NatsConfig {
         JetStreamSubscription products = createPullSubscription(js, "PRODUCTS", "archiver-products", "product.>");
         JetStreamSubscription orders = createPullSubscription(js, "ORDERS", "archiver-orders-order", "order.>");
         JetStreamSubscription payments = createPullSubscription(js, "ORDERS", "archiver-orders-payment", "payment.>");
+        JetStreamSubscription deals = createPullSubscription(js, "DEALS", "archiver-deals", "deal.>");
 
-        return List.of(identity, products, orders, payments);
+        return List.of(identity, products, orders, payments, deals);
     }
 
     private static final int MAX_RETRIES = 10;

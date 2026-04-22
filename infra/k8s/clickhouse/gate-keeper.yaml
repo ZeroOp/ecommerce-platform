@@ -1,0 +1,185 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: clickhouse-cluster-configs
+data:
+  keeper_config.xml: |
+    <clickhouse>
+        <listen_host>0.0.0.0</listen_host>
+        <logger>
+            <level>information</level>
+            <console>1</console>
+        </logger>
+        <keeper_server>
+            <tcp_port>2181</tcp_port>
+            <server_id>1</server_id>
+            <log_storage_path>/var/lib/clickhouse/coordination/logs</log_storage_path>
+            <snapshot_storage_path>/var/lib/clickhouse/coordination/snapshots</snapshot_storage_path>
+            <coordination_settings>
+                <operation_timeout_ms>10000</operation_timeout_ms>
+                <session_timeout_ms>30000</session_timeout_ms>
+                <raft_logs_level>information</raft_logs_level>
+            </coordination_settings>
+            <raft_configuration>
+                <server>
+                    <id>1</id>
+                    <hostname>clickhouse-keeper-0.clickhouse-keeper-srv.default.svc.cluster.local</hostname>
+                    <port>9444</port>
+                </server>
+            </raft_configuration>
+        </keeper_server>
+    </clickhouse>
+
+  config.xml: |
+    <clickhouse>
+        <listen_host>0.0.0.0</listen_host>
+        <macros>
+            <shard from_env="SHARD_ID"></shard>
+            <replica from_env="REPLICA_ID"></replica>
+        </macros>
+        <remote_servers>
+            <redstore_analytics_cluster>
+                <shard>
+                    <replica><host>clickhouse-0.clickhouse-srv.default.svc.cluster.local</host><port>9000</port></replica>
+                </shard>
+            </redstore_analytics_cluster>
+        </remote_servers>
+        <zookeeper>
+            <node>
+                <host>clickhouse-keeper-srv.default.svc.cluster.local</host>
+                <port>2181</port>
+            </node>
+        </zookeeper>
+    </clickhouse>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse-keeper-srv
+spec:
+  clusterIP: None
+  selector:
+    app: clickhouse-keeper
+  ports:
+    - name: client
+      port: 2181
+    - name: raft
+      port: 9444
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse-srv
+spec:
+  clusterIP: None
+  selector:
+    app: clickhouse
+  ports:
+    - name: native
+      port: 9000
+    - name: http
+      port: 8123
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: clickhouse-keeper
+spec:
+  serviceName: clickhouse-keeper-srv
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clickhouse-keeper
+  template:
+    metadata:
+      labels:
+        app: clickhouse-keeper
+    spec:
+      securityContext:
+        runAsUser: 101
+        runAsGroup: 101
+        fsGroup: 101
+      containers:
+        - name: keeper
+          image: clickhouse/clickhouse-keeper:23.8-alpine
+          resources:
+            requests:
+              cpu: "25m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+          volumeMounts:
+            - name: keeper-storage
+              mountPath: /var/lib/clickhouse
+            - name: keeper-config-vol
+              mountPath: /etc/clickhouse-keeper/keeper_config.xml
+              subPath: keeper_config.xml
+      volumes:
+        - name: keeper-config-vol
+          configMap:
+            name: clickhouse-cluster-configs
+  volumeClaimTemplates:
+    - metadata:
+        name: keeper-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: clickhouse
+spec:
+  serviceName: clickhouse-srv
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clickhouse
+  template:
+    metadata:
+      labels:
+        app: clickhouse
+    spec:
+      containers:
+        - name: clickhouse
+          image: clickhouse/clickhouse-server:23.8-alpine
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "400m"
+              memory: "768Mi"
+          env:
+            - name: HOSTNAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              INDEX=${HOSTNAME##*-}
+              export SHARD_ID=$(( INDEX / 2 + 1 ))
+              export REPLICA_ID=${HOSTNAME}
+              exec /entrypoint.sh
+          volumeMounts:
+            - name: clickhouse-storage
+              mountPath: /var/lib/clickhouse
+            - name: config-volume
+              mountPath: /etc/clickhouse-server/config.d/config.xml
+              subPath: config.xml
+      volumes:
+        - name: config-volume
+          configMap:
+            name: clickhouse-cluster-configs
+  volumeClaimTemplates:
+    - metadata:
+        name: clickhouse-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi

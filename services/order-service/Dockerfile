@@ -14,6 +14,8 @@ COPY services/search-service/pom.xml services/search-service/
 COPY services/order-service/pom.xml services/order-service/
 COPY services/expiration-service/pom.xml services/expiration-service/
 COPY services/deal-service/pom.xml services/deal-service/
+COPY services/payment-service/pom.xml services/payment-service/
+COPY services/analytics-service/pom.xml services/analytics-service/
 
 RUN sh -c 'for i in 1 2 3 4 5; do \
   mvn -B -U -Dmaven.wagon.http.retryHandler.count=5 dependency:go-offline -pl services/order-service -am && exit 0; \

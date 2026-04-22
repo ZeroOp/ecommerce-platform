@@ -31,6 +31,16 @@ public class OrderController {
         return ResponseEntity.ok(orderService.listMyOrders());
     }
 
+    @GetMapping("/seller")
+    public ResponseEntity<List<OrderDto>> sellerOrders() {
+        return ResponseEntity.ok(orderService.listSellerOrders());
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<List<OrderDto>> adminOrders() {
+        return ResponseEntity.ok(orderService.listAdminOrders());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<OrderDto> myOrder(@PathVariable("id") String id) {
         return ResponseEntity.ok(orderService.getMyOrder(id));
@@ -47,5 +57,31 @@ public class OrderController {
             @RequestParam(value = "reason", required = false) String reason
     ) {
         return ResponseEntity.ok(orderService.cancelOrder(id, reason));
+    }
+
+    @PostMapping("/{id}/seller/ship")
+    public ResponseEntity<OrderDto> sellerShip(@PathVariable("id") String id) {
+        return ResponseEntity.ok(orderService.shipBySeller(id));
+    }
+
+    @PostMapping("/{id}/seller/cancel")
+    public ResponseEntity<OrderDto> sellerCancel(
+            @PathVariable("id") String id,
+            @RequestParam(value = "reason", required = false) String reason
+    ) {
+        return ResponseEntity.ok(orderService.cancelBySeller(id, reason));
+    }
+
+    @PostMapping("/{id}/admin/close")
+    public ResponseEntity<OrderDto> adminClose(@PathVariable("id") String id) {
+        return ResponseEntity.ok(orderService.closeByAdmin(id));
+    }
+
+    @PostMapping("/{id}/admin/cancel")
+    public ResponseEntity<OrderDto> adminCancel(
+            @PathVariable("id") String id,
+            @RequestParam(value = "reason", required = false) String reason
+    ) {
+        return ResponseEntity.ok(orderService.cancelByAdmin(id, reason));
     }
 }
