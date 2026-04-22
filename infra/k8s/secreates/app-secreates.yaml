@@ -155,6 +155,31 @@ stringData:
 apiVersion: v1
 kind: Secret
 metadata:
+  name: payment-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026-zeroop-hmac
+  NATS_URL: nats://nats-srv:4222
+  STRIPE_SECRET_KEY: YOUR_STRIPE_SECRET_KEY
+  STRIPE_PUBLIC_KEY: YOUR_STRIPE_PUBLIC_KEY
+  STRIPE_RESTRICTED_KEY: YOUR_STRIPE_RESTRICTED_KEY
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: analytics-secrets
+type: Opaque
+stringData:
+  JWT_KEY: redstore-secret-key-2026-zeroop-hmac
+  NATS_URL: nats://nats-srv:4222
+  CLICKHOUSE_ENDPOINT: http://clickhouse-srv:8123
+  CLICKHOUSE_DATABASE: analytics
+  CLICKHOUSE_USER: default
+  CLICKHOUSE_PASSWORD: ""
+---
+apiVersion: v1
+kind: Secret
+metadata:
   name: cart-redis-secrets
 type: Opaque
 stringData:
