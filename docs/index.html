@@ -187,6 +187,8 @@
     .tag-s3     { background: #fffbeb; color: #b45309; }
     .tag-ng     { background: #fdf2f8; color: #9d174d; }
     .tag-k8s    { background: #eff6ff; color: #1e40af; }
+    .tag-info   { background: #eff6ff; color: #2563eb; }
+    .tag-analytics { background: #ecfeff; color: #0e7490; }
 
     /* ── Cards / boxes ── */
     .card {
@@ -202,6 +204,19 @@
       margin-bottom: 6px;
     }
     .card p { color: var(--muted); font-size: 13.5px; margin: 0; }
+    .doc-list { margin: 8px 0 2px 18px; }
+    .doc-list li { margin: 6px 0; color: var(--muted); }
+    .doc-list a { color: var(--brand); text-decoration: none; font-weight: 600; }
+    .doc-list a:hover { text-decoration: underline; }
+    .img-placeholder {
+      margin-top: 10px;
+      padding: 12px 14px;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--muted);
+      font-size: 12.5px;
+    }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
@@ -309,6 +324,14 @@
     .step-body { padding: 4px 0 20px; }
     .step-title { font-weight: 700; font-size: 14px; }
     .step-desc { font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+    .event-flow {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+    .event-flow h3 { margin-top: 0; }
 
     /* ── Code blocks ── */
     pre {
@@ -371,12 +394,16 @@
   <nav>
     <div class="group-label">Overview</div>
     <a onclick="show('overview')" class="active" id="nav-overview"><span class="dot"></span>Architecture</a>
+    <a onclick="show('docs-hub')" id="nav-docs-hub"><span class="dot"></span>Documentation Hub</a>
 
     <div class="group-label">Java Services</div>
     <a onclick="show('common')"    id="nav-common"><span class="dot"></span>Common Module</a>
     <a onclick="show('identity')"  id="nav-identity"><span class="dot"></span>Identity Service</a>
     <a onclick="show('product')"   id="nav-product"><span class="dot"></span>Product Service</a>
     <a onclick="show('inventory')" id="nav-inventory"><span class="dot"></span>Inventory Service</a>
+    <a onclick="show('order')"     id="nav-order"><span class="dot"></span>Order Service</a>
+    <a onclick="show('payment')"   id="nav-payment"><span class="dot"></span>Payment Service</a>
+    <a onclick="show('analytics')" id="nav-analytics"><span class="dot"></span>Analytics Service</a>
     <a onclick="show('archive')"   id="nav-archive"><span class="dot"></span>Archive Service</a>
 
     <div class="group-label">Other Services</div>
@@ -387,6 +414,7 @@
 
     <div class="group-label">Infrastructure</div>
     <a onclick="show('infra')"     id="nav-infra"><span class="dot"></span>Kubernetes / Infra</a>
+    <a onclick="show('event-flows')" id="nav-event-flows"><span class="dot"></span>Event Flow Diagrams</a>
   </nav>
 </aside>
 
@@ -409,6 +437,9 @@
       <tr><td class="file-name">identity-service</td><td><span class="tag tag-java">Java</span></td><td>8081</td><td class="file-desc">Handles signup, login, JWT issuance, Google OAuth, seller registration, admin approval/rejection of sellers.</td></tr>
       <tr><td class="file-name">product-service</td><td><span class="tag tag-java">Java</span></td><td>8080</td><td class="file-desc">Product catalog — brands, categories, product listings, metadata, image upload to MinIO via presigned URLs.</td></tr>
       <tr><td class="file-name">inventory-service</td><td><span class="tag tag-java">Java</span></td><td>8083</td><td class="file-desc">Stock management — sellers add stock, orders reserve it, payment failure releases it. Redis caches quantities for fast public reads.</td></tr>
+      <tr><td class="file-name">order-service</td><td><span class="tag tag-java">Java</span></td><td>8084</td><td class="file-desc">Order lifecycle orchestration — creates orders, calls inventory reserve/release endpoints, tracks status transitions, and publishes order domain events.</td></tr>
+      <tr><td class="file-name">payment-service</td><td><span class="tag tag-java">Java</span></td><td>8085</td><td class="file-desc">Payment processing service — consumes order creation/expiration events, stores payment records, and publishes payment completion events for order progression.</td></tr>
+      <tr><td class="file-name">analytics-service</td><td><span class="tag tag-java">Java</span></td><td>8086</td><td class="file-desc">Read-optimized analytics service — consumes order lifecycle events and writes aggregates to ClickHouse for admin/seller dashboard reporting.</td></tr>
       <tr><td class="file-name">archive-service</td><td><span class="tag tag-java">Java</span></td><td>—</td><td class="file-desc">Pulls every NATS event using durable subscriptions and writes them to MinIO as a permanent audit log.</td></tr>
       <tr><td class="file-name">snapshot-service</td><td><span class="tag tag-node">Node.js</span></td><td>—</td><td class="file-desc">Cron job — runs pg_dump on Postgres databases every 2 hours and uploads the SQL files to MinIO for backup.</td></tr>
       <tr><td class="file-name">redstore-client</td><td><span class="tag tag-ng">Angular 17</span></td><td>4200</td><td class="file-desc">Single-page app — public store, seller dashboard, admin panel. Signal-based reactive state, OnPush change detection.</td></tr>
@@ -436,6 +467,53 @@
     <div class="lib-card"><div class="lib-name">Redis 7 <span class="tag tag-redis">Cache</span></div><div class="lib-desc">In-memory key-value store. Used in inventory-service to cache stock quantities so the public storefront doesn't hit Postgres on every page load.</div><div class="lib-why"><b>Why:</b> Stock reads happen far more often than writes. Redis keeps the DB load low at scale.</div></div>
     <div class="lib-card"><div class="lib-name">MinIO <span class="tag tag-s3">Object Storage</span></div><div class="lib-desc">S3-compatible object store running inside the cluster. Stores product images, NATS event archives, and Postgres backup files.</div><div class="lib-why"><b>Why:</b> Product images shouldn't be stored in the DB. MinIO keeps them outside the application tier with presigned URLs for direct browser upload/download.</div></div>
     <div class="lib-card"><div class="lib-name">Kubernetes + Nginx Ingress <span class="tag tag-k8s">Infra</span></div><div class="lib-desc">Orchestrates all containers. Nginx Ingress is the single public entry point that routes requests to the right service by URL prefix.</div><div class="lib-why"><b>Why:</b> Centralised routing, TLS termination, and horizontal scaling without changing any service code.</div></div>
+  </div>
+</section>
+
+<!-- ─────────────────── DOCS HUB ─────────────────── -->
+<section id="docs-hub">
+  <div class="page-header">
+    <div class="badge tag-info">Docs</div>
+    <h1>Documentation Hub</h1>
+    <p class="lead">This page summarizes the detailed Markdown documentation in the <code>docs/</code> folder. Use these files as the canonical written references for requirements, architecture, and database decisions.</p>
+  </div>
+
+  <h2>Primary documents</h2>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Functional requirements</div>
+      <p>Business requirements by actor (Customer, Seller, Admin), acceptance criteria, edge cases, and quality goals.</p>
+      <ul class="doc-list">
+        <li><a href="./functional-requirements.md" target="_blank" rel="noopener noreferrer">Open functional-requirements.md</a></li>
+      </ul>
+      <div class="img-placeholder">Image placeholder: add a user journey map (browse -> cart -> order -> payment -> delivery).</div>
+    </div>
+    <div class="card">
+      <div class="card-title">System architecture</div>
+      <p>Service topology, communication modes, data ownership, security, and reliability design for the platform.</p>
+      <ul class="doc-list">
+        <li><a href="./system-architecture.md" target="_blank" rel="noopener noreferrer">Open system-architecture.md</a></li>
+      </ul>
+      <div class="img-placeholder">Image placeholder: add context/container/sequence architecture diagrams.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Database selection</div>
+      <p>Rationale for PostgreSQL, Redis, ClickHouse, and MinIO selections, including consistency and performance trade-offs.</p>
+      <ul class="doc-list">
+        <li><a href="./database-selection.md" target="_blank" rel="noopener noreferrer">Open database-selection.md</a></li>
+      </ul>
+      <div class="img-placeholder">Image placeholder: add data platform map and cache fallback flow diagram.</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Recommended image placeholders directory</div>
+      <p>To keep docs consistent, place all future diagrams/screenshots under a shared images folder.</p>
+      <pre><code>docs/
+  images/
+    placeholder-system-context.png
+    placeholder-checkout-sequence.png
+    placeholder-data-platform.png
+    placeholder-user-journey.png</code></pre>
+    </div>
   </div>
 </section>
 
@@ -637,6 +715,120 @@
   <div class="note note-warn"><b>The oversell problem — why the atomic decrement matters:</b><br>If two requests for the last unit arrive simultaneously, a naive check-then-update would both read quantity=1, both decide "enough stock", both decrement to 0 — but the buyer would get 2 orders for 1 unit. The SQL <code>UPDATE WHERE quantity >= requested</code> runs atomically inside the database — only one of the two concurrent updates will match the WHERE clause.</div>
 </section>
 
+<!-- ─────────────────── ORDER ─────────────────── -->
+<section id="order">
+  <div class="page-header">
+    <div class="badge tag-java">Java · Spring Boot · Port 8084</div>
+    <h1>Order Service</h1>
+    <p class="lead">The order domain orchestrator. It creates customer orders, coordinates inventory reservation/release through internal APIs, advances order statuses, and publishes order lifecycle events for other services.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Order Creation</div><p>Creates immutable order snapshots from checkout data and starts each order in a deterministic lifecycle state.</p></div>
+    <div class="card"><div class="card-title">Inventory Coordination</div><p>Calls inventory internal APIs to reserve stock at order start and release stock on cancellation/failure paths.</p></div>
+    <div class="card"><div class="card-title">Order Lifecycle</div><p>Transitions orders through states such as CREATED, IN_PROGRESS, SHIPPED, COMPLETED, FAILED, or EXPIRED based on business actions/events.</p></div>
+    <div class="card"><div class="card-title">Event Publication</div><p>Publishes order domain events (created, in-progress, shipped, completed, cancelled/expired) to NATS JetStream for payment, analytics, and archive consumers.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-web <span class="tag tag-spring">HTTP</span></div><div class="lib-desc">Exposes customer/seller/admin order APIs and internal endpoints used in orchestration flows.</div><div class="lib-why"><b>Why:</b> Order operations are user-facing and require synchronous responses for checkout and status views.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-jpa <span class="tag tag-spring">Database</span></div><div class="lib-desc">Persists orders, line items, and status transitions in PostgreSQL.</div><div class="lib-why"><b>Why:</b> Order and line-item data must remain strongly consistent and auditable.</div></div>
+    <div class="lib-card"><div class="lib-name">RestTemplate / HTTP client <span class="tag tag-spring">Internal Call</span></div><div class="lib-desc">Calls inventory internal reserve/release APIs with shared internal key headers.</div><div class="lib-why"><b>Why:</b> Reservation status is required before confirming order creation.</div></div>
+    <div class="lib-card"><div class="lib-name">common module <span class="tag tag-java">Shared</span></div><div class="lib-desc">JWT context, role validation, event DTOs, base publisher, and standard exceptions.</div><div class="lib-why"><b>Why:</b> Enforces consistent auth/event handling across services.</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">controller/OrderController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc">Exposes APIs to create orders, fetch user/seller/admin order views, and update status where permitted.</td></tr>
+      <tr><td class="file-name">service/OrderService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Core orchestration logic for order creation, status transitions, and compensation actions.</td></tr>
+      <tr><td class="file-name">repository/OrderRepository.java</td><td><span class="file-kind">Repository</span></td><td class="file-desc">JPA repository for order queries and lifecycle state retrieval.</td></tr>
+      <tr><td class="file-name">events/publishers/OrderInProgressPublisher.java</td><td><span class="file-kind">Publisher</span></td><td class="file-desc">Publishes when an order advances from initial creation to processing state.</td></tr>
+      <tr><td class="file-name">events/publishers/OrderShippedPublisher.java</td><td><span class="file-kind">Publisher</span></td><td class="file-desc">Publishes shipping-state transitions for downstream analytics/archive consumers.</td></tr>
+      <tr><td class="file-name">events/publishers/OrderCompletedPublisher.java</td><td><span class="file-kind">Publisher</span></td><td class="file-desc">Publishes final completion events once payment and fulfillment conditions are met.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─────────────────── PAYMENT ─────────────────── -->
+<section id="payment">
+  <div class="page-header">
+    <div class="badge tag-java">Java · Spring Boot · Port 8085</div>
+    <h1>Payment Service</h1>
+    <p class="lead">Responsible for payment record lifecycle and payment confirmation logic. It consumes order lifecycle events, validates payment actions, and emits payment-completion events for order progression.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Payment Record Management</div><p>Creates and updates payment records per order to enforce one canonical payment state machine.</p></div>
+    <div class="card"><div class="card-title">Order-Aware Validation</div><p>Uses order snapshots and order read clients to validate that payment is allowed for the target order state.</p></div>
+    <div class="card"><div class="card-title">Event Consumption</div><p>Listens to order-created and order-expired events to initialize/close payment windows.</p></div>
+    <div class="card"><div class="card-title">Event Publication</div><p>Publishes payment-order-complete events consumed by order service to move orders toward completion.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-web <span class="tag tag-spring">HTTP</span></div><div class="lib-desc">Provides payment confirmation and payment detail endpoints.</div><div class="lib-why"><b>Why:</b> Checkout/payment confirmation needs immediate API response semantics.</div></div>
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-data-jpa <span class="tag tag-spring">Database</span></div><div class="lib-desc">Stores `PaymentRecord` entities and transactional updates.</div><div class="lib-why"><b>Why:</b> Financially sensitive state requires durable and consistent writes.</div></div>
+    <div class="lib-card"><div class="lib-name">NATS JetStream (jnats) <span class="tag tag-nats">Events</span></div><div class="lib-desc">Subscribes to order events and publishes payment completion events.</div><div class="lib-why"><b>Why:</b> Decouples payment processing timing from order service availability.</div></div>
+    <div class="lib-card"><div class="lib-name">common module <span class="tag tag-java">Shared</span></div><div class="lib-desc">Shared DTOs, subjects, and publisher abstractions.</div><div class="lib-why"><b>Why:</b> Guarantees consistent event contracts between order and payment domains.</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">controller/PaymentController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc">Exposes API endpoints for payment confirmation and payment query operations.</td></tr>
+      <tr><td class="file-name">service/PaymentService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Processes confirmation requests, validates order/payment state, and persists transitions.</td></tr>
+      <tr><td class="file-name">events/consumers/OrderCreatedListener.java</td><td><span class="file-kind">Consumer</span></td><td class="file-desc">Creates pending payment context when a new order is emitted.</td></tr>
+      <tr><td class="file-name">events/consumers/OrderExpiredListener.java</td><td><span class="file-kind">Consumer</span></td><td class="file-desc">Marks payment window closed when order expiration is emitted.</td></tr>
+      <tr><td class="file-name">events/publishers/PaymentOrderCompletePublisher.java</td><td><span class="file-kind">Publisher</span></td><td class="file-desc">Publishes successful payment completion to order domain consumers.</td></tr>
+      <tr><td class="file-name">repository/PaymentRepository.java</td><td><span class="file-kind">Repository</span></td><td class="file-desc">Persists and queries payment records by order/user/payment identifiers.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ─────────────────── ANALYTICS ─────────────────── -->
+<section id="analytics">
+  <div class="page-header">
+    <div class="badge tag-analytics">Java · Spring Boot · Port 8086</div>
+    <h1>Analytics Service</h1>
+    <p class="lead">Read-optimized analytics service that ingests order lifecycle events and provides summarized metrics for admin and seller dashboards. It stores query-oriented datasets in ClickHouse.</p>
+  </div>
+
+  <h2>What does it accomplish?</h2>
+  <div class="grid-2">
+    <div class="card"><div class="card-title">Event Ingestion</div><p>Consumes order and payment-adjacent events from NATS and writes structured analytics rows.</p></div>
+    <div class="card"><div class="card-title">Dashboard APIs</div><p>Exposes aggregated metrics such as order count, status distribution, and trend windows.</p></div>
+    <div class="card"><div class="card-title">Time-Series/OLAP Queries</div><p>Uses ClickHouse for fast aggregation over large event volumes.</p></div>
+    <div class="card"><div class="card-title">Operational Decoupling</div><p>Keeps analytical workloads off transactional databases used by checkout and inventory APIs.</p></div>
+  </div>
+
+  <h2>Libraries used</h2>
+  <div class="grid-2">
+    <div class="lib-card"><div class="lib-name">spring-boot-starter-web <span class="tag tag-spring">HTTP</span></div><div class="lib-desc">Provides analytics query endpoints for dashboards.</div><div class="lib-why"><b>Why:</b> Admin/seller UIs need direct API access to pre-aggregated metrics.</div></div>
+    <div class="lib-card"><div class="lib-name">NATS JetStream (jnats) <span class="tag tag-nats">Events</span></div><div class="lib-desc">Consumes order status events (created/in-progress/shipped/completed/cancelled/expired).</div><div class="lib-why"><b>Why:</b> Keeps analytics eventually consistent without coupling to order DB writes.</div></div>
+    <div class="lib-card"><div class="lib-name">ClickHouse client <span class="tag tag-analytics">OLAP</span></div><div class="lib-desc">Writes and queries analytics records optimized for aggregates and range scans.</div><div class="lib-why"><b>Why:</b> ClickHouse is designed for high-performance analytical workloads.</div></div>
+    <div class="lib-card"><div class="lib-name">common module <span class="tag tag-java">Shared</span></div><div class="lib-desc">Uses shared event DTOs and subject naming conventions for consistent ingestion.</div><div class="lib-why"><b>Why:</b> Prevents drift between producer and analytics consumer contracts.</div></div>
+  </div>
+
+  <h2>Folder structure and files</h2>
+  <table>
+    <thead><tr><th>File</th><th>Type</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="file-name">controller/AnalyticsController.java</td><td><span class="file-kind">Controller</span></td><td class="file-desc">Serves summary endpoints for admin/seller dashboard cards and trend views.</td></tr>
+      <tr><td class="file-name">service/OrderAnalyticsIngestionService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Transforms incoming events into analytics rows and writes to repository.</td></tr>
+      <tr><td class="file-name">service/OrderAnalyticsQueryService.java</td><td><span class="file-kind">Service</span></td><td class="file-desc">Builds summary DTOs and grouped metrics for API responses.</td></tr>
+      <tr><td class="file-name">repository/OrderAnalyticsRepository.java</td><td><span class="file-kind">Repository</span></td><td class="file-desc">Executes ClickHouse inserts and analytical query statements.</td></tr>
+      <tr><td class="file-name">events/consumers/*.java</td><td><span class="file-kind">Consumers</span></td><td class="file-desc">Dedicated listeners for each major order status event (created, in-progress, shipped, completed, cancelled, expired).</td></tr>
+      <tr><td class="file-name">repository/ClickHouseClient.java</td><td><span class="file-kind">Client</span></td><td class="file-desc">Manages low-level ClickHouse connectivity and execution wrappers.</td></tr>
+    </tbody>
+  </table>
+</section>
+
 <!-- ─────────────────── ARCHIVE ─────────────────── -->
 <section id="archive">
   <div class="page-header">
@@ -765,6 +957,88 @@ cron.schedule(process.env.SNAPSHOT_CRON_SCHEDULE, runSnapshotTask, { timezone: '
 }
 // Order matters: /api/admin/products must come before /api/admin
 // otherwise /api/admin would match it first and route to identity-service (wrong)</code></pre>
+</section>
+
+<!-- ─────────────────── EVENT FLOWS ─────────────────── -->
+<section id="event-flows">
+  <div class="page-header">
+    <div class="badge tag-nats">Cross-Service Events</div>
+    <h1>Event Flow Diagrams</h1>
+    <p class="lead">These diagrams show how each major event moves across services. They represent publisher -> event bus -> consumers and the resulting side effects.</p>
+  </div>
+
+  <div class="event-flow">
+    <h3>Order Created</h3>
+    <pre><code>User Checkout
+  -> order-service
+  -> publish: order.created
+  -> NATS JetStream (ORDERS)
+  -> payment-service (create pending payment context)
+  -> analytics-service (record order-created metric row)
+  -> archive-service (persist immutable event JSON in MinIO)</code></pre>
+  </div>
+
+  <div class="event-flow">
+    <h3>Payment Completed</h3>
+    <pre><code>User Payment Confirmation
+  -> payment-service
+  -> publish: payment.order.complete
+  -> NATS JetStream (ORDERS)
+  -> order-service (mark order completed / progress workflow)
+  -> analytics-service (increment successful payment/completion metrics)
+  -> archive-service (audit persistence)</code></pre>
+  </div>
+
+  <div class="event-flow">
+    <h3>Order In Progress / Shipped / Completed</h3>
+    <pre><code>seller/admin action in order-service
+  -> publish: order.in-progress | order.shipped | order.completed
+  -> NATS JetStream (ORDERS)
+  -> analytics-service (status funnel updates)
+  -> archive-service (append raw event log)</code></pre>
+  </div>
+
+  <div class="event-flow">
+    <h3>Order Cancelled / Expired / Failed</h3>
+    <pre><code>order-service detects cancellation/expiry/failure
+  -> publish: order.cancelled | order.expired | order.failed
+  -> NATS JetStream (ORDERS)
+  -> payment-service (close or invalidate pending payment flows)
+  -> inventory-service (release reserved stock when applicable)
+  -> analytics-service (failure/expiration counters)
+  -> archive-service (audit persistence)</code></pre>
+  </div>
+
+  <div class="event-flow">
+    <h3>Inventory Stock Added</h3>
+    <pre><code>seller adds stock
+  -> inventory-service
+  -> publish: inventory.stock.added
+  -> NATS JetStream (INVENTORY)
+  -> analytics-service (stock movement metrics if subscribed)
+  -> archive-service (audit persistence)</code></pre>
+  </div>
+
+  <div class="event-flow">
+    <h3>Inventory Reserved / Released</h3>
+    <pre><code>order-service internal API call
+  -> inventory-service reserve/release
+  -> publish: inventory.reserved | inventory.released
+  -> NATS JetStream (INVENTORY)
+  -> analytics-service (reservation/release trend metrics)
+  -> archive-service (audit persistence)</code></pre>
+  </div>
+
+  <div class="event-flow">
+    <h3>Identity and Seller Governance Events</h3>
+    <pre><code>identity-service actions
+  -> publish: user.login | user.logout | seller.registered | seller.approved | seller.rejected
+  -> NATS JetStream (IDENTITY)
+  -> analytics-service (identity funnel metrics if subscribed)
+  -> archive-service (audit persistence)</code></pre>
+  </div>
+
+  <div class="img-placeholder">Image placeholder: add one sequence diagram image per flow above (or one consolidated event choreography diagram).</div>
 </section>
 
 <!-- ─────────────────── INFRA ─────────────────── -->
